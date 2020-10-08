@@ -14,5 +14,8 @@ download_trmm(destination, start_year, end_year)
 \item{end_year}{numeric. End year should be between 1979-2019, and should be greater or equal to start year.}
 }
 \description{
-Function for downloading TRMM 3B43 HDF files from GES DISC.
+Function for downloading TRMM 3B43 HDF files.
+}
+\note{
+user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 }

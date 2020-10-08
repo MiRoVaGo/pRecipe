@@ -1,3 +1,19 @@
+#' 20CR data downloader
+#'
+#' Function for downloading 20CR NC files.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+#' @export
+
+download_20cr <- function(destination){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  file_name <- "prate.mon.mean.nc"
+  file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/sfcSI-MO/"
+  file_url <- paste0(file_url_base, file_name)
+  file_destination <- paste0(destination, "/", file_name)
+  download.file(file_url, file_destination)
+}
+
 #' CMAP data downloader
 #'
 #' Function for downloading CMAP NC files.
@@ -11,7 +27,7 @@ download_cmap <- function(destination){
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' CPC data downloader
@@ -35,7 +51,7 @@ download_cpc <- function(destination, start_year, end_year){
     file_name <- paste0("precip.", year, ".nc")
     file_url <- paste0(file_url_base, file_name)
     file_destination <- paste0(destination, "/", file_name)
-    download.file(file_url, file_destination, quiet = TRUE)
+    download.file(file_url, file_destination)
   }
 }
 
@@ -52,7 +68,7 @@ download_cru <- function(destination){
   file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.04/cruts.2004151855.v4.04/pre/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' GHCN-M data downloader
@@ -68,7 +84,7 @@ download_ghcn <- function(destination){
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ghcngridded/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' GPCC data downloader
@@ -102,7 +118,7 @@ download_gpcc <- function(destination, resolution){
   file_url_base <- "https://opendata.dwd.de/climate_environment/GPCC/full_data_2018/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' GPCP data downloader
@@ -118,7 +134,7 @@ download_gpcp <- function(destination){
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' GPM data downloader
@@ -151,9 +167,41 @@ download_gpm <- function(destination, start_year, end_year){
       file_name <- paste0("3B-MO.MS.MRG.3IMERG.", year, str_pad(month, 2, pad = "0"), "01-S000000-E235959.", str_pad(month, 2, pad = "0"), ".V06B.HDF5")
       file_url <- paste0(file_url_base, year, "/", file_name)
       file_destination <- paste0(destination, "/", file_name)
-      download.file(file_url, file_destination, quiet = TRUE)
+      download.file(file_url, file_destination)
     }
   }
+}
+
+#' NCEP/NCAR data downloader
+#'
+#' Function for downloading NCEP/NCAR NC files.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+#' @export
+
+download_ncep <- function(destination){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  file_name <- "prate.sfc.mon.mean.nc"
+  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
+  file_url <- paste0(file_url_base, file_name)
+  file_destination <- paste0(destination, "/", file_name)
+  download.file(file_url, file_destination)
+}
+
+#' NCEP/DOE data downloader
+#'
+#' Function for downloading NCEP/DOE NC files.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+#' @export
+
+download_ncep2 <- function(destination){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  file_name <- "prate.sfc.mon.mean.nc"
+  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
+  file_url <- paste0(file_url_base, file_name)
+  file_destination <- paste0(destination, "/", file_name)
+  download.file(file_url, file_destination)
 }
 
 #' PRECL data downloader
@@ -187,12 +235,12 @@ download_precl <- function(destination, resolution){
   file_url_base <-"ftp://ftp.cdc.noaa.gov/Datasets/precl/"
   file_url <- paste0(file_url_base, file_folder, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }
 
 #' TRMM data downloader
 #'
-#' Function for downloading TRMM 3B43 HDF files from GES DISC.
+#' Function for downloading TRMM 3B43 HDF files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 1998-2019.
@@ -218,7 +266,7 @@ download_trmm <- function(destination, start_year, end_year){
         }
       file_url <- paste0(file_url_base, year, "/", file_name)
       file_destination <- paste0(destination, "/", file_name)
-      download.file(file_url, file_destination, quiet = TRUE)
+      download.file(file_url, file_destination)
     }
   }
 }
@@ -236,5 +284,5 @@ download_udel <- function(destination){
   file_name <- "precip.mon.total.v501.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
-  download.file(file_url, file_destination, quiet = TRUE)
+  download.file(file_url, file_destination)
 }

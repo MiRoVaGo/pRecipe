@@ -16,3 +16,6 @@ download_gpm(destination, start_year, end_year)
 \description{
 Function for downloading GPM HDF5 files.
 }
+\note{
+user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+}
