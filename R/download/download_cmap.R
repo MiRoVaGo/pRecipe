@@ -1,5 +1,5 @@
 download_cmap <- function(destination){
-  if (!is.character(destination)) stop ("destination should be character string.")
+  if (!is.character(destination)) stop ("destination should be a character string.")
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cmap/enh/"
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
