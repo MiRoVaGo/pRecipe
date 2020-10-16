@@ -7,7 +7,7 @@ Authors@R: c(
   )
 Description: TBC.
 Depends: R (>= 3.4.0)
-Imports: data.table, dplyr, getPass, readr, stringr, utils
+Imports: data.table, dplyr, ncdf4, raster, readr
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
