@@ -7,8 +7,8 @@
 
 download_20cr <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
-  file_name <- "prate.mon.mean.nc"
-  file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/sfcSI-MO/"
+  file_name <- "apcp.mon.mean.nc"
+  file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/accumsSI-MO/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
   download.file(file_url, file_destination, mode = "wb")

@@ -2,287 +2,261 @@
 #'
 #' Function for reading 20CR NC files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm] and missing values are NA.
 #' @export
 
-import_20cr <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_name <- "prate.mon.mean.nc"
-  file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/sfcSI-MO/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_20cr <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' CMAP data reader
 #'
 #' Function for reading CMAP NC files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_cmap <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cmap/std/"
-  file_name <- "precip.mon.mean.nc"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_cmap <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' CPC data reader
 #'
 #' Function for reading CPC-GLOBAL NC files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
-#' @param start_year numeric. Start year should be between 1979-2019.
-#' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a list of bricks with daily precipitation data in [mm] and missing values are NA.
 #' @export
 
-import_cpc <- function(file_path, start_year, end_year){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 1979:2019)) | (!any(end_year == 1979:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 1979-2019, and end_year should be greater or equal to start_year")
+import_cpc <- function(folder_path, chk = FALSE){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  if (chk == TRUE) {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    no_cores <- 2L
+  } else {
+    # use all cores in devtools::test()
+    no_cores <- detectCores() -1
   }
-  
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cpc_global_precip/"
-  for (year in start_year:end_year){
-    file_name <- paste0("precip.", year, ".nc")
-    file_url <- paste0(file_url_base, file_name)
-    file_file_path <- paste0(file_path, "/", file_name)
-    download.file(file_url, file_file_path)
-  }
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, file_name, function(year){
+    dummie_brick <- raster::brick(year)
+    dummie_brick[dummie_brick < 0] <- NA
+    return(dummie_brick)
+  })
+  stopCluster(cluster)
+  return(precip)
 }
 
 #' CRU data reader
 #'
 #' Function for reading CRU_TS NC.GZ file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_cru <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_name <- "cru_ts4.04.1901.2019.pre.dat.nc.gz"
-  file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.04/cruts.2004151855.v4.04/pre/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_cru <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- gunzip(file_name, temporary = TRUE, remove = FALSE) %>% brick()
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' GHCN-M data reader
 #'
 #' Function for reading GHCN-M NC file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm] and missing values are NA.
 #' @export
 
-import_ghcn <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_name <- "precip.mon.total.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ghcngridded/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_ghcn <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' GPCC data reader
 #'
 #' Function for reading GPCC NC.GZ file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
-#' @param resolution numeric. Data spatial resolution. Suitable options are:
-#' \itemize{
-#' \item{0.25 for 0.25 degree,}
-#' \item{0.5 for 0.5 degree,}
-#' \item{1 for 1 degree,}
-#' \item{2.5 for 2.5 degree.}
-#' }
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/month] and missing values are NA.
 #' @export
 
 
 
-import_gpcc <- function(file_path, resolution){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  if (!is.numeric(resolution)) stop ("resolution should be numeric.")
-  if (!any(resolution == c(0.25, 0.5, 1, 2.5))){
-    stop("Error: Resolution not available. Select between 0.25, 0.5, 1, 2.5")
-  }
-  file_name <- switch(as.character(resolution),
-         "0.25" = "full_data_monthly_v2018_025.nc.gz",
-         "0.5" = "full_data_monthly_v2018_05.nc.gz",
-         "1" = "full_data_monthly_v2018_10.nc.gz",
-         "2.5" = "full_data_monthly_v2018_25.nc.gz"
-  )
-  file_url_base <- "https://opendata.dwd.de/climate_environment/GPCC/full_data_2018/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_gpcc <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- gunzip(file_name, temporary = TRUE, remove = FALSE) %>% brick()
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' GPCP data reader
 #'
 #' Function for reading GPCP NC file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_gpcp <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcp/"
-  file_name <- "precip.mon.mean.nc"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_gpcp <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' GPM data reader
 #'
 #' Function for reading GPM HDF5 files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
-#' @param start_year numeric. Start year should be between 2000-2019.
-#' @param end_year numeric. End year should be between 2000-2019, and should be greater or equal to start year.
-#' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a list of bricks with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
 
-import_gpm <- function(file_path, start_year, end_year){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 2000:2019)) | (!any(end_year == 2000:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 2000-2019, and end_year should be greater or equal to start_year")
+import_gpm <- function(folder_path, chk = FALSE){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  if (chk == TRUE) {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    no_cores <- 2L
+  } else {
+    # use all cores in devtools::test()
+    no_cores <- detectCores() -1
   }
-  username <- getPass("Enter the username: ")
-  password <- getPass("Enter the password: ")
-  file_url_base <- paste0("https://", username, ":", password, "@", "gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGM.06/")
-  for (year in start_year:end_year){
-    if (year == 2000){
-      start_month <- 6
-    } else {
-      start_month <- 1
-    }
-    for (month in start_month:12){
-      file_name <- paste0("3B-MO.MS.MRG.3IMERG.", year, str_pad(month, 2, pad = "0"), "01-S000000-E235959.", str_pad(month, 2, pad = "0"), ".V06B.HDF5")
-      file_url <- paste0(file_url_base, year, "/", file_name)
-      file_file_path <- paste0(file_path, "/", file_name)
-      download.file(file_url, file_file_path)
-    }
-  }
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, file_name, function(year){
+    dummie_brick <- rhdf5::h5read(year, name = "/Grid/precipitation")
+    dummie_brick <- raster::brick(dummie_brick, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
+    dummie_brick <- raster::flip(dummie_brick, direction = "y")
+    dummie_brick <- dummie_brick * 24
+    dummie_brick[dummie_brick < 0] <- NA
+    return(dummie_brick)
+  })
+  stopCluster(cluster)
+  return(precip)
 }
 
 #' NCEP/NCAR data reader
 #'
 #' Function for reading NCEP/NCAR NC files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_ncep <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_name <- "prate.sfc.mon.mean.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_ncep <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip <- precip * 86400
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' NCEP/DOE data reader
 #'
 #' Function for reading NCEP/DOE NC files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_ncep2 <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_name <- "prate.sfc.mon.mean.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_ncep2 <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip <- precip * 86400
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' PRECL data reader
 #'
 #' Function for reading PRECL NC file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
-#' @param resolution numeric. Data spatial resolution. Suitable options are:
-#' \itemize{
-#' \item{0.5 for 0.5 degree,}
-#' \item{1 for 1 degree,}
-#' \item{2.5 for 2.5 degree.}
-#' }
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_precl <- function(file_path, resolution){
-  if (!is.character(file_path)) stop ("file_path should be character string.")
-  if (!any(resolution == c(0.5, 1, 2.5))){
-    stop("Error: Resolution not available. Select between 0.5, 1, 2.5")
-  }
-  file_name <- switch(as.character(resolution),
-                      "0.5" = "precip.mon.mean.0.5x0.5.nc",
-                      "1" = "precip.mon.mean.1x1.nc",
-                      "2.5" = "precip.mon.mean.2.5x2.5.nc"
-  )
-  file_folder <- switch(as.character(resolution),
-                        "0.5" = "0.5deg/",
-                        "1" = "1.0deg/",
-                        "2.5" = "2.5deg/"
-  )
-  file_url_base <-"ftp://ftp.cdc.noaa.gov/Datasets/precl/"
-  file_url <- paste0(file_url_base, file_folder, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_precl <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip[precip < 0] <- NA
+  return(precip)
 }
 
 #' TRMM data reader
 #'
 #' Function for reading TRMM 3B43 HDF files.
 #'
-#' @param file_path a character string with the path where the data set file is located.
-#' @param start_year numeric. Start year should be between 1998-2019.
-#' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
-#' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a list of bricks with monthly precipitation data in [mm/day] and missing values are NA.
 #' @export
 
-import_trmm <- function(file_path, start_year, end_year){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 1998:2019)) | (!any(end_year == 1998:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 1998-2019, and end_year should be greater or equal to start_year")
+import_trmm <- function(folder_path, chk = FALSE){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  if (chk == TRUE) {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    no_cores <- 2L
+  } else {
+    # use all cores in devtools::test()
+    no_cores <- detectCores() -1
   }
-  username <- getPass("Enter the username: ")
-  password <- getPass("Enter the password: ")
-  file_url_base <- paste0("https://", username, ":", password, "@", "disc2.gesdisc.eosdis.nasa.gov/data/TRMM_L3/TRMM_3B43.7/")
-  for (year in start_year:end_year){
-    for (month in 1:12){
-      if ((year < 2000) | (year >= 2011) | ((year == 2010) && (month > 9))){
-        file_name <- paste0("3B43.", year, str_pad(month, 2, pad = "0"), "01.7.HDF")
-      } else {
-        file_name <- paste0("3B43.", year, str_pad(month, 2, pad = "0"), "01.7A.HDF")
-        }
-      file_url <- paste0(file_url_base, year, "/", file_name)
-      file_file_path <- paste0(file_path, "/", file_name)
-      download.file(file_url, file_file_path)
-    }
-  }
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, file_name, function(year){
+    dummie_brick <- gdalUtils::get_subdatasets(year)
+    dummie_brick <- rgdal::readGDAL(dummie_brick[1])
+    dummie_brick <- raster::brick(dummie_brick)
+    dummie_brick <- raster::t(dummie_brick)
+    sp::proj4string(dummie_brick) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    raster::extent(dummie_brick) <- c(-180, 180, -50, 50)
+    dummie_brick <- raster::flip(dummie_brick, direction = "y")
+    dummie_brick <- dummie_brick * 24
+    dummie_brick[dummie_brick < 0] <- NA
+    return(dummie_brick)
+  })
+  stopCluster(cluster)
+  return(precip)
 }
 
 #' UDEL data reader
 #'
 #' Function for reading UDEL NC file.
 #'
-#' @param file_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the data set file is located.
+#' @return a brick with monthly precipitation data in [mm] and missing values are NA.
 #' @export
 
-import_udel <- function(file_path){
-  if (!is.character(file_path)) stop ("file_path should be a character string.")
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/udel.airt.precip/"
-  file_name <- "precip.mon.total.v501.nc"
-  file_url <- paste0(file_url_base, file_name)
-  file_file_path <- paste0(file_path, "/", file_name)
-  download.file(file_url, file_file_path)
+import_udel <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  precip <- brick(file_name)
+  precip <- precip * 10
+  precip[precip < 0] <- NA
+  return(precip)
 }

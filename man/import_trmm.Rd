@@ -4,18 +4,14 @@
 \alias{import_trmm}
 \title{TRMM data reader}
 \usage{
-import_trmm(file_path, start_year, end_year)
+import_trmm(folder_path, chk = FALSE)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
-
-\item{start_year}{numeric. Start year should be between 1998-2019.}
-
-\item{end_year}{numeric. End year should be between 1979-2019, and should be greater or equal to start year.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a list of bricks with monthly precipitation data in [mm/day] and missing values are NA.
 }
 \description{
 Function for reading TRMM 3B43 HDF files.
-}
-\note{
-user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 }

@@ -4,10 +4,13 @@
 \alias{import_ghcn}
 \title{GHCN-M data reader}
 \usage{
-import_ghcn(file_path)
+import_ghcn(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm] and missing values are NA.
 }
 \description{
 Function for reading GHCN-M NC file.

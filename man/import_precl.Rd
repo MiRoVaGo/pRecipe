@@ -4,17 +4,13 @@
 \alias{import_precl}
 \title{PRECL data reader}
 \usage{
-import_precl(file_path, resolution)
+import_precl(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
-
-\item{resolution}{numeric. Data spatial resolution. Suitable options are:
-\itemize{
-\item{0.5 for 0.5 degree,}
-\item{1 for 1 degree,}
-\item{2.5 for 2.5 degree.}
-}}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm/day] and missing values are NA.
 }
 \description{
 Function for reading PRECL NC file.

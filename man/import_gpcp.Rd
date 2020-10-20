@@ -4,10 +4,13 @@
 \alias{import_gpcp}
 \title{GPCP data reader}
 \usage{
-import_gpcp(file_path)
+import_gpcp(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm/day] and missing values are NA.
 }
 \description{
 Function for reading GPCP NC file.

@@ -4,14 +4,13 @@
 \alias{import_cpc}
 \title{CPC data reader}
 \usage{
-import_cpc(file_path, start_year, end_year)
+import_cpc(folder_path, chk = FALSE)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
-
-\item{start_year}{numeric. Start year should be between 1979-2019.}
-
-\item{end_year}{numeric. End year should be between 1979-2019, and should be greater or equal to start year.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a list of bricks with daily precipitation data in [mm] and missing values are NA.
 }
 \description{
 Function for reading CPC-GLOBAL NC files.

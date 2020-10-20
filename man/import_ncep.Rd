@@ -4,10 +4,13 @@
 \alias{import_ncep}
 \title{NCEP/NCAR data reader}
 \usage{
-import_ncep(file_path)
+import_ncep(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm/day] and missing values are NA.
 }
 \description{
 Function for reading NCEP/NCAR NC files.

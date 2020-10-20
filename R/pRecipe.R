@@ -59,6 +59,8 @@ download_data <- function(name, destination, resolution = NULL, start_year = NUL
 #'
 #' The function \code{import_data} downloads the selected data product.
 #'
+#' @importFrom dplyr %>%
+#' @importFrom R.utils gunzip
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"20cr" for 20CR v3}
@@ -75,27 +77,27 @@ download_data <- function(name, destination, resolution = NULL, start_year = NUL
 #' \item{"trmm" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param file_path a character string with the path where the data set is located.
+#' @param folder_path a character string with the folder path where the data set is located.
 #' @export
 
-import_data <- function(name, file_path){
+import_data <- function(name, folder_path){
   '%!in%' <- function(x, y)!('%in%'(x, y))
   if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
     stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
   }
   switch(name,
-         "20cr" = import_20cr(file_path),
-         "cmap" = import_cmap(file_path),
-         "cpc" = import_cpc(file_path),
-         "cru" = import_cru(file_path),
-         "ghcn" = import_ghcn(file_path),
-         "gpcc" = import_gpcc(file_path),
-         "gpcp" = import_gpcp(file_path),
-         "gpm" = import_gpm(file_path),
-         "ncep" = import_ncep(file_path),
-         "ncep2" = import_ncep2(file_path),
-         "precl" = import_precl(file_path),
-         "trmm" = import_trmm(file_path),
-         "udel" = import_udel(file_path)
+         "20cr" = {precip_20cr <<- import_20cr(folder_path)},
+         "cmap" = {precip_cmap <<- import_cmap(folder_path)},
+         "cpc" = {precip_cpc <<- import_cpc(folder_path)},
+         "cru" = {precip_cru <<- import_cru(folder_path)},
+         "ghcn" = {precip_ghcn <<- import_ghcn(folder_path)},
+         "gpcc" = {precip_gpcc <<- import_gpcc(folder_path)},
+         "gpcp" = {precip_gpcp <<- import_gpcp(folder_path)},
+         "gpm" = {precip_gpm <<- import_gpm(folder_path)},
+         "ncep" = {precip_ncep <<- import_ncep(folder_path)},
+         "ncep2" = {precip_ncep2 <<- import_ncep2(folder_path)},
+         "precl" = {precip_precl <<- import_precl(folder_path)},
+         "trmm" = {precip_trmm <<- import_trmm(folder_path)},
+         "udel" = {precip_udel <<- import_udel(folder_path)}
   )
 }

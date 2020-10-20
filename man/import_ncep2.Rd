@@ -4,10 +4,13 @@
 \alias{import_ncep2}
 \title{NCEP/DOE data reader}
 \usage{
-import_ncep2(file_path)
+import_ncep2(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm/day] and missing values are NA.
 }
 \description{
 Function for reading NCEP/DOE NC files.

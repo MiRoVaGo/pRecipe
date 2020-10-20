@@ -4,7 +4,7 @@
 \alias{import_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-import_data(name, file_path)
+import_data(name, folder_path)
 }
 \arguments{
 \item{name}{a character string with the name of the desired data set. Suitable options are:
@@ -24,7 +24,7 @@ import_data(name, file_path)
 \item{"udel" for UDEL v501.}
 }}
 
-\item{file_path}{a character string with the path where the data set is located.}
+\item{folder_path}{a character string with the folder path where the data set is located.}
 }
 \description{
 The function \code{import_data} downloads the selected data product.

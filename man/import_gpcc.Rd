@@ -4,18 +4,13 @@
 \alias{import_gpcc}
 \title{GPCC data reader}
 \usage{
-import_gpcc(file_path, resolution)
+import_gpcc(folder_path)
 }
 \arguments{
-\item{file_path}{a character string with the path where the data set file is located.}
-
-\item{resolution}{numeric. Data spatial resolution. Suitable options are:
-\itemize{
-\item{0.25 for 0.25 degree,}
-\item{0.5 for 0.5 degree,}
-\item{1 for 1 degree,}
-\item{2.5 for 2.5 degree.}
-}}
+\item{folder_path}{a character string with the path where the data set file is located.}
+}
+\value{
+a brick with monthly precipitation data in [mm/month] and missing values are NA.
 }
 \description{
 Function for reading GPCC NC.GZ file.
