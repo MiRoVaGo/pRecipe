@@ -11,12 +11,11 @@ download_gpcc(destination, resolution)
 
 \item{resolution}{numeric. Data spatial resolution. Suitable options are:
 \itemize{
-\item{0.25 for 0.25 degree,}
 \item{0.5 for 0.5 degree,}
 \item{1 for 1 degree,}
 \item{2.5 for 2.5 degree.}
 }}
 }
 \description{
-Function for downloading GPCC NC.GZ file.
+Function for downloading GPCC NC file.
 }

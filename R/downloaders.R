@@ -89,33 +89,29 @@ download_ghcn <- function(destination){
 
 #' GPCC data downloader
 #'
-#' Function for downloading GPCC NC.GZ file.
+#' Function for downloading GPCC NC file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param resolution numeric. Data spatial resolution. Suitable options are:
 #' \itemize{
-#' \item{0.25 for 0.25 degree,}
 #' \item{0.5 for 0.5 degree,}
 #' \item{1 for 1 degree,}
 #' \item{2.5 for 2.5 degree.}
 #' }
 #' @export
 
-
-
 download_gpcc <- function(destination, resolution){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!is.numeric(resolution)) stop ("resolution should be numeric.")
   if (!any(resolution == c(0.25, 0.5, 1, 2.5))){
-    stop("Error: Resolution not available. Select between 0.25, 0.5, 1, 2.5")
+    stop("Error: Resolution not available. Select between 0.5, 1, 2.5")
   }
   file_name <- switch(as.character(resolution),
-         "0.25" = "full_data_monthly_v2018_025.nc.gz",
-         "0.5" = "full_data_monthly_v2018_05.nc.gz",
-         "1" = "full_data_monthly_v2018_10.nc.gz",
-         "2.5" = "full_data_monthly_v2018_25.nc.gz"
+         "0.5" = "precip.mon.total.v2018.nc",
+         "1" = "precip.mon.total.1x1.v2018.nc",
+         "2.5" = "precip.mon.total.2.5x.25.v2018.nc"
   )
-  file_url_base <- "https://opendata.dwd.de/climate_environment/GPCC/full_data_2018/"
+  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcc/full_v2018/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -146,7 +142,6 @@ download_gpcp <- function(destination){
 #' @param end_year numeric. End year should be between 2000-2019, and should be greater or equal to start year.
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 #' @export
-
 
 download_gpm <- function(destination, start_year, end_year){
   if (!is.character(destination)) stop ("destination should be a character string.")

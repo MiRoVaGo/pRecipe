@@ -22,9 +22,8 @@
 #' \item{"udel" for UDEL v501.}
 #' }
 #' @param destination a character string with the path where the downloaded file is saved.
-#' @param resolution numeric. Data spatial resolution for GPCC or PRECL. Suitable options are:
+#' @param resolution numeric. Data spatial resolution for GPCC and PRECL. Suitable options are:
 #' \itemize{
-#' \item{0.25 for 0.25 degree (GPCC only),}
 #' \item{0.5 for 0.5 degree,}
 #' \item{1 for 1 degree,}
 #' \item{2.5 for 2.5 degree.}
@@ -57,9 +56,10 @@ download_data <- function(name, destination, resolution = NULL, start_year = NUL
 
 #' Download and import precipitation data from various sources
 #'
-#' The function \code{import_data} downloads the selected data product.
+#' The function \code{reformat_data} downloads the selected data product.
 #'
-#' @importFrom dplyr %>%
+#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
+#' @importFrom dplyr %>% slice
 #' @importFrom R.utils gunzip
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
@@ -78,26 +78,28 @@ download_data <- function(name, destination, resolution = NULL, start_year = NUL
 #' \item{"udel" for UDEL v501.}
 #' }
 #' @param folder_path a character string with the folder path where the data set is located.
+#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
+#' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @export
 
-import_data <- function(name, folder_path){
+reformat_data <- function(name, folder_path, save = TRUE, preserve = TRUE){
   '%!in%' <- function(x, y)!('%in%'(x, y))
   if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
     stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
   }
   switch(name,
-         "20cr" = {precip_20cr <<- import_20cr(folder_path)},
-         "cmap" = {precip_cmap <<- import_cmap(folder_path)},
-         "cpc" = {precip_cpc <<- import_cpc(folder_path)},
-         "cru" = {precip_cru <<- import_cru(folder_path)},
-         "ghcn" = {precip_ghcn <<- import_ghcn(folder_path)},
-         "gpcc" = {precip_gpcc <<- import_gpcc(folder_path)},
-         "gpcp" = {precip_gpcp <<- import_gpcp(folder_path)},
-         "gpm" = {precip_gpm <<- import_gpm(folder_path)},
-         "ncep" = {precip_ncep <<- import_ncep(folder_path)},
-         "ncep2" = {precip_ncep2 <<- import_ncep2(folder_path)},
-         "precl" = {precip_precl <<- import_precl(folder_path)},
-         "trmm" = {precip_trmm <<- import_trmm(folder_path)},
-         "udel" = {precip_udel <<- import_udel(folder_path)}
+         "20cr" = {precip_20cr <<- reformat_20cr(folder_path)},
+         "cmap" = {precip_cmap <<- reformat_cmap(folder_path)},
+         "cpc" = {precip_cpc <<- reformat_cpc(folder_path)},
+         "cru" = {precip_cru <<- reformat_cru(folder_path)},
+         "ghcn" = {precip_ghcn <<- reformat_ghcn(folder_path)},
+         "gpcc" = {precip_gpcc <<- reformat_gpcc(folder_path)},
+         "gpcp" = {precip_gpcp <<- reformat_gpcp(folder_path)},
+         "gpm" = {precip_gpm <<- reformat_gpm(folder_path)},
+         "ncep" = {precip_ncep <<- reformat_ncep(folder_path)},
+         "ncep2" = {precip_ncep2 <<- reformat_ncep2(folder_path)},
+         "precl" = {precip_precl <<- reformat_precl(folder_path)},
+         "trmm" = {precip_trmm <<- reformat_trmm(folder_path)},
+         "udel" = {precip_udel <<- reformat_udel(folder_path)}
   )
 }

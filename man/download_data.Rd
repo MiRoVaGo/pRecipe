@@ -32,9 +32,8 @@ download_data(
 
 \item{destination}{a character string with the path where the downloaded file is saved.}
 
-\item{resolution}{numeric. Data spatial resolution for GPCC or PRECL. Suitable options are:
+\item{resolution}{numeric. Data spatial resolution for GPCC and PRECL. Suitable options are:
 \itemize{
-\item{0.25 for 0.25 degree (GPCC only),}
 \item{0.5 for 0.5 degree,}
 \item{1 for 1 degree,}
 \item{2.5 for 2.5 degree.}
