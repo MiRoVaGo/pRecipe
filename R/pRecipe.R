@@ -88,18 +88,18 @@ reformat_data <- function(name, folder_path, save = TRUE, preserve = TRUE){
     stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
   }
   switch(name,
-         "20cr" = {precip_20cr <<- reformat_20cr(folder_path)},
-         "cmap" = {precip_cmap <<- reformat_cmap(folder_path)},
-         "cpc" = {precip_cpc <<- reformat_cpc(folder_path)},
-         "cru" = {precip_cru <<- reformat_cru(folder_path)},
-         "ghcn" = {precip_ghcn <<- reformat_ghcn(folder_path)},
-         "gpcc" = {precip_gpcc <<- reformat_gpcc(folder_path)},
-         "gpcp" = {precip_gpcp <<- reformat_gpcp(folder_path)},
-         "gpm" = {precip_gpm <<- reformat_gpm(folder_path)},
-         "ncep" = {precip_ncep <<- reformat_ncep(folder_path)},
-         "ncep2" = {precip_ncep2 <<- reformat_ncep2(folder_path)},
-         "precl" = {precip_precl <<- reformat_precl(folder_path)},
-         "trmm" = {precip_trmm <<- reformat_trmm(folder_path)},
-         "udel" = {precip_udel <<- reformat_udel(folder_path)}
+         "20cr" = {precip_20cr <<- reformat_20cr(folder_path, save, preserve)},
+         "cmap" = {precip_cmap <<- reformat_cmap(folder_path, save, preserve)},
+         "cpc" = {precip_cpc <<- reformat_cpc(folder_path, save, preserve)},
+         "cru" = {precip_cru <<- reformat_cru(folder_path, save, preserve)},
+         "ghcn" = {precip_ghcn <<- reformat_ghcn(folder_path, save, preserve)},
+         "gpcc" = {precip_gpcc <<- reformat_gpcc(folder_path, save, preserve)},
+         "gpcp" = {precip_gpcp <<- reformat_gpcp(folder_path, save, preserve)},
+         "gpm" = {precip_gpm <<- reformat_gpm(folder_path, save, preserve)},
+         "ncep" = {precip_ncep <<- reformat_ncep(folder_path, save, preserve)},
+         "ncep2" = {precip_ncep2 <<- reformat_ncep2(folder_path, save, preserve)},
+         "precl" = {precip_precl <<- reformat_precl(folder_path, save, preserve)},
+         "trmm" = {precip_trmm <<- reformat_trmm(folder_path, save, preserve)},
+         "udel" = {precip_udel <<- reformat_udel(folder_path, save, preserve)}
   )
 }

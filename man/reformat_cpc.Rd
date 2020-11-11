@@ -4,10 +4,16 @@
 \alias{reformat_cpc}
 \title{CPC data reader}
 \usage{
-reformat_cpc(folder_path, chk = FALSE)
+reformat_cpc(folder_path, save = TRUE, preserve = TRUE, check = FALSE)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
+
+\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
+
+\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
+
+\item{check}{logical. If TRUE parallel works only with 2 cores for CRAN tests.}
 }
 \value{
 a list of bricks with total daily precipitation in [mm] at 0.5 degrees for 1979-2019.

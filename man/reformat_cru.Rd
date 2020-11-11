@@ -4,10 +4,14 @@
 \alias{reformat_cru}
 \title{CRU data reader}
 \usage{
-reformat_cru(folder_path)
+reformat_cru(folder_path, save = TRUE, preserve = TRUE)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
+
+\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
+
+\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
 }
 \value{
 a brick with monthly precipitation rate in [mm/month] at 0.5 degrees for 1901-2019.

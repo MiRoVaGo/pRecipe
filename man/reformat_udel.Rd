@@ -4,10 +4,14 @@
 \alias{reformat_udel}
 \title{UDEL data reader}
 \usage{
-reformat_udel(folder_path)
+reformat_udel(folder_path, save = TRUE, preserve = TRUE)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
+
+\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
+
+\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
 }
 \value{
 a brick with total monthly precipitation in [cm] at 0.5 degrees for 1900-2017.

@@ -4,10 +4,14 @@
 \alias{reformat_ncep2}
 \title{NCEP/DOE data reader}
 \usage{
-reformat_ncep2(folder_path)
+reformat_ncep2(folder_path, save = TRUE, preserve = TRUE)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
+
+\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
+
+\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
 }
 \value{
 a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2020.
