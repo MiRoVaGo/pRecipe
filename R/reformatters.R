@@ -67,7 +67,7 @@ reformat_cpc <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
   })
   stopCluster(cluster)
   return(precip)
-  if (preserve == FALSE) file.remove(file_name)
+  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
   if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cpc_raw.Rds"))
 }
 
@@ -181,7 +181,7 @@ reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
   })
   stopCluster(cluster)
   return(precip)
-  if (preserve == FALSE) file.remove(file_name)
+  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
   if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_raw.Rds"))
 }
 
@@ -279,7 +279,7 @@ reformat_trmm <- function(folder_path, save = TRUE, preserve = TRUE, check = FAL
   })
   stopCluster(cluster)
   return(precip)
-  if (preserve == FALSE) file.remove(file_name)
+  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
   if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_raw.Rds"))
 }
 
