@@ -14,7 +14,7 @@ reformat_ncep(folder_path, save = TRUE, preserve = TRUE)
 \item{preserve}{logical. If TRUE (default) the original file will be preserved.}
 }
 \value{
-a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2020.
+a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
 }
 \description{
 Function for reading NCEP/NCAR NC files.

@@ -15,7 +15,7 @@ download_data(
 \arguments{
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
-\item{"20cr" for 20CR v3}
+\item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
 \item{"cru" for CRU_TS v4.04,}

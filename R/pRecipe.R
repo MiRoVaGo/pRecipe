@@ -7,7 +7,7 @@
 #' @importFrom utils download.file
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
-#' \item{"20cr" for 20CR v3}
+#' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru" for CRU_TS v4.04,}
@@ -54,16 +54,16 @@ download_data <- function(name, destination, resolution = NULL, start_year = NUL
   )
 }
 
-#' Download and import precipitation data from various sources
+#' Read precipitation data from various sources and reformat them into .Rds files
 #'
-#' The function \code{reformat_data} downloads the selected data product.
+#' The function \code{reformat_data} reformats the selected data product.
 #'
 #' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
 #' @importFrom dplyr %>% slice
 #' @importFrom R.utils gunzip
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
-#' \item{"20cr" for 20CR v3}
+#' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru" for CRU_TS v4.04,}
@@ -101,5 +101,46 @@ reformat_data <- function(name, folder_path, save = TRUE, preserve = TRUE){
          "precl" = {precip_precl <<- reformat_precl(folder_path, save, preserve)},
          "trmm" = {precip_trmm <<- reformat_trmm(folder_path, save, preserve)},
          "udel" = {precip_udel <<- reformat_udel(folder_path, save, preserve)}
+  )
+}
+
+#' Transforms the data from precipitation rate into total precipitation.
+#'
+#' The function \code{prate_to_psum} accumulates precipitation of the selected data product.
+#'
+#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
+#' @importFrom dplyr %>% slice
+#' @param name a character string with the name of the desired data set. Suitable options are:
+#' \itemize{
+#' \item{"cmap" for CMAP standard version,}
+#' \item{"cru" for CRU_TS v4.04,}
+#' \item{"gpcp" for GPCP v2.3,}
+#' \item{"gpm" for GPM IMERG Final v06,}
+#' \item{"ncep" for NCEP/NCAR,}
+#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"precl" for PRECL,}
+#' \item{"trmm" for TRMM 3B43 v7,}
+#' \item{"udel" for UDEL v501.}
+#' }
+#' @param folder_path a character string with the folder path where the data set is located.
+#' @param overwrite logical. If TRUE (default) the original file with precipitation data will be replaced with a file with total precipitation.
+#' @note For Udel data only the units are transformed to mm because it is already in terms of total precipitation
+#' @export
+
+prate_to_psum <- function(name, folder_path, overwrite = TRUE){
+  '%!in%' <- function(x, y)!('%in%'(x, y))
+  if (name %!in% c("cmap", "cru", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
+    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
+  }
+  switch(name,
+         "cmap" = {precip_cmap <<- prate_to_psum_cmap(folder_path, overwrite)},
+         "cru" = {precip_cru <<- prate_to_psum_cru(folder_path, overwrite)},
+         "gpcp" = {precip_gpcp <<- prate_to_psum_gpcp(folder_path, overwrite)},
+         "gpm" = {precip_gpm <<- prate_to_psum_gpm(folder_path, overwrite)},
+         "ncep" = {precip_ncep <<- prate_to_psum_ncep(folder_path, overwrite)},
+         "ncep2" = {precip_ncep2 <<- prate_to_psum_ncep2(folder_path, overwrite)},
+         "precl" = {precip_precl <<- prate_to_psum_precl(folder_path, overwrite)},
+         "trmm" = {precip_trmm <<- prate_to_psum_trmm(folder_path, overwrite)},
+         "udel" = {precip_udel <<- prate_to_psum_udel(folder_path, overwrite)}
   )
 }

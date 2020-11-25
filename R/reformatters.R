@@ -15,7 +15,7 @@ reformat_20cr <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/20cr_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/20cr_M_1_186301_201512.Rds"))
 }
 
 #' CMAP data reader
@@ -25,7 +25,7 @@ reformat_20cr <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param folder_path a character string with the path where the data set file is located.
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2020.
+#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
 #' @export
 
 reformat_cmap <- function(folder_path, save = TRUE, preserve = TRUE){
@@ -35,7 +35,7 @@ reformat_cmap <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cmap_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cmap_M_25_197901_201912.Rds"))
 }
 
 #' CPC data reader
@@ -68,7 +68,7 @@ reformat_cpc <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
   stopCluster(cluster)
   return(precip)
   if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cpc_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cpc_d_05_197901_201912.Rds"))
 }
 
 #' CRU data reader
@@ -88,7 +88,7 @@ reformat_cru <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cru_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cru_M_05_190101_201912.Rds"))
 }
 
 #' GHCN-M data reader
@@ -108,7 +108,7 @@ reformat_ghcn <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ghcn_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ghcn_M_5_190001_201505.Rds"))
 }
 
 #' GPCC data reader
@@ -128,7 +128,7 @@ reformat_gpcc <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcc_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcc_M_05_189101_201612.Rds"))
 }
 
 #' GPCP data reader
@@ -138,7 +138,7 @@ reformat_gpcc <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param folder_path a character string with the path where the data set file is located.
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2020.
+#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
 #' @export
 
 reformat_gpcp <- function(folder_path, save = TRUE, preserve = TRUE){
@@ -148,7 +148,7 @@ reformat_gpcp <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcp_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcp_M_25_197901_201912.Rds"))
 }
 
 #' GPM data reader
@@ -182,7 +182,7 @@ reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
   stopCluster(cluster)
   return(precip)
   if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_M_01_2000_2019.Rds"))
 }
 
 #' NCEP/NCAR data reader
@@ -192,7 +192,7 @@ reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
 #' @param folder_path a character string with the path where the data set file is located.
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2020.
+#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
 #' @export
 
 reformat_ncep <- function(folder_path, save = TRUE, preserve = TRUE){
@@ -202,7 +202,7 @@ reformat_ncep <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep_M_T62_194801_201912.Rds"))
 }
 
 #' NCEP/DOE data reader
@@ -212,7 +212,7 @@ reformat_ncep <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param folder_path a character string with the path where the data set file is located.
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2020.
+#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2019.
 #' @export
 
 reformat_ncep2 <- function(folder_path, save = TRUE, preserve = TRUE){
@@ -222,7 +222,7 @@ reformat_ncep2 <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep2_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep2_M_T62_197901_201912.Rds"))
 }
 
 #' PRECL data reader
@@ -242,7 +242,7 @@ reformat_precl <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/precl_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/precl_M_05_194801_201212.Rds"))
 }
 
 #' TRMM data reader
@@ -280,7 +280,7 @@ reformat_trmm <- function(folder_path, save = TRUE, preserve = TRUE, check = FAL
   stopCluster(cluster)
   return(precip)
   if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_M_025_1998_2019.Rds"))
 }
 
 #' UDEL data reader
@@ -300,5 +300,5 @@ reformat_udel <- function(folder_path, save = TRUE, preserve = TRUE){
   precip[precip < 0] <- NA
   return(precip)
   if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/udel_raw.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/udel_M_05_190001_201712.Rds"))
 }
