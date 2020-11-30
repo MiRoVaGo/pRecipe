@@ -4,7 +4,7 @@
 \alias{reformat_ncep2}
 \title{NCEP/DOE data reader}
 \usage{
-reformat_ncep2(folder_path, save = TRUE, preserve = TRUE)
+reformat_ncep2(folder_path, save, preserve)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

@@ -4,7 +4,7 @@
 \alias{reformat_ncep}
 \title{NCEP/NCAR data reader}
 \usage{
-reformat_ncep(folder_path, save = TRUE, preserve = TRUE)
+reformat_ncep(folder_path, save, preserve)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

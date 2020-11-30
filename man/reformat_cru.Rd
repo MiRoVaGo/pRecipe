@@ -4,7 +4,7 @@
 \alias{reformat_cru}
 \title{CRU data reader}
 \usage{
-reformat_cru(folder_path, save = TRUE, preserve = TRUE)
+reformat_cru(folder_path, save, preserve)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

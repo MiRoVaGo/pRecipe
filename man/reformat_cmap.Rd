@@ -4,7 +4,7 @@
 \alias{reformat_cmap}
 \title{CMAP data reader}
 \usage{
-reformat_cmap(folder_path, save = TRUE, preserve = TRUE)
+reformat_cmap(folder_path, save, preserve)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

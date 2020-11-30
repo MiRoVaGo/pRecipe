@@ -4,7 +4,7 @@
 \alias{reformat_trmm}
 \title{TRMM data reader}
 \usage{
-reformat_trmm(folder_path, save = TRUE, preserve = TRUE, check = FALSE)
+reformat_trmm(folder_path, save, preserve, check = FALSE)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

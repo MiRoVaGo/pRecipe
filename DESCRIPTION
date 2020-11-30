@@ -7,7 +7,8 @@ Authors@R: c(
   )
 Description: TBC.
 Depends: R (>= 3.4.0)
-Imports: data.table, gdalUtils, ncdf4, parallel, raster, readr, rgdal, rhdf5
+biocViews:
+Imports: data.table, gdalUtils, ncdf4, parallel, raster, readr, rgdal
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -15,4 +16,5 @@ URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    rhdf5

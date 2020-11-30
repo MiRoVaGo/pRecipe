@@ -6,9 +6,8 @@
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with total monthly precipitation in [mm] at 1 degrees for 1863-2015.
-#' @export
 
-reformat_20cr <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_20cr <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -26,9 +25,8 @@ reformat_20cr <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
-#' @export
 
-reformat_cmap <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_cmap <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -47,9 +45,8 @@ reformat_cmap <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
 #' @return a list of bricks with total daily precipitation in [mm] at 0.5 degrees for 1979-2019.
-#' @export
 
-reformat_cpc <- function(folder_path, save = TRUE, preserve = TRUE, check = FALSE){
+reformat_cpc <- function(folder_path, save, preserve, check = FALSE){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   if (check == TRUE) {
@@ -79,9 +76,8 @@ reformat_cpc <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/month] at 0.5 degrees for 1901-2019.
-#' @export
 
-reformat_cru <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_cru <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- gunzip(file_name, remove = FALSE) %>% brick()
@@ -99,9 +95,8 @@ reformat_cru <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with total monthly precipitation in [mm] at 5 degrees for 1900-2015.
-#' @export
 
-reformat_ghcn <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_ghcn <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -119,9 +114,8 @@ reformat_ghcn <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with total monthly precipitation in [mm] at 0.5 degrees for 1891-2016.
-#' @export
 
-reformat_gpcc <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_gpcc <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -139,9 +133,8 @@ reformat_gpcc <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
-#' @export
 
-reformat_gpcp <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_gpcp <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -160,10 +153,13 @@ reformat_gpcp <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
 #' @return a list of bricks with monthly precipitation rate in [mm/hour] at 0.1 degrees for 2000-2019.
-#' @export
 
-reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALSE){
+reformat_gpm <- function(folder_path, save, preserve, check = FALSE){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!requireNamespace("rhdf5", quietly = TRUE)){
+    if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
+    BiocManager::install("rhdf5")
+  }
   file_name <- list.files(folder_path, full.names = TRUE)
   if (check == TRUE) {
     no_cores <- 2L
@@ -182,7 +178,7 @@ reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
   stopCluster(cluster)
   return(precip)
   if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_M_01_2000_2019.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_M_01_200006_201912.Rds"))
 }
 
 #' NCEP/NCAR data reader
@@ -193,9 +189,8 @@ reformat_gpm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALS
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
-#' @export
 
-reformat_ncep <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_ncep <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -213,9 +208,8 @@ reformat_ncep <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2019.
-#' @export
 
-reformat_ncep2 <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_ncep2 <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -233,9 +227,8 @@ reformat_ncep2 <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with monthly precipitation rate in [mm/day] at 0.5 degrees for 1948-2012.
-#' @export
 
-reformat_precl <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_precl <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)
@@ -254,9 +247,8 @@ reformat_precl <- function(folder_path, save = TRUE, preserve = TRUE){
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
 #' @return a list of bricks with monthly precipitation rate in [mm/h] at 0.25 degrees for 1998-2019.
-#' @export
 
-reformat_trmm <- function(folder_path, save = TRUE, preserve = TRUE, check = FALSE){
+reformat_trmm <- function(folder_path, save, preserve, check = FALSE){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   if (check == TRUE) {
@@ -280,7 +272,7 @@ reformat_trmm <- function(folder_path, save = TRUE, preserve = TRUE, check = FAL
   stopCluster(cluster)
   return(precip)
   if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_M_025_1998_2019.Rds"))
+  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_M_025_199801_201912.Rds"))
 }
 
 #' UDEL data reader
@@ -291,9 +283,8 @@ reformat_trmm <- function(folder_path, save = TRUE, preserve = TRUE, check = FAL
 #' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
 #' @param preserve logical. If TRUE (default) the original file will be preserved.
 #' @return a brick with total monthly precipitation in [cm] at 0.5 degrees for 1900-2017.
-#' @export
 
-reformat_udel <- function(folder_path, save = TRUE, preserve = TRUE){
+reformat_udel <- function(folder_path, save, preserve){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   file_name <- list.files(folder_path, full.names = TRUE)
   precip <- brick(file_name)

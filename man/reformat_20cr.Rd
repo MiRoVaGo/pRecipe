@@ -4,7 +4,7 @@
 \alias{reformat_20cr}
 \title{20CR data reader}
 \usage{
-reformat_20cr(folder_path, save = TRUE, preserve = TRUE)
+reformat_20cr(folder_path, save, preserve)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

@@ -4,13 +4,12 @@
 \alias{prate_to_psum}
 \title{Transforms the data from precipitation rate into total precipitation.}
 \usage{
-prate_to_psum(name, folder_path, overwrite = TRUE)
+prate_to_psum(name, file, overwrite = TRUE)
 }
 \arguments{
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
 \item{"cmap" for CMAP standard version,}
-\item{"cru" for CRU_TS v4.04,}
 \item{"gpcp" for GPCP v2.3,}
 \item{"gpm" for GPM IMERG Final v06,}
 \item{"ncep" for NCEP/NCAR,}
@@ -20,7 +19,7 @@ prate_to_psum(name, folder_path, overwrite = TRUE)
 \item{"udel" for UDEL v501.}
 }}
 
-\item{folder_path}{a character string with the folder path where the data set is located.}
+\item{file}{a character string with the folder path where the data set is located.}
 
 \item{overwrite}{logical. If TRUE (default) the original file with precipitation data will be replaced with a file with total precipitation.}
 }
