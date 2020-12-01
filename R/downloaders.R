@@ -141,8 +141,8 @@ download_gpm <- function(destination, start_year, end_year){
   if ((!any(start_year == 2000:2019)) | (!any(end_year == 2000:2019)) | !(end_year >= start_year)){
     stop("Error: start_year and end_year should be between 2000-2019, and end_year should be greater or equal to start_year")
   }
-  username <- getPass("Enter the username: ")
-  password <- getPass("Enter the password: ")
+  username <- getPass("Enter the username: ") %>% URLencode(reserved = TRUE)
+  password <- getPass("Enter the password: ") %>% URLencode(reserved = TRUE)
   file_url_base <- paste0("https://", username, ":", password, "@", "gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGM.06/")
   for (year in start_year:end_year){
     if (year == 2000){
@@ -238,8 +238,8 @@ download_trmm <- function(destination, start_year, end_year){
   if ((!any(start_year == 1998:2019)) | (!any(end_year == 1998:2019)) | !(end_year >= start_year)){
     stop("Error: start_year and end_year should be between 1998-2019, and end_year should be greater or equal to start_year")
   }
-  username <- getPass("Enter the username: ")
-  password <- getPass("Enter the password: ")
+  username <- getPass("Enter the username: ") %>% URLencode(reserved = TRUE)
+  password <- getPass("Enter the password: ") %>% URLencode(reserved = TRUE)
   file_url_base <- paste0("https://", username, ":", password, "@", "disc2.gesdisc.eosdis.nasa.gov/data/TRMM_L3/TRMM_3B43.7/")
   for (year in start_year:end_year){
     for (month in 1:12){
