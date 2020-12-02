@@ -103,7 +103,7 @@ download_gpcc <- function(destination, resolution){
   file_name <- switch(as.character(resolution),
          "0.5" = "precip.mon.total.v2018.nc",
          "1" = "precip.mon.total.1x1.v2018.nc",
-         "2.5" = "precip.mon.total.2.5x.2.5.v2018.nc"
+         "2.5" = "precip.mon.total.2.5x2.5.v2018.nc"
   )
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcc/full_v2018/"
   file_url <- paste0(file_url_base, file_name)
