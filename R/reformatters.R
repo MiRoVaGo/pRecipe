@@ -6,6 +6,7 @@
 
 reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/20cr")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -34,6 +35,7 @@ reformat_20cr <- function(folder_path){
 
 reformat_cmap <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/cmap")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -65,6 +67,7 @@ reformat_cmap <- function(folder_path){
 
 reformat_cpc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/cpc")
   file_name <- list.files(folder_path, full.names = TRUE) %>% as.list()
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
@@ -98,6 +101,7 @@ reformat_cpc <- function(folder_path){
 
 reformat_cru_ts <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/cru_ts")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- gunzip(file_name, remove = FALSE) %>% brick() %>% as.list()
   no_cores <- detectCores() - 1
@@ -127,6 +131,7 @@ reformat_cru_ts <- function(folder_path){
 
 reformat_ghcn <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/ghcn")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -156,6 +161,7 @@ reformat_ghcn <- function(folder_path){
 
 reformat_gpcc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/gpcc")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -185,6 +191,7 @@ reformat_gpcc <- function(folder_path){
 
 reformat_gpcp <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/gpcp")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -220,6 +227,7 @@ reformat_gpm_imergm <- function(folder_path){
     if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
     BiocManager::install("rhdf5")
   }
+  folder_path <- paste0(folder_path, "/gpm_imergm")
   file_name <- list.files(folder_path, full.names = TRUE)
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
@@ -257,6 +265,7 @@ reformat_gpm_imergm <- function(folder_path){
 
 reformat_ncep_ncar <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/ncep_ncar")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -287,6 +296,7 @@ reformat_ncep_ncar <- function(folder_path){
 
 reformat_ncep_doe <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/ncep_doe")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -317,6 +327,7 @@ reformat_ncep_doe <- function(folder_path){
 
 reformat_precl <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
+  folder_path <- paste0(folder_path, "/precl")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
@@ -348,6 +359,7 @@ reformat_precl <- function(folder_path){
 
 reformat_trmm_3b43 <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/trmm_3b43")
   file_name <- list.files(folder_path, full.names = TRUE)
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
@@ -389,6 +401,7 @@ reformat_trmm_3b43 <- function(folder_path){
 
 reformat_udel <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  folder_path <- paste0(folder_path, "/udel")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1

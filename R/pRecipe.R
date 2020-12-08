@@ -34,6 +34,7 @@ download_data <- function(destination, name = "all", reformat = TRUE){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
   create_folders(destination)
+  destination <- paste0(destination,"/data/raw")
   lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),

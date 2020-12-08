@@ -9,7 +9,7 @@ download_20cr <- function(destination){
   file_name <- "apcp.mon.mean.nc"
   file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/accumsSI-MO/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/20cr/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -24,7 +24,7 @@ download_cmap <- function(destination){
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cmap/std/"
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/cmap/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -47,7 +47,7 @@ download_cpc <- function(destination, start_year = 1979, end_year = 2019){
   for (year in start_year:end_year){
     file_name <- paste0("precip.", year, ".nc")
     file_url <- paste0(file_url_base, file_name)
-    file_destination <- paste0(destination, "/", file_name)
+    file_destination <- paste0(destination, "/cpc/", file_name)
     download.file(file_url, file_destination, mode = "wb")
   }
 }
@@ -63,7 +63,7 @@ download_cru_ts <- function(destination){
   file_name <- "cru_ts4.04.1901.2019.pre.dat.nc.gz"
   file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.04/cruts.2004151855.v4.04/pre/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/cru_ts/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -78,7 +78,7 @@ download_ghcn <- function(destination){
   file_name <- "precip.mon.total.nc"
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ghcngridded/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/ghcn/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -107,7 +107,7 @@ download_gpcc <- function(destination, resolution = 0.5){
   )
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcc/full_v2018/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/gpcc/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -122,7 +122,7 @@ download_gpcp <- function(destination){
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcp/"
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/gpcp/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -153,7 +153,7 @@ download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2019)
     for (month in start_month:12){
       file_name <- paste0("3B-MO.MS.MRG.3IMERG.", year, str_pad(month, 2, pad = "0"), "01-S000000-E235959.", str_pad(month, 2, pad = "0"), ".V06B.HDF5")
       file_url <- paste0(file_url_base, year, "/", file_name)
-      file_destination <- paste0(destination, "/", file_name)
+      file_destination <- paste0(destination, "/gpm_imergm/", file_name)
       download.file(file_url, file_destination, mode = "wb")
     }
   }
@@ -170,7 +170,7 @@ download_ncep_ncar<- function(destination){
   file_name <- "prate.sfc.mon.mean.nc"
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/ncep_ncar/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -186,7 +186,7 @@ download_ncep_doe <- function(destination){
   file_name <- "prate.sfc.mon.mean.nc"
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/ncep_doe/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -219,7 +219,7 @@ download_precl <- function(destination, resolution = 0.5){
   )
   file_url_base <-"ftp://ftp.cdc.noaa.gov/Datasets/precl/"
   file_url <- paste0(file_url_base, file_folder, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/precl/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
@@ -249,7 +249,7 @@ download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2019){
         file_name <- paste0("3B43.", year, str_pad(month, 2, pad = "0"), "01.7A.HDF")
         }
       file_url <- paste0(file_url_base, year, "/", file_name)
-      file_destination <- paste0(destination, "/", file_name)
+      file_destination <- paste0(destination, "/trmm_3b43/", file_name)
       download.file(file_url, file_destination, mode = "wb")
     }
   }
@@ -266,7 +266,7 @@ download_udel <- function(destination){
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/udel.airt.precip/"
   file_name <- "precip.mon.total.v501.nc"
   file_url <- paste0(file_url_base, file_name)
-  file_destination <- paste0(destination, "/", file_name)
+  file_destination <- paste0(destination, "/udel/", file_name)
   download.file(file_url, file_destination, mode = "wb")
 }
 
