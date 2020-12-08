@@ -4,7 +4,7 @@
 \alias{reformat_precl}
 \title{PRECL data reader}
 \usage{
-reformat_precl(folder_path, save, preserve)
+reformat_precl(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

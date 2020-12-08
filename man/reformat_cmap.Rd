@@ -4,7 +4,7 @@
 \alias{reformat_cmap}
 \title{CMAP data reader}
 \usage{
-reformat_cmap(folder_path, save, preserve)
+reformat_cmap(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
@@ -13,9 +13,6 @@ reformat_cmap(folder_path, save, preserve)
 
 \item{preserve}{logical. If TRUE (default) the original file will be preserved.}
 }
-\value{
-a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
-}
 \description{
-Function for reading CMAP NC files.
+Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file
 }

@@ -4,7 +4,7 @@
 \alias{reformat_ghcn}
 \title{GHCN-M data reader}
 \usage{
-reformat_ghcn(folder_path, save, preserve)
+reformat_ghcn(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

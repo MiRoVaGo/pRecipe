@@ -4,7 +4,7 @@
 \alias{reformat_gpcc}
 \title{GPCC data reader}
 \usage{
-reformat_gpcc(folder_path, save, preserve)
+reformat_gpcc(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

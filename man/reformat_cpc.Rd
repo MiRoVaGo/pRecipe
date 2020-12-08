@@ -4,7 +4,7 @@
 \alias{reformat_cpc}
 \title{CPC data reader}
 \usage{
-reformat_cpc(folder_path, save, preserve, check = FALSE)
+reformat_cpc(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}

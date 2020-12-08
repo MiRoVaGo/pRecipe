@@ -4,17 +4,10 @@
 \alias{reformat_20cr}
 \title{20CR data reader}
 \usage{
-reformat_20cr(folder_path, save, preserve)
+reformat_20cr(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with total monthly precipitation in [mm] at 1 degrees for 1863-2015.
 }
 \description{
 Function for reading 20CR NC files.

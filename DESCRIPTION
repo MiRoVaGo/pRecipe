@@ -1,9 +1,10 @@
 Package: pRecipe
 Title: My package
-Version: 0.1.0
+Version: 0.0.1
 Authors@R: c(
-  person("Mijael", "Vargas", email = "mirovago@gmail.com", role = c("aut", "cre")),
-  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut"))
+  person("Mijael R.", "Vargas G.", email = "mirovago@gmail.com", role = c("aut", "cre")),
+  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
+  person("Rajani K.", "Pradhan", role = "ctb")
   )
 Description: TBC.
 Depends: R (>= 3.4.0)
@@ -16,5 +17,4 @@ URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat (>= 2.1.0),
-    rhdf5
+    testthat (>= 2.1.0)

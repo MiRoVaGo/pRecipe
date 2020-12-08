@@ -36,7 +36,7 @@ download_cmap <- function(destination){
 #' @param start_year numeric. Start year should be between 1979-2019.
 #' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
 
-download_cpc <- function(destination, start_year, end_year){
+download_cpc <- function(destination, start_year = 1979, end_year = 2019){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
   if ((!any(start_year == 1979:2019)) | (!any(end_year == 1979:2019)) | !(end_year >= start_year)){
@@ -58,7 +58,7 @@ download_cpc <- function(destination, start_year, end_year){
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
 
-download_cru <- function(destination){
+download_cru_ts <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
   file_name <- "cru_ts4.04.1901.2019.pre.dat.nc.gz"
   file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.04/cruts.2004151855.v4.04/pre/"
@@ -94,7 +94,7 @@ download_ghcn <- function(destination){
 #' \item{2.5 for 2.5 degree.}
 #' }
 
-download_gpcc <- function(destination, resolution){
+download_gpcc <- function(destination, resolution = 0.5){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!is.numeric(resolution)) stop ("resolution should be numeric.")
   if (!any(resolution == c(0.25, 0.5, 1, 2.5))){
@@ -135,7 +135,7 @@ download_gpcp <- function(destination){
 #' @param end_year numeric. End year should be between 2000-2019, and should be greater or equal to start year.
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 
-download_gpm <- function(destination, start_year, end_year){
+download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2019){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
   if ((!any(start_year == 2000:2019)) | (!any(end_year == 2000:2019)) | !(end_year >= start_year)){
@@ -165,7 +165,7 @@ download_gpm <- function(destination, start_year, end_year){
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
 
-download_ncep <- function(destination){
+download_ncep_ncar<- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
   file_name <- "prate.sfc.mon.mean.nc"
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
@@ -181,7 +181,7 @@ download_ncep <- function(destination){
 #' @param destination a character string with the path where the downloaded file is saved.
 
 
-download_ncep2 <- function(destination){
+download_ncep_doe <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
   file_name <- "prate.sfc.mon.mean.nc"
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
@@ -202,7 +202,7 @@ download_ncep2 <- function(destination){
 #' \item{2.5 for 2.5 degree.}
 #' }
 
-download_precl <- function(destination, resolution){
+download_precl <- function(destination, resolution = 0.5){
   if (!is.character(destination)) stop ("destination should be character string.")
   if (!any(resolution == c(0.5, 1, 2.5))){
     stop("Error: Resolution not available. Select between 0.5, 1, 2.5")
@@ -232,7 +232,7 @@ download_precl <- function(destination, resolution){
 #' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
 
-download_trmm <- function(destination, start_year, end_year){
+download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2019){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
   if ((!any(start_year == 1998:2019)) | (!any(end_year == 1998:2019)) | !(end_year >= start_year)){
@@ -268,4 +268,27 @@ download_udel <- function(destination){
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/", file_name)
   download.file(file_url, file_destination, mode = "wb")
+}
+
+#' All data downloader
+#'
+#' Function for downloading GPCP NC file.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+
+download_all <- function(destination){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  download_20cr(destination)
+  download_cmap(destination)
+  download_cpc(destination)
+  download_cru_ts(destination)
+  download_ghcn(destination)
+  download_gpcc(destination)
+  download_gpcp(destination)
+  download_gpm_imergm(destination)
+  download_ncep_ncar(destination)
+  download_ncep_doe(destination)
+  download_precl(destination)
+  download_trmm_3b43(destination)
+  download_udel(destination)
 }
