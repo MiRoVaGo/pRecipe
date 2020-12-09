@@ -71,7 +71,7 @@ reformat_cpc <- function(folder_path){
     layer_names <- as.Date(names(dummie_brick), format = "X%Y.%m.%d")
     layer_names <- c(layer_names[1], layer_names[length(layer_names)])
     layer_names <- seq(layer_names[1], layer_names[2], 'month')
-    dummie_brick <- raster::zApply(dummie_brick, by = data.table::month, fun = sum, na.rm = TRUE)
+    dummie_brick <- raster::zApply(dummie_brick, by = lubridate::month, fun = sum, na.rm = TRUE)
     names(dummie_brick) <- layer_names
     dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE)
     dummie_brick <- data.table::as.data.table(dummie_brick)
