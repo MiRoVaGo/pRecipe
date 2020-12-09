@@ -7,10 +7,11 @@
 reformat_data(folder_path, name)
 }
 \arguments{
-\item{folder_path}{a character string with the folder path where the data set is located.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
+\item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
@@ -27,5 +28,8 @@ reformat_data(folder_path, name)
 }}
 }
 \description{
-The function \code{reformat_data} reformats the selected data product.
+The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables.
+}
+\note{
+GPM IMERGM Final v06 and TRMM 3B43 v7 are aggregated into 0.5 degree resolution.
 }

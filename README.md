@@ -22,8 +22,8 @@ pRecipe package integrates multiple P data sets into a more accurate and spatiot
 * Uses multiple integration techniques 
 * Estimates the uncertainty of integration 
 
-#Contributing
-## Workflow
+# Contributing
+## Workflow:
 
 If you would like to contribute to `pRecipe` you should create an issue with the
 enhancement label and state your possible addition in order to check if it 

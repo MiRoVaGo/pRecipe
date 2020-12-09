@@ -2,13 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_20cr}
 \alias{reformat_20cr}
-\title{20CR data reader}
+\title{20CR data reformatter}
 \usage{
 reformat_20cr(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading 20CR NC files.
+Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

@@ -2,22 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_trmm_3b43}
 \alias{reformat_trmm_3b43}
-\title{TRMM data reader}
+\title{TRMM data reformatter}
 \usage{
 reformat_trmm_3b43(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-
-\item{check}{logical. If TRUE parallel works only with 2 cores for CRAN tests.}
-}
-\value{
-a list of bricks with monthly precipitation rate in [mm/h] at 0.25 degrees for 1998-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading TRMM 3B43 HDF files.
+Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 }

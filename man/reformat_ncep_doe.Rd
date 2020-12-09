@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_ncep_doe}
 \alias{reformat_ncep_doe}
-\title{NCEP/DOE data reader}
+\title{NCEP/DOE data reformatter}
 \usage{
 reformat_ncep_doe(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading NCEP/DOE NC files.
+Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

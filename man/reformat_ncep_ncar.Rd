@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_ncep_ncar}
 \alias{reformat_ncep_ncar}
-\title{NCEP/NCAR data reader}
+\title{NCEP/NCAR data reformatter}
 \usage{
 reformat_ncep_ncar(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading NCEP/NCAR NC files.
+Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

@@ -1,8 +1,8 @@
-#' 20CR data reader
+#' 20CR data reformatter
 #'
-#' Function for reading 20CR NC files.
+#' Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -16,22 +16,20 @@ reformat_20cr <- function(folder_path){
     dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
     dummie_table$Z <- as.Date(dummie_table$Z)
-    dummie_table$name <- "20cr"
-    data.table::setkey(dummie_table, name)
     return(dummie_table)
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  dummie_table$name <- "20cr"
+  data.table::setkey(dummie_table, name)
   saveRDS(precip, paste0(folder_path, "/../../database/20cr.Rds"))
 }
 
-#' CMAP data reader
+#' CMAP data reformatter
 #'
-#' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file
+#' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_cmap <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -55,15 +53,11 @@ reformat_cmap <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/cmap.Rds"))
 }
 
-#' CPC data reader
+#' CPC data reformatter
 #'
-#' Function for reading CPC-GLOBAL NC files.
+#' Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with total daily precipitation in [mm] at 0.5 degrees for 1979-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_cpc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -77,7 +71,7 @@ reformat_cpc <- function(folder_path){
     layer_names <- as.Date(names(dummie_brick), format = "X%Y.%m.%d")
     layer_names <- c(layer_names[1], layer_names[length(layer_names)])
     layer_names <- seq(layer_names[1], layer_names[2], 'month')
-    dummie_brick <- raster::zApply(dummie_brick, by = lubridate::month, fun = sum, na.rm = TRUE)
+    dummie_brick <- raster::zApply(dummie_brick, by = data.table::month, fun = sum, na.rm = TRUE)
     names(dummie_brick) <- layer_names
     dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE)
     dummie_brick <- data.table::as.data.table(dummie_brick)
@@ -90,14 +84,11 @@ reformat_cpc <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/cpc.Rds"))
 }
 
-#' CRU data reader
+#' CRU data reformatter
 #'
-#' Function for reading CRU_TS NC.GZ file.
+#' Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/month] at 0.5 degrees for 1901-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_cru_ts <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -120,14 +111,11 @@ reformat_cru_ts <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
 }
 
-#' GHCN-M data reader
+#' GHCN-M data reformatter
 #'
-#' Function for reading GHCN-M NC file.
+#' Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [mm] at 5 degrees for 1900-2015.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_ghcn <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -150,14 +138,11 @@ reformat_ghcn <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/ghcn.Rds"))
 }
 
-#' GPCC data reader
+#' GPCC data reformatter
 #'
-#' Function for reading GPCC NC file.
+#' Function for reading GPCC NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [mm] at 0.5 degrees for 1891-2016.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_gpcc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -180,14 +165,11 @@ reformat_gpcc <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/gpcc.Rds"))
 }
 
-#' GPCP data reader
+#' GPCP data reformatter
 #'
-#' Function for reading GPCP NC file.
+#' Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_gpcp <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -211,15 +193,11 @@ reformat_gpcp <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/gpcp.Rds"))
 }
 
-#' GPM data reader
+#' GPM data reformatter
 #'
-#' Function for reading GPM HDF5 files.
+#' Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with monthly precipitation rate in [mm/hour] at 0.1 degrees for 2000-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_gpm_imergm <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -254,14 +232,11 @@ reformat_gpm_imergm <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/gpm_imergm.Rds"))
 }
 
-#' NCEP/NCAR data reader
+#' NCEP/NCAR data reformatter
 #'
-#' Function for reading NCEP/NCAR NC files.
+#' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_ncep_ncar <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -285,14 +260,11 @@ reformat_ncep_ncar <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar.Rds"))
 }
 
-#' NCEP/DOE data reader
+#' NCEP/DOE data reformatter
 #'
-#' Function for reading NCEP/DOE NC files.
+#' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_ncep_doe <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -316,14 +288,11 @@ reformat_ncep_doe <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe.Rds"))
 }
 
-#' PRECL data reader
+#' PRECL data reformatter
 #'
-#' Function for reading PRECL NC file.
+#' Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 0.5 degrees for 1948-2012.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_precl <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
@@ -347,15 +316,11 @@ reformat_precl <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/precl.Rds"))
 }
 
-#' TRMM data reader
+#' TRMM data reformatter
 #'
-#' Function for reading TRMM 3B43 HDF files.
+#' Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with monthly precipitation rate in [mm/h] at 0.25 degrees for 1998-2019.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_trmm_3b43 <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -390,14 +355,11 @@ reformat_trmm_3b43 <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/trmm_3b43.Rds"))
 }
 
-#' UDEL data reader
+#' UDEL data reformatter
 #'
-#' Function for reading UDEL NC file.
+#' Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [cm] at 0.5 degrees for 1900-2017.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_udel <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -421,11 +383,11 @@ reformat_udel <- function(folder_path){
   saveRDS(precip, paste0(folder_path, "/../../database/udel.Rds"))
 }
 
-#' All data downloader
+#' All data reformatter
 #'
-#' Function for downloading GPCP NC file.
+#' Function for reformatting all of the available data sets.
 #'
-#' @param folder_path a character string with the path where the downloaded file is saved.
+#' @param folder_path a character string with the path where the "raw" folder is located.
 
 reformat_all <- function(folder_path){
   reformat_20cr(folder_path)

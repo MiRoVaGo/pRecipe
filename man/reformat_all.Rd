@@ -2,13 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_all}
 \alias{reformat_all}
-\title{All data downloader}
+\title{All data reformatter}
 \usage{
 reformat_all(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for downloading GPCP NC file.
+Function for reformatting all of the available data sets.
 }

@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_precl}
 \alias{reformat_precl}
-\title{PRECL data reader}
+\title{PRECL data reformatter}
 \usage{
 reformat_precl(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/day] at 0.5 degrees for 1948-2012.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading PRECL NC file.
+Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 }

@@ -1,6 +1,6 @@
 #' Directory creator
 #'
-#' Function for creating data directories
+#' Function for creating tidy data directories.
 #'
 #' @param destination a character string with the path where the folders will be located.
 

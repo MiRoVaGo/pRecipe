@@ -2,13 +2,13 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table gdalUtils ncdf4 parallel raster readr rgdal
+#' @import data.table gdalUtils ncdf4 parallel raster rgdal
 #' @importFrom stringr str_pad
 #' @importFrom getPass getPass
 #' @importFrom utils download.file
-#' @importFrom dplyr %>% slice
-#' @importFrom lubridate days_in_month
-#' @param destination a character string with the path where the downloaded file is saved.
+#' @importFrom dplyr %>% 
+#' @importFrom lubridate days_in_month 
+#' @param destination a character string with the path where the downloaded files will be saved.
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
@@ -56,14 +56,15 @@ download_data <- function(destination, name = "all", reformat = TRUE){
 
 #' Read precipitation data from various sources and reformat them into .Rds files
 #'
-#' The function \code{reformat_data} reformats the selected data product.
+#' The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables. 
 #'
-#' @import gdalUtils ncdf4 parallel raster rgdal
-#' @importFrom dplyr %>% slice
+#' @import data.table gdalUtils ncdf4 parallel raster rgdal
+#' @importFrom dplyr %>% 
 #' @importFrom R.utils gunzip
-#' @importFrom lubridate days_in_month
+#' @importFrom lubridate days_in_month 
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
+#' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
@@ -78,7 +79,8 @@ download_data <- function(destination, name = "all", reformat = TRUE){
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param folder_path a character string with the folder path where the data set is located.
+#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @note GPM IMERGM Final v06 and TRMM 3B43 v7 are aggregated into 0.5 degree resolution.
 #' @export
 
 reformat_data <- function(folder_path, name){

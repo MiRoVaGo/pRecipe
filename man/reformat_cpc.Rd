@@ -2,22 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_cpc}
 \alias{reformat_cpc}
-\title{CPC data reader}
+\title{CPC data reformatter}
 \usage{
 reformat_cpc(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-
-\item{check}{logical. If TRUE parallel works only with 2 cores for CRAN tests.}
-}
-\value{
-a list of bricks with total daily precipitation in [mm] at 0.5 degrees for 1979-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading CPC-GLOBAL NC files.
+Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

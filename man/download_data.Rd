@@ -7,7 +7,7 @@
 download_data(destination, name = "all", reformat = TRUE)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{destination}{a character string with the path where the downloaded files will be saved.}
 
 \item{name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{

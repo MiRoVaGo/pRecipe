@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_cru_ts}
 \alias{reformat_cru_ts}
-\title{CRU data reader}
+\title{CRU data reformatter}
 \usage{
 reformat_cru_ts(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/month] at 0.5 degrees for 1901-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading CRU_TS NC.GZ file.
+Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
 }

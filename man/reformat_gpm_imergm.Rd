@@ -2,22 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_gpm_imergm}
 \alias{reformat_gpm_imergm}
-\title{GPM data reader}
+\title{GPM data reformatter}
 \usage{
 reformat_gpm_imergm(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-
-\item{check}{logical. If TRUE parallel works only with 2 cores for CRAN tests.}
-}
-\value{
-a list of bricks with monthly precipitation rate in [mm/hour] at 0.1 degrees for 2000-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading GPM HDF5 files.
+Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 }

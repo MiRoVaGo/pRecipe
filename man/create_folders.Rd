@@ -10,5 +10,5 @@ create_folders(destination)
 \item{destination}{a character string with the path where the folders will be located.}
 }
 \description{
-Function for creating data directories
+Function for creating tidy data directories.
 }
