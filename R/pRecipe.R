@@ -2,145 +2,105 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
+#' @import data.table gdalUtils ncdf4 parallel raster rgdal
 #' @importFrom stringr str_pad
 #' @importFrom getPass getPass
 #' @importFrom utils download.file
-#' @param name a character string with the name of the desired data set. Suitable options are:
+#' @importFrom dplyr %>% 
+#' @importFrom lubridate days_in_month 
+#' @param destination a character string with the path where the downloaded files will be saved.
+#' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
+#' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
-#' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
+#' \item{"ncep_ncar" for NCEP/NCAR,}
+#' \item{"ncep_doe" for NCEP/DOE,}
 #' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param destination a character string with the path where the downloaded file is saved.
-#' @param resolution numeric. Data spatial resolution for GPCC and PRECL. Suitable options are:
-#' \itemize{
-#' \item{0.5 for 0.5 degree,}
-#' \item{1 for 1 degree,}
-#' \item{2.5 for 2.5 degree.}
-#' }
-#' @param start_year numeric. Start year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM).
-#' @param end_year numeric. End year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM), and should be greater or equal to start year.
+#' @param reformat logical. If TRUE (default) the downloaded datasets are reformatted into data.table and stored in .Rds files
 #' @export
 
-download_data <- function(name, destination, resolution = NULL, start_year = NULL, end_year = NULL){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
+download_data <- function(destination, name = "all", reformat = TRUE){
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  switch(name,
+  create_folders(destination)
+  destination <- paste0(destination,"/data/raw")
+  lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
+         "all"  = download_all(destination),
          "cmap" = download_cmap(destination),
-         "cpc" = download_cpc(destination, start_year, end_year),
-         "cru" = download_cru(destination),
+         "cpc" = download_cpc(destination),
+         "cru_ts" = download_cru_ts(destination),
          "ghcn" = download_ghcn(destination),
-         "gpcc" = download_gpcc(destination, resolution),
+         "gpcc" = download_gpcc(destination),
          "gpcp" = download_gpcp(destination),
-         "gpm" = download_gpm(destination, start_year, end_year),
-         "ncep" = download_ncep(destination),
-         "ncep2" = download_ncep2(destination),
-         "precl" = download_precl(destination, resolution),
-         "trmm" = download_trmm(destination, start_year, end_year),
+         "gpm_imergm" = download_gpm_imergm(destination),
+         "ncep_ncar" = download_ncep_ncar(destination),
+         "ncep_doe" = download_ncep_doe(destination),
+         "precl" = download_precl(destination),
+         "trmm_3b43" = download_trmm_3b43(destination),
          "udel" = download_udel(destination)
-  )
+  ))
+  if (refromat == TRUE) reformat_data(destination, name)
 }
 
 #' Read precipitation data from various sources and reformat them into .Rds files
 #'
-#' The function \code{reformat_data} reformats the selected data product.
+#' The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables. 
 #'
-#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
-#' @importFrom dplyr %>% slice
+#' @import data.table gdalUtils ncdf4 parallel raster rgdal
+#' @importFrom dplyr %>% 
 #' @importFrom R.utils gunzip
+#' @importFrom lubridate days_in_month 
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
+#' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep" for NCEP/NCAR,}
 #' \item{"ncep2" for NCEP/DOE,}
 #' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param folder_path a character string with the folder path where the data set is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
+#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @note GPM IMERGM Final v06 and TRMM 3B43 v7 are aggregated into 0.5 degree resolution.
 #' @export
 
-reformat_data <- function(name, folder_path, save = TRUE, preserve = TRUE){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
+reformat_data <- function(folder_path, name){
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  switch(name,
-         "20cr" = {precip_20cr <<- reformat_20cr(folder_path, save, preserve)},
-         "cmap" = {precip_cmap <<- reformat_cmap(folder_path, save, preserve)},
-         "cpc" = {precip_cpc <<- reformat_cpc(folder_path, save, preserve)},
-         "cru" = {precip_cru <<- reformat_cru(folder_path, save, preserve)},
-         "ghcn" = {precip_ghcn <<- reformat_ghcn(folder_path, save, preserve)},
-         "gpcc" = {precip_gpcc <<- reformat_gpcc(folder_path, save, preserve)},
-         "gpcp" = {precip_gpcp <<- reformat_gpcp(folder_path, save, preserve)},
-         "gpm" = {precip_gpm <<- reformat_gpm(folder_path, save, preserve)},
-         "ncep" = {precip_ncep <<- reformat_ncep(folder_path, save, preserve)},
-         "ncep2" = {precip_ncep2 <<- reformat_ncep2(folder_path, save, preserve)},
-         "precl" = {precip_precl <<- reformat_precl(folder_path, save, preserve)},
-         "trmm" = {precip_trmm <<- reformat_trmm(folder_path, save, preserve)},
-         "udel" = {precip_udel <<- reformat_udel(folder_path, save, preserve)}
-  )
-}
-
-#' Transforms the data from precipitation rate into total precipitation.
-#'
-#' The function \code{prate_to_psum} accumulates precipitation of the selected data product.
-#'
-#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
-#' @importFrom dplyr %>% slice
-#' @param name a character string with the name of the desired data set. Suitable options are:
-#' \itemize{
-#' \item{"cmap" for CMAP standard version,}
-#' \item{"cru" for CRU_TS v4.04,}
-#' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
-#' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
-#' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
-#' \item{"udel" for UDEL v501.}
-#' }
-#' @param folder_path a character string with the folder path where the data set is located.
-#' @param overwrite logical. If TRUE (default) the original file with precipitation data will be replaced with a file with total precipitation.
-#' @note For Udel data only the units are transformed to mm because it is already in terms of total precipitation
-#' @export
-
-prate_to_psum <- function(name, folder_path, overwrite = TRUE){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("cmap", "cru", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
-  }
-  switch(name,
-         "cmap" = {precip_cmap <<- prate_to_psum_cmap(folder_path, overwrite)},
-         "cru" = {precip_cru <<- prate_to_psum_cru(folder_path, overwrite)},
-         "gpcp" = {precip_gpcp <<- prate_to_psum_gpcp(folder_path, overwrite)},
-         "gpm" = {precip_gpm <<- prate_to_psum_gpm(folder_path, overwrite)},
-         "ncep" = {precip_ncep <<- prate_to_psum_ncep(folder_path, overwrite)},
-         "ncep2" = {precip_ncep2 <<- prate_to_psum_ncep2(folder_path, overwrite)},
-         "precl" = {precip_precl <<- prate_to_psum_precl(folder_path, overwrite)},
-         "trmm" = {precip_trmm <<- prate_to_psum_trmm(folder_path, overwrite)},
-         "udel" = {precip_udel <<- prate_to_psum_udel(folder_path, overwrite)}
-  )
+  lapply(name, function(dataset) switch(dataset,
+         "20cr" = reformat_20cr(folder_path),
+         "all" = reformat_all(folder_path),
+         "cmap" = reformat_cmap(folder_path),
+         "cpc" = reformat_cpc(folder_path),
+         "cru_ts" = reformat_cru_ts(folder_path),
+         "ghcn" = reformat_ghcn(folder_path),
+         "gpcc" = reformat_gpcc(folder_path),
+         "gpcp" = reformat_gpcp(folder_path),
+         "gpm_imergm" = reformat_gpm_imergm(folder_path),
+         "ncep" = reformat_ncep_ncar(folder_path),
+         "ncep2" = reformat_ncep_doe(folder_path),
+         "precl" = reformat_precl(folder_path),
+         "trmm_3b43" = reformat_trmm_3b43(folder_path),
+         "udel" = reformat_udel(folder_path)
+  ))
 }

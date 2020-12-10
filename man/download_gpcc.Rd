@@ -4,7 +4,7 @@
 \alias{download_gpcc}
 \title{GPCC data downloader}
 \usage{
-download_gpcc(destination, resolution)
+download_gpcc(destination, resolution = 0.5)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}

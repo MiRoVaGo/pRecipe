@@ -106,22 +106,31 @@ for i in range(n):
             temp_value = X[i][j][k] * 12.5
             new_array[i][j][k] = temp_value + 150
 ```
-## Functions
+## Functions Names
+### Front End
 Function names should say what they do.
 
 *Example:*  
 
 ```
-newDate <- date_add(5)
+download_data(name, destination)
 ```
-
-Would you expect this to add five days to the date? Or is it weeks, or hours? You can’t tell from the call what the function does.
 
 Functions should have a small number of **arguments**. One argument is best, followed by two and three. More than three is very questionable and should be avoided.
 
 **Boolean arguments** declare that the function does more than one thing. They are confusing and should be eliminated.
 
-Every time you see **duplication** in the code, it represents a missed opportunity for abstraction. That duplication could probably become another function outright. 
+Every time you see **duplication** in the code, it represents a missed opportunity for abstraction. That duplication could probably become another function outright.
+
+### Back End
+
+Function names should say what they do and over which data set.
+
+*Example:*  
+
+```
+download_gpm(destination)
+```
 
 ## Documentation
 ### Comments
@@ -145,41 +154,87 @@ Be brief.
 When you see **commented-out code**, delete it!
 
 ### Function documentation
-When creating a new function, the next first line should give a comprehensive description.       
 
-*Example:*        
+Functions are the most commonly documented object. Most functions have three tags: `@param`, `@examples` and `@return`.
 
+*   `@param name description` describes the function's inputs or parameters.
+    The description should provide a succinct summary of the type of the
+    parameter (e.g., string, numeric vector) and, if not obvious from
+    the name, what the parameter does. 
+    
+    The description should start with a capital letter and end with a full stop. 
+    It can span multiple lines (or even paragraphs) if necessary. All 
+    parameters must be documented.
+
+    You can document multiple arguments in one place by separating
+    the names with commas (no spaces). For example, to document both
+    `x` and `y`, you can write `@param x,y Numeric vectors.`.
+
+*   `@examples` provides executable R code showing how to use the function in
+    practice. This is a very important part of the documentation because
+    many people look at the examples first. Example code must work without 
+    errors as it is run automatically as part of `R CMD check`.
+
+    For the purpose of illustration, it's often useful to include code
+    that causes an error. `\dontrun{}` allows you to include code in the
+    example that is not run. (You used to be able to use `\donttest{}` for
+    a similar purpose, but it's no longer recommended because it actually
+    __is__ tested.)
+
+    Instead of including examples directly in the documentation, you can
+    put them in separate files and use `@example path/relative/to/package/root`
+    to insert them into the documentation. (Note that the `@example` tag here has no 's'.)
+
+*   `@return description` describes the output from the function. This is
+    not always necessary, but is a good idea if your function returns different 
+    types of output depending on the input, or if you're returning an S3, S4 or 
+    RC object.
+
+We could use these new tags to improve our documentation of `sum()` as follows:
+
+```{r}
+#' Sum of vector elements
+#'
+#' \code{sum} returns the sum of all the values present in its arguments.
+#'
+#' This is a generic function: methods can be defined for it directly
+#' or via the \code{\link{Summary}} group generic. For this to work properly,
+#' the arguments \code{...} should be unnamed, and dispatch is on the
+#' first argument.
+#'
+#' @param ... Numeric, complex, or logical vectors.
+#' @param na.rm A logical scalar. Should missing values (including NaN)
+#'   be removed?
+#' @return If all inputs are integer and logical, then the output
+#'   will be an integer. If integer overflow
+#'   \url{https://en.wikipedia.org/wiki/Integer_overflow} occurs, the output
+#'   will be NA with a warning. Otherwise it will be a length-one numeric or
+#'   complex vector.
+#'
+#'   Zero-length vectors have sum 0 by definition. See
+#'   \url{https://en.wikipedia.org/wiki/Empty_sum} for more details.
+#' @examples
+#' sum(1:10)
+#' sum(1:5, 6:10)
+#' sum(F, F, F, T, T)
+#'
+#' sum(.Machine$integer.max, 1L)
+#' sum(.Machine$integer.max, 1)
+#'
+#' \dontrun{
+#' sum("a")
+#' }
+sum <- function(..., na.rm = TRUE) {}
 ```
-# Create histogram of frequency of campaigns.
-hist(df$pct.spent,
-  breaks = "scott",  # method for ...
-  main   = "Histogram: fraction budget spent",
-  xlab   = "Fraction of budget spent",
-  ylab   = "Frequency (count of campaignids)")
-```
 
-In general, we try to describe function purpose and properties in the **definition**. More can be found [here](http://r-pkgs.had.co.nz/man.html)
+Indent the second and subsequent lines of a tag so that when scanning the documentation it's easy to see where one tag ends and the next begins. Tags that always span multiple lines (like `@example`) should start on a new line and don't need to be indented.
 
-*Example:*      
-
-```
-dot_product <- function(x, y, ) {
-# Computes dot product of two vector inputs.
-# Args:
-#  x: Transposed numerical vector.
-#  y: Simple numerical vector.
-# Returns:
-#  Dot product of both x, y.
-  
-  x %*% y 
-}	
-```
 
 ## TODO's
-In general, do not use them in scripts since the [Issues](https://github.com/KVHEM/drought_uncertainty/issues) feature on GitHub is much more capable. If we want to add them in script, an efficient way is:
+In general, do not use them in scripts since the [Issues](https://github.com/MiRoVaGo/pRecipe/issues) feature on GitHub is much more capable. If we want to add them in script, an efficient way is:
 
 ```#TODO(username): Exact description of the action needed```
 
-## R packages
-We try to load as less packages as possible in our scripts and avoid using two different packages for the same purpose. For instance using both `readr()` & `read.file`. 
+## Dependencies
+We try to load as less packages as possible in our scripts and avoid using two different packages for the same purpose. For instance using both `readr` & `read.file`. 
 

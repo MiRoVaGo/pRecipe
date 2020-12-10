@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_cmap}
 \alias{reformat_cmap}
-\title{CMAP data reader}
+\title{CMAP data reformatter}
 \usage{
-reformat_cmap(folder_path, save = TRUE, preserve = TRUE)
+reformat_cmap(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading CMAP NC files.
+Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

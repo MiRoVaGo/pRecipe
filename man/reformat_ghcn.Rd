@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_ghcn}
 \alias{reformat_ghcn}
-\title{GHCN-M data reader}
+\title{GHCN-M data reformatter}
 \usage{
-reformat_ghcn(folder_path, save = TRUE, preserve = TRUE)
+reformat_ghcn(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with total monthly precipitation in [mm] at 5 degrees for 1900-2015.
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \description{
-Function for reading GHCN-M NC file.
+Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
 }
