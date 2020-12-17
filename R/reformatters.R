@@ -8,20 +8,24 @@ reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   folder_path <- paste0(folder_path, "/20cr")
   file_name <- list.files(folder_path, full.names = TRUE)
-  dummie_list <- brick(file_name) %>% as.list()
+  dummie_list <- raster::brick(file_name) %>% as.list()
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
-    dummie_table$Z <- as.Date(dummie_table$Z)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table <- dummie_table[y < 90 & y > -90 & x > 0]
     return(dummie_table)
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
-  dummie_table$name <- "20cr"
-  data.table::setkey(dummie_table, name)
+  precip$name <- "20cr"
   saveRDS(precip, paste0(folder_path, "/../../database/20cr.Rds"))
 }
 
@@ -40,8 +44,13 @@ reformat_cmap <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
     return(dummie_table)
@@ -49,7 +58,6 @@ reformat_cmap <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "cmap"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/cmap.Rds"))
 }
 
@@ -71,16 +79,15 @@ reformat_cpc <- function(folder_path){
     layer_names <- as.Date(names(dummie_brick), format = "X%Y.%m.%d")
     layer_names <- c(layer_names[1], layer_names[length(layer_names)])
     layer_names <- seq(layer_names[1], layer_names[2], 'month')
-    dummie_brick <- raster::zApply(dummie_brick, by = lubridate::month, fun = sum, na.rm = TRUE)
+    dummie_brick <- raster::zApply(dummie_brick, by = data.table::month, fun = sum, na.rm = TRUE)
     names(dummie_brick) <- layer_names
-    dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE)
+    dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_brick <- data.table::as.data.table(dummie_brick)
     return(dummie_brick)
   })
   stopCluster(cluster)
   precip <- rbindlist(precip)
   precip$name <- "cpc"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/cpc.Rds"))
 }
 
@@ -93,13 +100,13 @@ reformat_cpc <- function(folder_path){
 reformat_cru_ts <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   folder_path <- paste0(folder_path, "/cru_ts")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  dummie_list <- gunzip(file_name, remove = FALSE) %>% brick() %>% as.list()
+  file_name <- list.files(folder_path, full.names = TRUE, pattern = "*.gz")
+  dummie_list <- gunzip(file_name, remove = FALSE, skip = TRUE) %>% brick() %>% as.list()
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
     dummie_table$Z <- as.Date(dummie_table$Z)
     return(dummie_table)
@@ -107,7 +114,6 @@ reformat_cru_ts <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "cru_ts"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
 }
 
@@ -126,15 +132,19 @@ reformat_ghcn <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     return(dummie_table)
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "ghcn"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/ghcn.Rds"))
 }
 
@@ -153,7 +163,7 @@ reformat_gpcc <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
     dummie_table$Z <- as.Date(dummie_table$Z)
     return(dummie_table)
@@ -161,7 +171,6 @@ reformat_gpcc <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "gpcc"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/gpcc.Rds"))
 }
 
@@ -180,8 +189,13 @@ reformat_gpcp <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
     return(dummie_table)
@@ -189,7 +203,6 @@ reformat_gpcp <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "gpcp"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/gpcp.Rds"))
 }
 
@@ -228,7 +241,6 @@ reformat_gpm_imergm <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "gpm_imergm"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/gpm_imergm.Rds"))
 }
 
@@ -247,8 +259,16 @@ reformat_ncep_ncar <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:ncell(dummie_raster))
+    dummie_factor <- round(raster::res(year)/0.5)
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method='bilinear')
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
     return(dummie_table)
@@ -256,7 +276,6 @@ reformat_ncep_ncar <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "ncep_ncar"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar.Rds"))
 }
 
@@ -275,8 +294,16 @@ reformat_ncep_doe <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE)
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:ncell(dummie_raster))
+    dummie_factor <- round(raster::res(year)/0.5)
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method='bilinear')
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
     return(dummie_table)
@@ -284,7 +311,6 @@ reformat_ncep_doe <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "ncep_doe"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe.Rds"))
 }
 
@@ -312,7 +338,6 @@ reformat_precl <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "precl"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/precl.Rds"))
 }
 
@@ -351,7 +376,6 @@ reformat_trmm_3b43 <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "trmm_3b43"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/trmm_3b43.Rds"))
 }
 
@@ -379,7 +403,6 @@ reformat_udel <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "udel"
-  setkey(precip, name)
   saveRDS(precip, paste0(folder_path, "/../../database/udel.Rds"))
 }
 

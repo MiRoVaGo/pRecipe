@@ -9,7 +9,7 @@ Authors@R: c(
 Description: TBC.
 Depends: R (>= 3.4.0)
 biocViews:
-Imports: data.table, gdalUtils, ncdf4, parallel, raster, rgdal
+Imports: data.table, gdalUtils, maptools, ncdf4, parallel, raster, rgdal
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
