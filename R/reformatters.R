@@ -13,9 +13,14 @@ reformat_20cr <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
-    dummie_table$Z <- as.Date(dummie_table$Z)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table <- dummie_table[y < 90 & y > -90 & x > 0]
     return(dummie_table)
   })
   stopCluster(cluster)
@@ -39,8 +44,13 @@ reformat_cmap <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
     return(dummie_table)
@@ -122,8 +132,13 @@ reformat_ghcn <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     return(dummie_table)
   })
@@ -174,8 +189,13 @@ reformat_gpcp <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_factor <- raster::res(year)/0.5
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
     return(dummie_table)
@@ -212,7 +232,7 @@ reformat_gpm_imergm <- function(folder_path){
     dummie_brick[dummie_brick < 0] <- NA
     dummie_brick <- raster::aggregate(dummie_brick, fact = 5, fun = sum, na.rm = TRUE)
     names(dummie_brick) <- layer_name
-    dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE)
+    dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE, na.rm = TRUE)
     data.table::setnames(dummie_brick, "layer", "Z")
     dummie_brick$Z <- as.Date(dummie_brick$Z, format = "X%Y%m%d")
     dummie_brick$value <- dummie_brick$value * lubridate::days_in_month(dummie_brick$Z) * 24
@@ -239,8 +259,16 @@ reformat_ncep_ncar <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
+    dummie_factor <- round(raster::res(year)/0.5)
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method='bilinear')
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
     return(dummie_table)
@@ -266,8 +294,16 @@ reformat_ncep_doe <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
+    dummie_factor <- round(raster::res(year)/0.5)
+    dummie_table <- raster::disaggregate(year, fact = dummie_factor)
+    dummie_table <- dummie_table/(dummie_factor[1] * dummie_factor[2])
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method='bilinear')
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
     dummie_table$Z <- as.Date(dummie_table$Z)
     dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
     return(dummie_table)
