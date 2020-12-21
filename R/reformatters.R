@@ -80,7 +80,7 @@ reformat_cpc <- function(folder_path){
     layer_names <- c(layer_names[1], layer_names[length(layer_names)])
     layer_names <- seq(layer_names[1], layer_names[2], 'month')
     dummie_brick <- raster::zApply(dummie_brick, by = data.table::month, fun = sum, na.rm = TRUE)
-    names(dummie_brick) <- layer_names
+    dummie_brick <- raster::setZ(dummie_brick, layer_names)
     dummie_brick <- raster::as.data.frame(dummie_brick, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_brick <- data.table::as.data.table(dummie_brick)
     return(dummie_brick)
@@ -113,6 +113,7 @@ reformat_cru_ts <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip$x <- precip$x + 180
   precip$name <- "cru_ts"
   saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
 }
@@ -227,7 +228,7 @@ reformat_gpm_imergm <- function(folder_path){
     layer_name <- sub(".*3IMERG.", "", year)
     layer_name <- substr(layer_name, 1, 8)
     dummie_brick <- rhdf5::h5read(year, name = "/Grid/precipitation")
-    dummie_brick <- raster::brick(dummie_brick, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
+    dummie_brick <- raster::brick(dummie_brick, xmn = 0, xmx = 360, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
     dummie_brick <- raster::flip(dummie_brick, direction = "y")
     dummie_brick[dummie_brick < 0] <- NA
     dummie_brick <- raster::aggregate(dummie_brick, fact = 5, fun = sum, na.rm = TRUE)
@@ -362,7 +363,7 @@ reformat_trmm_3b43 <- function(folder_path){
     dummie_brick <- raster::brick(dummie_brick)
     dummie_brick <- raster::t(dummie_brick)
     sp::proj4string(dummie_brick) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    raster::extent(dummie_brick) <- c(-180, 180, -50, 50)
+    raster::extent(dummie_brick) <- c(0, 360, -50, 50)
     dummie_brick <- raster::flip(dummie_brick, direction = "y")
     dummie_brick[dummie_brick < 0] <- NA
     dummie_brick <- raster::aggregate(dummie_brick, fact = 2, fun = sum, na.rm = TRUE)
