@@ -7,7 +7,8 @@
 #' @importFrom getPass getPass
 #' @importFrom utils download.file
 #' @importFrom dplyr %>% 
-#' @importFrom lubridate days_in_month 
+#' @importFrom lubridate days_in_month
+#' @importFrom R.utils gunzip 
 #' @param destination a character string with the path where the downloaded files will be saved.
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
@@ -52,6 +53,7 @@ download_data <- function(destination, name = "all", reformat = TRUE){
          "udel" = download_udel(destination)
   ))
   if (refromat == TRUE) reformat_data(destination, name)
+  return(invisible())
 }
 
 #' Reformat the downloaded data sets into .Rds files
@@ -59,9 +61,9 @@ download_data <- function(destination, name = "all", reformat = TRUE){
 #' The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables at 0.5 degree resolution. 
 #'
 #' @import data.table gdalUtils ncdf4 parallel raster rgdal
-#' @importFrom dplyr %>% 
+#' @importFrom dplyr %>%
+#' @importFrom lubridate days_in_month
 #' @importFrom R.utils gunzip
-#' @importFrom lubridate days_in_month 
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
@@ -102,6 +104,7 @@ reformat_data <- function(folder_path, name){
          "trmm_3b43" = reformat_trmm_3b43(folder_path),
          "udel" = reformat_udel(folder_path)
   ))
+  return(invisible())
 }
 
 #' Read precipitation data.table from database
