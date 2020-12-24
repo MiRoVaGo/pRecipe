@@ -26,6 +26,7 @@ reformat_20cr <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "20cr"
   saveRDS(precip, paste0(folder_path, "/../../database/20cr.Rds"))
 }
@@ -59,6 +60,7 @@ reformat_cmap <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "cmap"
   saveRDS(precip, paste0(folder_path, "/../../database/cmap.Rds"))
 }
@@ -90,6 +92,7 @@ reformat_cpc <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "cpc"
   saveRDS(precip, paste0(folder_path, "/../../database/cpc.Rds"))
 }
@@ -117,7 +120,6 @@ reformat_cru_ts <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
-  precip$x <- precip$x + 180
   precip$name <- "cru_ts"
   saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
 }
@@ -150,6 +152,7 @@ reformat_ghcn <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "ghcn"
   saveRDS(precip, paste0(folder_path, "/../../database/ghcn.Rds"))
 }
@@ -176,6 +179,7 @@ reformat_gpcc <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "gpcc"
   saveRDS(precip, paste0(folder_path, "/../../database/gpcc.Rds"))
 }
@@ -209,6 +213,7 @@ reformat_gpcp <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "gpcp"
   saveRDS(precip, paste0(folder_path, "/../../database/gpcp.Rds"))
 }
@@ -234,7 +239,7 @@ reformat_gpm_imergm <- function(folder_path){
     layer_name <- sub(".*3IMERG.", "", year)
     layer_name <- substr(layer_name, 1, 8)
     dummie_table <- rhdf5::h5read(year, name = "/Grid/precipitation")
-    dummie_table <- raster::brick(dummie_table, xmn = 0, xmx = 360, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
+    dummie_table <- raster::brick(dummie_table, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
     dummie_table <- raster::flip(dummie_table, direction = "y")
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::aggregate(dummie_table, fact = 5, fun = sum, na.rm = TRUE)
@@ -283,6 +288,7 @@ reformat_ncep_ncar <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "ncep_ncar"
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar.Rds"))
 }
@@ -319,6 +325,7 @@ reformat_ncep_doe <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "ncep_doe"
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe.Rds"))
 }
@@ -346,6 +353,7 @@ reformat_precl <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "precl"
   saveRDS(precip, paste0(folder_path, "/../../database/precl.Rds"))
 }
@@ -371,7 +379,7 @@ reformat_trmm_3b43 <- function(folder_path){
     dummie_table <- raster::brick(dummie_table)
     dummie_table <- raster::t(dummie_table)
     sp::proj4string(dummie_table) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    raster::extent(dummie_table) <- c(0, 360, -50, 50)
+    raster::extent(dummie_table) <- c(-180, 180, -50, 50)
     dummie_table <- raster::flip(dummie_table, direction = "y")
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::aggregate(dummie_table, fact = 2, fun = sum, na.rm = TRUE)
@@ -411,6 +419,7 @@ reformat_udel <- function(folder_path){
   })
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
   precip$name <- "udel"
   saveRDS(precip, paste0(folder_path, "/../../database/udel.Rds"))
 }
