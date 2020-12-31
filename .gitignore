@@ -3,5 +3,4 @@
 .RData
 .Ruserdata
 ._pRecipe.Rproj
-data/database
-data/raw
+data/
