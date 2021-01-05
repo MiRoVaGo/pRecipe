@@ -2,7 +2,7 @@
 #'
 #' Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -35,7 +35,7 @@ reformat_20cr <- function(folder_path){
 #'
 #' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_cmap <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -69,7 +69,7 @@ reformat_cmap <- function(folder_path){
 #'
 #' Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_cpc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -101,7 +101,7 @@ reformat_cpc <- function(folder_path){
 #'
 #' Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_cru_ts <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -128,7 +128,7 @@ reformat_cru_ts <- function(folder_path){
 #'
 #' Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_ghcn <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -161,7 +161,7 @@ reformat_ghcn <- function(folder_path){
 #'
 #' Function for reading GPCC NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_gpcc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -188,7 +188,7 @@ reformat_gpcc <- function(folder_path){
 #'
 #' Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_gpcp <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -222,7 +222,7 @@ reformat_gpcp <- function(folder_path){
 #'
 #' Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_gpm_imergm <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -260,7 +260,7 @@ reformat_gpm_imergm <- function(folder_path){
 #'
 #' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_ncep_ncar <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -297,7 +297,7 @@ reformat_ncep_ncar <- function(folder_path){
 #'
 #' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_ncep_doe <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -334,7 +334,7 @@ reformat_ncep_doe <- function(folder_path){
 #'
 #' Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_precl <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
@@ -362,7 +362,7 @@ reformat_precl <- function(folder_path){
 #'
 #' Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_trmm_3b43 <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -400,7 +400,7 @@ reformat_trmm_3b43 <- function(folder_path){
 #'
 #' Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_udel <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
@@ -428,7 +428,7 @@ reformat_udel <- function(folder_path){
 #'
 #' Function for reformatting all of the available data sets.
 #'
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param folder_path a character string with the path to the "raw" folder.
 
 reformat_all <- function(folder_path){
   reformat_20cr(folder_path)

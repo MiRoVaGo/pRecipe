@@ -2,7 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table gdalUtils ncdf4 parallel rgdal
+#' @import data.table gdalUtils ggplot2 ncdf4 parallel rgdal
 #' @importFrom dplyr %>%
 #' @importFrom getPass getPass
 #' @importFrom lubridate days_in_month
@@ -10,6 +10,7 @@
 #' @importFrom R.utils gunzip
 #' @importFrom stringr str_pad
 #' @importFrom utils download.file
+#' @importFrom zoo as.yearmon
 #' @param destination a character string with the path where the downloaded files will be saved.
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
