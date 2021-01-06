@@ -7,7 +7,7 @@
 reformat_trmm_3b43(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "raw" folder is located.}
+\item{folder_path}{a character string with the path to the "raw" folder.}
 }
 \description{
 Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.

@@ -7,7 +7,7 @@
 reformat_ncep_doe(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "raw" folder is located.}
+\item{folder_path}{a character string with the path to the "raw" folder.}
 }
 \description{
 Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
