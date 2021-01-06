@@ -10,5 +10,5 @@ merge_time(folder_path)
 \item{folder_path}{a character string with the path to the "integration" folder.}
 }
 \description{
-Function for merging the data sets overlaping by time periods.
+Function for merging the data sets overlapping by time periods.
 }

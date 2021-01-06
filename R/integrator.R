@@ -27,19 +27,33 @@ split_time <- function(folder_path){
 
 #' Data integrator by period.
 #'
-#' Function for merging the data sets overlaping by time periods.
+#' Function for merging the data sets overlapping by time periods.
 #'
 #' @param folder_path a character string with the path to the "integration" folder.
 
 merge_time <- function(folder_path){
-  precip <- list.files(folder_path, full.names = TRUE) %>% lapply(list.files, full.names = TRUE)
-  for (index in 1:length(precip)){
-    dummie_table <- precip[[index]] %>% lapply(readRDS) %>% rbindlist()
-    dummie_table[, Z := as.yearmon(Z)] %>% .[, mean := mean(value, na.rm = TRUE), by = .(x, y, Z)] %>% .[, err := (mean - value)^(-2)] %>% .[, sum_err := sum(err), by = .(x, y, Z)] %>% .[, weight := err/sum_err] %>% .[, wvalue := value * weight]
-    dummie_table <- dummie_table[, .(x, y, Z, sum_err, wvalue)]
-    dummie_table[, wvalue := sum(wvalue, na.rm = TRUE), by = .(x, y, Z)] %>% .[, sum_err := 1/sum_err]
-    dummie_table <- unique(dummie_table)
-    saveRDS(dummie_table, paste0(folder_path, "/precip", str_pad(index, 2, pad = "0"), ".Rds"))
+  dummie_names <- list.files(folder_path, full.names = TRUE) %>% grep(pattern = ".Rds", invert = TRUE, value = TRUE) %>% lapply(list.files, full.names = TRUE)
+  dummie_table <- dummie_names[[1]] %>% readRDS()
+  dummie_table[, Z := as.yearmon(Z)]
+  saveRDS(dummie_table[, -5], paste0(folder_path, "/precip01.Rds"))
+  rm(dummie_table)
+  gc()
+  for (index in 2:length(dummie_names)){
+    dummie_list <- dummie_names[[index]] %>% lapply(readRDS) %>% rbindlist()
+    dummie_list <- split(dummie_list, year(dummie_list$Z))
+    no_cores <- detectCores() - 1
+    if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+    cluster <- makeCluster(no_cores, type = "PSOCK")
+    clusterExport(cluster, varlist = "dt_parallel")
+    clusterEvalQ(cluster, library("data.table"))
+    precip <- parLapply(cluster, dummie_list, dt_parallel)
+    stopCluster(cluster)
+    rm(dummie_list)
+    gc()
+    precip <- rbindlist(precip)
+    saveRDS(precip, paste0(folder_path, "/precip", str_pad(index, 2, pad = "0"), ".Rds"))
+    rm(precip)
+    gc()
   }
   return(invisible())
 }
