@@ -41,6 +41,36 @@ merge_time <- function(folder_path){
   for (index in 2:length(dummie_names)){
     dummie_list <- dummie_names[[index]] %>% lapply(readRDS) %>% rbindlist()
     dummie_list <- split(dummie_list, year(dummie_list$Z))
+    if (index == 6){
+      dummie_list_1 <- dummie_list[1:10]
+      dummie_list_2 <- dummie_list[11:19]
+      rm(dummie_list)
+      gc()
+      no_cores <- detectCores() - 1
+      if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+      cluster <- makeCluster(no_cores, type = "PSOCK")
+      clusterExport(cluster, varlist = "dt_parallel")
+      clusterEvalQ(cluster, library("data.table"))
+      precip_1 <- parLapply(cluster, dummie_list_1, dt_parallel)
+      stopCluster(cluster)
+      rm(dummie_list_1)
+      gc()
+      precip_1 <- rbindlist(precip_1)
+      cluster <- makeCluster(no_cores, type = "PSOCK")
+      clusterExport(cluster, varlist = "dt_parallel")
+      clusterEvalQ(cluster, library("data.table"))
+      precip_2 <- parLapply(cluster, dummie_list_2, dt_parallel)
+      stopCluster(cluster)
+      rm(dummie_list_2)
+      gc()
+      precip_2 <- rbindlist(precip_2)
+      precip <- rbind(precip_1, precip_2)
+      rm(precip_1, precip_2)
+      gc()
+      saveRDS(precip, paste0(folder_path, "/precip", str_pad(index, 2, pad = "0"), ".Rds"))
+      rm(precip)
+      gc()
+    }
     no_cores <- detectCores() - 1
     if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
     cluster <- makeCluster(no_cores, type = "PSOCK")
