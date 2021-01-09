@@ -13,7 +13,7 @@ reformat_20cr <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5, method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
@@ -44,7 +44,7 @@ reformat_cmap <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5, method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
@@ -134,7 +134,7 @@ reformat_ghcn <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5, method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
@@ -191,7 +191,7 @@ reformat_gpcp <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   precip <- parLapply(cluster, dummie_list, function(year){
-    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5, method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
     dummie_table <- data.table::as.data.table(dummie_table)
@@ -262,7 +262,7 @@ reformat_ncep_ncar <- function(folder_path){
   precip <- parLapply(cluster, dummie_list, function(year){
     dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
     dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
-    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5), method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
@@ -296,7 +296,7 @@ reformat_ncep_doe <- function(folder_path){
   precip <- parLapply(cluster, dummie_list, function(year){
     dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
     dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
-    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5), method = "bilinear")
+    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
     dummie_table[dummie_table < 0] <- NA
     dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
