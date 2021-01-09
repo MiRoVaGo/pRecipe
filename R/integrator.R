@@ -145,7 +145,7 @@ merge_time <- function(folder_path){
       saveRDS(precip, paste0(folder_path, "/precip", str_pad(index, 2, pad = "0"), ".Rds"))
       rm(precip)
       gc()
-    }
+    } else {
     no_cores <- detectCores() - 1
     if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
     cluster <- makeCluster(no_cores, type = "PSOCK")
@@ -158,7 +158,7 @@ merge_time <- function(folder_path){
     precip <- rbindlist(precip)
     saveRDS(precip, paste0(folder_path, "/precip", str_pad(index, 2, pad = "0"), ".Rds"))
     rm(precip)
-    gc()
+    gc()}
   }
   return(invisible())
 }
