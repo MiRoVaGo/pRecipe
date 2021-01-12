@@ -59,3 +59,17 @@ dt_aggregate <- function(data, res){
   data$name <- dummie_name
   return(data)
 }
+
+dt_parallel <- function(dummie_table){
+  dummie_table[, Z := zoo::as.yearmon(Z)]
+  dummie_table[, mean := mean(value, na.rm = TRUE), by = .(x, y, Z)]
+  dummie_table[, err := (mean - value)^(-2)]
+  dummie_table[, sum_err := sum(err, na.rm = TRUE), by = .(x, y, Z)]
+  dummie_table[, weight := err/sum_err]
+  dummie_table[, wvalue := value * weight]
+  dummie_table <- dummie_table[, .(x, y, Z, sum_err, wvalue)]
+  dummie_table[, wvalue := sum(wvalue, na.rm = TRUE), by = .(x, y, Z)]
+  dummie_table[, sum_err := 1/sum_err]
+  dummie_table <- unique(dummie_table)
+  return(dummie_table)
+}
