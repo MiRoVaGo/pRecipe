@@ -3,7 +3,6 @@
 export(download_data)
 export(import_data)
 export(reformat_data)
-export(select_data)
 export(subset_data)
 import(data.table)
 import(gdalUtils)

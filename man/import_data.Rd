@@ -11,7 +11,7 @@ import_data(folder_path, name)
 
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
-\item{"all" for all of the below listed data sets (default),}
+\item{"all" for all of the below listed data sets,}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
@@ -26,6 +26,9 @@ import_data(folder_path, name)
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
 }}
+}
+\value{
+a data.table with the requested precipitation data sets.
 }
 \description{
 The function \code{import_data} imports the requested data sets.

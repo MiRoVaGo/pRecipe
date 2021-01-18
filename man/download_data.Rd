@@ -4,7 +4,7 @@
 \alias{download_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-download_data(destination, name = "all", reformat = TRUE)
+download_data(destination, name = "all", reformat = FALSE)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded files will be saved.}
@@ -27,7 +27,7 @@ download_data(destination, name = "all", reformat = TRUE)
 \item{"udel" for UDEL v501.}
 }}
 
-\item{reformat}{logical. If TRUE (default) the downloaded datasets are reformatted into data.table and stored in .Rds files}
+\item{reformat}{logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files}
 }
 \description{
 The function \code{download_data} downloads the selected data product.
