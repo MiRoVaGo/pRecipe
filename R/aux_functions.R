@@ -60,6 +60,13 @@ dt_aggregate <- function(data, res){
   return(data)
 }
 
+#' Data table weighted mean for parallel computing
+#'
+#' Function for merging data sets available in pRecipe data table by weighted mean.
+#'
+#' @param dummie_table A pRecipe data table with multiple data sets.
+#' @return the aggregated data table at the new spatial resolution.
+
 dt_parallel <- function(dummie_table){
   dummie_table[, Z := zoo::as.yearmon(Z)]
   dummie_table[, mean := mean(value, na.rm = TRUE), by = .(x, y, Z)]
