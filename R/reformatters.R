@@ -26,6 +26,7 @@ reformat_20cr <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "20cr"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/20cr.Rds"))
 }
 
@@ -57,6 +58,7 @@ reformat_cmap <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "cmap"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/cmap.Rds"))
 }
 
@@ -89,6 +91,7 @@ reformat_cpc <- function(folder_path){
   precip <- rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "cpc"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/cpc.Rds"))
 }
 
@@ -116,6 +119,7 @@ reformat_cru_ts <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "cru_ts"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
 }
 
@@ -146,6 +150,7 @@ reformat_ghcn <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "ghcn"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/ghcn.Rds"))
 }
 
@@ -173,6 +178,7 @@ reformat_gpcc <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "gpcc"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/gpcc.Rds"))
 }
 
@@ -204,6 +210,7 @@ reformat_gpcp <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "gpcp"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/gpcp.Rds"))
 }
 
@@ -242,6 +249,7 @@ reformat_gpm_imergm <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "gpm_imergm"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/gpm_imergm.Rds"))
 }
 
@@ -276,6 +284,7 @@ reformat_ncep_ncar <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "ncep_ncar"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar.Rds"))
 }
 
@@ -310,6 +319,7 @@ reformat_ncep_doe <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "ncep_doe"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe.Rds"))
 }
 
@@ -338,6 +348,7 @@ reformat_precl <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "precl"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/precl.Rds"))
 }
 
@@ -376,6 +387,7 @@ reformat_trmm_3b43 <- function(folder_path){
   stopCluster(cluster)
   precip <- data.table::rbindlist(precip)
   precip$name <- "trmm_3b43"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/trmm_3b43.Rds"))
 }
 
@@ -404,6 +416,7 @@ reformat_udel <- function(folder_path){
   precip <- data.table::rbindlist(precip)
   precip[x > 180, x := x - 360]
   precip$name <- "udel"
+  class(precip) <- append(class(precip),"pRecipe")
   saveRDS(precip, paste0(folder_path, "/../../database/udel.Rds"))
 }
 
