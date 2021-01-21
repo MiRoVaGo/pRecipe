@@ -43,7 +43,7 @@ plot_line <- function(x){
 
 #' Precipitation bar plot
 #'
-#' Function for plotting monthly area averaged precipitation.
+#' Function for plotting (bar plot) monthly area averaged precipitation.
 #'
 #' @param x  a pRecipe data.table.
 #' @return ggplot object
@@ -59,6 +59,27 @@ plot_bar <- function(x){
     theme_bw() +
     labs(x = "Month", y = "Precipitation in [mm]", fill = "Data set", title = paste0("Monthly Average between ", dummie_year[1], "-", dummie_year[2], " inside (", dummie_box[1], ", ", dummie_box[2], ", ", dummie_box[3], ", ", dummie_box[4], ")")) +
     scale_x_continuous(breaks = seq(1, 12), labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) +
+    theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), axis.text.x = element_text(angle = 45, hjust = 1))
+  return(precip_plot)
+}
+
+#' Precipitation box plot
+#'
+#' Function for plotting (box plot) monthly area averaged precipitation.
+#'
+#' @param x  a pRecipe data.table.
+#' @return ggplot object
+
+plot_box <- function(x){
+  dummie_box <- c(min(x$x), min(x$y), max(x$x), max(x$y))
+  dummie_year <- c(min(year(x$Z)), max(year(x$Z)))
+  x <- x[, ':='(month = factor(month(Z)), year = year(Z))][, value := mean(value, na.rm = TRUE), by = .(month, year, name)][, .(month, year, value, name)] %>% unique()
+  precip_plot <- ggplot(x, aes(x = month, y = value, fill = name)) +
+    geom_boxplot(outlier.size = 0.25) +
+    scale_fill_manual(values = precip_colors) +
+    theme_bw() +
+    labs(x = "Month", y = "Precipitation in [mm]", fill = "Data set", title = paste0("Monthly Average between ", dummie_year[1], "-", dummie_year[2], " inside (", dummie_box[1], ", ", dummie_box[2], ", ", dummie_box[3], ", ", dummie_box[4], ")")) +
+    scale_x_discrete(breaks = seq(1, 12), labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) +
     theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), axis.text.x = element_text(angle = 45, hjust = 1))
   return(precip_plot)
 }
