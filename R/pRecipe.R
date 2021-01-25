@@ -10,6 +10,7 @@
 #' @importFrom R.utils gunzip
 #' @importFrom stringr str_pad
 #' @importFrom utils download.file
+#' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
 #' @param destination a character string with the path where the downloaded files will be saved.
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
