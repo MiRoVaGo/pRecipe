@@ -98,28 +98,31 @@ plot_map <- function(x, monthly = FALSE){
   dummie_year <- c(min(year(x$Z)), max(year(x$Z)))
   dummie_res <- abs(unique(x$y)[2] - unique(x$y)[1])
   dummie_min <- copy(x)
-  dummie_min <- dummie_min[, value := mean(value, na.rm = TRUE), by = .(x, y, month(Z))][, .(value)] %>% min()
+  dummie_min <- dummie_min[, value := mean(value, na.rm = TRUE), by = .(x, y, month(Z), name)][, .(value)] %>% min() %>% floor()
   dummie_max <- copy(x)
-  dummie_max <- dummie_max[, value := mean(value, na.rm = TRUE), by = .(x, y, month(Z))][, .(value)] %>% max()
+  dummie_max <- dummie_max[, value := mean(value, na.rm = TRUE), by = .(x, y, month(Z), name)][, .(value)] %>% max() %>% ceiling()
   if (monthly == TRUE){
     x <- split(x, month(x$Z))
     x <- lapply(x, function(month){
-      month <- month[, value := mean(value, na.rm = TRUE), by = .(x, y)][, .(x, y, month(Z), value)] %>% unique()
+      month <- month[, value := mean(value, na.rm = TRUE), by = .(x, y, name)][, .(x, y, month(Z), value, name)] %>% unique()
       precip_plot <- ggplot(month, aes(x = x, y = y)) + 
         geom_raster(aes(fill = value)) +
         borders("world", xlim = c(dummie_box[1], dummie_box[3]), ylim = c(dummie_box[2], dummie_box[4]), colour = "black") +
-        scale_fill_viridis(direction = -1, limits = c(dummie_min, dummie_max)) + 
+        scale_fill_viridis(direction = -1, limits = c(dummie_min, dummie_max)) +
+        facet_wrap(~name) +
         theme_bw() +
         coord_cartesian(xlim = c(dummie_box[1] - dummie_res/2, dummie_box[3] + dummie_res/2), ylim = c(dummie_box[2] - dummie_res/2, dummie_box[4] + dummie_res/2)) +
         labs(x = "Longitude", y = "Latitude", fill = "Precipitation [mm]", title = paste0(month.abb[month$V3[1]], " Average between ", dummie_year[1], "-", dummie_year[2]))
       return(precip_plot)
-    })} else {
+    })
+    return(x)
+    } else {
       x <- x[, year_value := sum(value, na.rm = TRUE), by = .(year(Z), x, y, name)][, ':='(year_mean = mean(year_value, na.rm = TRUE), year_sd = sd(year_value, na.rm = TRUE)), by = .(x, y, name)]
       mean_plot <- ggplot(x, aes(x = x, y = y)) + 
         geom_raster(aes(fill = year_mean)) +
         borders("world", xlim = c(dummie_box[1], dummie_box[3]), ylim = c(dummie_box[2], dummie_box[4]), colour = "black") +
         scale_fill_viridis(direction = -1) + 
-        facet_wrap(~name, ncol = 2) +
+        facet_wrap(~name) +
         theme_bw() +
         coord_cartesian(xlim = c(dummie_box[1] - dummie_res/2, dummie_box[3] + dummie_res/2), ylim = c(dummie_box[2] - dummie_res/2, dummie_box[4] + dummie_res/2)) +
         labs(x = "Longitude", y = "Latitude", fill = "Precipitation [mm]", title = paste0("Annual Average between ", dummie_year[1], "-", dummie_year[2]))
@@ -127,12 +130,37 @@ plot_map <- function(x, monthly = FALSE){
         geom_raster(aes(fill = year_sd)) +
         borders("world", xlim = c(dummie_box[1], dummie_box[3]), ylim = c(dummie_box[2], dummie_box[4]), colour = "black") +
         scale_fill_viridis(direction = -1) +
-        facet_wrap(~name, ncol = 2) +
+        facet_wrap(~name) +
         theme_bw() +
         coord_cartesian(xlim = c(dummie_box[1] - dummie_res/2, dummie_box[3] + dummie_res/2), ylim = c(dummie_box[2] - dummie_res/2, dummie_box[4] + dummie_res/2)) +
         labs(x = "Longitude", y = "Latitude", fill = "Precipitation [mm]", title = paste0("Annual Standard Deviation between ", dummie_year[1], "-", dummie_year[2]))
       precip_plot <- list(mean_plot, std_plot)
       return(precip_plot)
   }
+}
+
+#' Precipitation matrix
+#'
+#' Function for plotting monthly precipitation matrices.
+#'
+#' @param x  a pRecipe data.table.
+#' @return list with ggplot objects
+ 
+plot_matrix <- function(x, monthly = FALSE){
+  dummie_box <- c(min(x$x), min(x$y), max(x$x), max(x$y))
+  dummie_min <- copy(x)
+  dummie_min <- dummie_min[, value := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, .(value)] %>% min() %>% floor()
+  dummie_max <- copy(x)
+  dummie_max <- dummie_max[, value := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, .(value)] %>% max() %>% ceiling()
+  x <- x[, value := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, .(Z, value, name)] %>% unique()
+  precip_plot <- ggplot(x, aes(x = year(Z), y = month(Z))) + 
+    geom_raster(aes(fill = value)) +
+    scale_fill_viridis(direction = -1, limits = c(dummie_min, dummie_max)) +
+    scale_x_continuous(breaks = seq(min(year(x$Z)), max(year(x$Z))), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(min(month(x$Z)), max(month(x$Z))), labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), expand = c(0,0)) +
+    facet_wrap(~name) +
+    theme_bw() +
+    labs(x = NULL, y = NULL, fill = "[mm]", title = paste0("Average Monthly Precipitation inside (", dummie_box[1], ", ", dummie_box[2], ", ", dummie_box[3], ", ", dummie_box[4], ")")) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
   return(precip_plot)
 }
