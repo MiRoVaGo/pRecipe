@@ -4,17 +4,18 @@
 #' Function for plotting monthly time-series of different data-sets and their average as a multiline plot. .
 #'
 #' @param data_table  represents the name of the particular "data_table" to be plotted.
+#' @return a ggplot object of the given data sets
 
 plot_line <- function(data_table){
   
   mean_all <- data_table[, .(value = mean(value, na.rm = TRUE), name = factor("average")), by = c("x", "y", "Z")]
   data_table <- rbind(data_table, mean_all)
-  data_table <- data_table[, reg_val := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, ':='(reg_monmean = mean(reg_val, na.rm = TRUE), 
-                                                                                             reg_monstd = sd(reg_val, na.rm = TRUE)), by = .(month(Z), name)]
+  data_table <- data_table[, region_value := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, ':='(reg_monmean = mean(region_value, na.rm = TRUE), 
+                                                                                             reg_monstd = sd(region_value, na.rm = TRUE)), by = .(month(Z), name)]
   
   name_count <- length(unique(data_table$name)) - 1 
   
-  plot_monline <- ggplot(data_table, aes(Z, reg_val, color = name, linetype = name)) + 
+  plot_monline <- ggplot(data_table, aes(Z, region_value, color = name, linetype = name)) + 
     geom_line() + 
     geom_point() + 
     scale_linetype_manual(values = c(rep("dashed", name_count), "solid")) + 
@@ -30,12 +31,13 @@ plot_line <- function(data_table){
 #' Function for plotting seasonality of different data-sets as a bar blot along with the error bar of one standard deviation.
 #'
 #' @param data_table  represents the name of the particular "data_table" to be plotted.
+#' @return a ggplot object of the given data sets
 
 plot_seasonality <- function(data_table){
   
-  data_table <- data_table[, reg_val := mean(value, na.rm = TRUE), 
-                           by = .(month(Z), year(Z), name)][, ':='(reg_monmean = mean(reg_val, na.rm = TRUE),
-                                                                   reg_monstd = sd(reg_val, na.rm = TRUE)), by = .(month(Z), name)]
+  data_table <- data_table[, region_value := mean(value, na.rm = TRUE), 
+                           by = .(month(Z), year(Z), name)][, ':='(reg_monmean = mean(region_value, na.rm = TRUE),
+                                                                   reg_monstd = sd(region_value, na.rm = TRUE)), by = .(month(Z), name)]
   
   plot_bar <- ggplot(data_table, aes(factor(month(Z)), reg_monmean, fill = name)) + 
     geom_bar(stat="identity", position=position_dodge(), alpha=0.5) + 
