@@ -3,16 +3,17 @@
 #' The function \code{download_data} downloads the selected data product.
 #'
 #' @import data.table gdalUtils ggplot2 ncdf4 parallel rgdal
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
-#' @importFrom lubridate days_in_month
+#' @importFrom lubridate day days_in_month
 #' @importFrom raster aggregate as.data.frame as.list brick disaggregate extend extent flip metadata ncell raster rasterFromXYZ res resample setValues setZ t zApply
 #' @importFrom R.utils gunzip
+#' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stringr str_pad
 #' @importFrom utils download.file
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
-#' @param destination a character string with the path where the downloaded files will be saved.
+#' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
@@ -30,15 +31,15 @@
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param reformat logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files
+#' @param reformat logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
 #' @export
 
-download_data <- function(destination, name = "all", reformat = FALSE){
+download_data <- function(project_folder, name = "all", reformat = FALSE){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  create_folders(destination)
-  destination <- paste0(destination,"/data/raw")
+  create_folders(project_folder)
+  destination <- paste0(project_folder,"/data/raw")
   lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),
@@ -55,7 +56,7 @@ download_data <- function(destination, name = "all", reformat = FALSE){
          "trmm_3b43" = download_trmm_3b43(destination),
          "udel" = download_udel(destination)
   ))
-  if (refromat == TRUE) reformat_data(destination, name)
+  if (reformat == TRUE) reformat_data(destination, name)
   return(invisible())
 }
 
@@ -84,7 +85,7 @@ download_data <- function(destination, name = "all", reformat = FALSE){
 #' @export
 
 reformat_data <- function(folder_path, name = "all"){
-  if (!Reduce("&", is.element(name, c("20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+  if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
   lapply(name, function(dataset) switch(dataset,
@@ -159,5 +160,54 @@ import_data <- function(folder_path, name){
 subset_data <- function(x, start_year, end_year, box){
   if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
   x <- x[year(Z) >= start_year & year(Z) <= end_year & x >= box[1] & x <= box[3] & y >= box[2] & y <= box[4]]
+  return(x)
+}
+
+#' Resampling precipitation data sets
+#'
+#' The function \code{resample_data} resamples the imported data.
+#'
+#' @param x a pRecipe data.table imported using \code{import_data}.
+#' @param yearly logical. If TRUE (default) monthly data will be aggregated into yearly.
+#' @param resolution numeric. Desired spatial resolution (original is 0.5)
+#' @return a data.table with the resampled data sets
+#' @export
+
+resample_data <- function(x, yearly = TRUE, resolution){
+  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
+  if (yearly == TRUE){
+    x <- x[, value := sum(value, na.rm = TRUE), by = .(x, y, Z)]
+    x <- split(x, x$name)
+    no_cores <- detectCores() - 1
+    if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+    cluster <- makeCluster(no_cores, type = "PSOCK")
+    clusterExport(cluster, varlist = c("dt_aggregate", "resolution"))
+    precip <- parLapply(cluster, x, function(dataset){
+      precip <- dt_aggregate(x, resolution)
+    })
+  }
+  x <- x[year(Z) >= start_year & year(Z) <= end_year & x >= box[1] & x <= box[3] & y >= box[2] & y <= box[4]]
+  return(x)
+}
+
+#' Crop precipitation data sets
+#'
+#' The function \code{crop_data} crops the data sets using a shapefile mask.
+#'
+#' @param x a pRecipe data.table imported using \code{\link{import_data}}.
+#' @param shp_path a character string with the path to the ".shp" file.
+#' @return a data.table with the cropped data sets
+#' @export
+
+crop_data <- function(x, shp_path){
+  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
+  shp_mask <- rearOGR(shp_path)
+  shp_mask <- spTransform(shp_mask, "+proj=longlat +datum=WGS84 +ellps=WGS84")
+  x <- as.data.frame(x)
+  coordinates(x) <- ~ x + y
+  proj4string(x) <- proj4string(shp_mask)
+  x <- x[!is.na(over(x, as(shp_mask, "SpatialPolygons"))), ]
+  x <- as.data.table(x)
+  class(x) <- append(class(x),"pRecipe")
   return(x)
 }

@@ -7,8 +7,18 @@
 create_folders(destination)
 }
 \arguments{
-\item{destination}{a character string with the path where the folders will be located.}
+\item{destination}{a character string with the path where the folders will be created as follows:
+\itemize{
+\item{\code{destination}/data}
+\itemize{
+\item{\code{destination}/data/database}
+\item{\code{destination}/data/raw}
+\itemize{
+\item{\code{destination}/data/raw/20cr}
+\item{\code{destination}/data/raw/cmap}
+\item{\code{destination}/data/raw/...}}}
+}}
 }
 \description{
-Function for creating tidy data directories.
+Function for creating tidy folders to store pRecipe.
 }

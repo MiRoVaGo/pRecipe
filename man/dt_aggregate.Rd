@@ -4,12 +4,12 @@
 \alias{dt_aggregate}
 \title{Data table aggregation in space}
 \usage{
-dt_aggregate(data, res)
+dt_aggregate(data, resolution)
 }
 \arguments{
 \item{data}{data.table. A precipitation data table reformatted by pRecipe.}
 
-\item{res}{numeric. The upscale target resolution.}
+\item{resolution}{numeric. The upscale target resolution.}
 }
 \value{
 the aggregated data table at the new spatial resolution.

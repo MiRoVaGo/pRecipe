@@ -5,6 +5,19 @@
 #' @param folder_path a character string with the path to the "database" folder.
 
 split_time <- function(folder_path){
+  dir.create(paste0(folder_path, "/../integration"))
+  dir.create(paste0(folder_path, "/../integration/1836_1890"))
+  dir.create(paste0(folder_path, "/../integration/1891_1899"))
+  dir.create(paste0(folder_path, "/../integration/1900"))
+  dir.create(paste0(folder_path, "/../integration/1901_1947"))
+  dir.create(paste0(folder_path, "/../integration/1948_1978"))
+  dir.create(paste0(folder_path, "/../integration/1979_1997"))
+  dir.create(paste0(folder_path, "/../integration/1998_2000"))
+  dir.create(paste0(folder_path, "/../integration/2001_2011"))
+  dir.create(paste0(folder_path, "/../integration/2012_2015"))
+  dir.create(paste0(folder_path, "/../integration/2016"))
+  dir.create(paste0(folder_path, "/../integration/2017"))
+  dir.create(paste0(folder_path, "/../integration/2018_2019"))
   dummie_list <- list.files(folder_path, full.names = TRUE)
   lapply(dummie_list, function(names){
     data_name <- sub(".*/", "", names)
@@ -108,9 +121,13 @@ split_time <- function(folder_path){
 
 merge_1836_1890 <- function(folder_path){
   folder_path <- paste0(folder_path, "/1836_1890")
-  dummie_names <- list.files(folder_path, full.names = TRUE) %>% readRDS()
-  dummie_table[, Z := as.yearmon(Z)]
-  saveRDS(dummie_table[, -5], paste0(folder_path, "/precip01.Rds"))
+  sd_20cr(folder_path)
+  dummie_values <- readRDS(paste0(folder_path, "/20cr.Rds")) %>% .[(y >= -90) & (y <= 90) & (x >= -180) & (x <= 180), -5] %>% setnames("value", "wvalue")
+  dummie_sd <- readRDS(paste0(folder_path, "/20cr_sd.Rds"))%>% .[(y >= -90) & (y <= 90) & (x >= -180) & (x <= 180)] %>% setnames("value", "sum_err")
+  dummie_table <- merge(dummie_values, dummie_sd, by = c("x", "y", "Z"))
+  rm(dummie_values, dummie_sd)
+  dummie_table <- dummie_table[, Z := as.yearmon(Z)]
+  saveRDS(dummie_table, paste0(folder_path, "/../precip01.Rds"))
   rm(dummie_table)
   gc()
   return(invisible())
@@ -125,7 +142,7 @@ merge_1836_1890 <- function(folder_path){
 merge_1891_1899 <- function(folder_path){
   folder_path <- paste0(folder_path, "/1891_1899")
   dummie_list <- list.files(folder_path, full.names = TRUE) %>% lapply(readRDS) %>% rbindlist()
-  lidummie_list <- split(dummie_list, year(dummie_list$Z))
+  dummie_list <- split(dummie_list, year(dummie_list$Z))
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
@@ -136,7 +153,7 @@ merge_1891_1899 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip02.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip02.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -162,7 +179,7 @@ merge_1900 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip03.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip03.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -188,7 +205,7 @@ merge_1901_1947 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip04.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip04.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -214,7 +231,7 @@ merge_1948_1978 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip05.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip05.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -255,7 +272,7 @@ merge_1979_1997 <- function(folder_path){
   precip <- rbind(precip_1, precip_2)
   rm(precip_1, precip_2)
   gc()
-  saveRDS(precip, paste0(folder_path, "/precip06.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip06.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -281,7 +298,7 @@ merge_1998_2000 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip07.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip07.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -307,7 +324,7 @@ merge_2001_2011 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip08.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip08.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -333,7 +350,7 @@ merge_2012_2015 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip09.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip09.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -359,7 +376,7 @@ merge_2016 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip10.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip10.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -385,7 +402,7 @@ merge_2017 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip11.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip11.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -411,7 +428,7 @@ merge_2018_2019 <- function(folder_path){
   rm(dummie_list)
   gc()
   precip <- rbindlist(precip)
-  saveRDS(precip, paste0(folder_path, "/precip12.Rds"))
+  saveRDS(precip, paste0(folder_path, "/../precip12.Rds"))
   rm(precip)
   gc()
   return(invisible())
@@ -436,5 +453,19 @@ merge_time <- function(folder_path){
   merge_2016(folder_path)
   merge_2017(folder_path)
   merge_2018_2019(folder_path)
+  return(invisible())
+}
+
+#' Climate Data Record
+#'
+#' Function for unifying the merged periods.
+#'
+#' @param folder_path a character string with the path to the "integration" folder.
+
+merge_cdr <- function(folder_path){
+  dummie_list <- list.files(folder_path, pattern = "precip.*\\.Rds$", full.names = TRUE)
+  dummie_list <- lapply(dummie_list, readRDS)
+  dummie_list <- rbindlist(dummie_list, use.names = TRUE)
+  saveRDS(dummie_list, paste0(folder_path, "/mv_precip.Rds"))
   return(invisible())
 }
