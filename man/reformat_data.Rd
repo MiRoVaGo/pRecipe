@@ -30,3 +30,9 @@ reformat_data(raw_folder_path, name = "all")
 \description{
 The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables at 0.5 degree resolution.
 }
+\examples{
+\donttest{
+reformat_data("~/global_precipitation/pRecipe/data/raw")
+reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+}
+}

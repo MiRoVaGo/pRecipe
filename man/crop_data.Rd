@@ -17,3 +17,9 @@ a data.table with the cropped data sets
 \description{
 The function \code{crop_data} crops the data sets using a shapefile mask.
 }
+\examples{
+\donttest{
+x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+y <- resample_data(x, "~/Downloads/cze.shp")
+}
+}

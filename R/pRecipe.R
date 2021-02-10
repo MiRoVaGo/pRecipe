@@ -33,6 +33,12 @@
 #' }
 #' @param reformat logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
 #' @export
+#' @examples
+#' \donttest{
+#' download_data("~/global_precipitation/pRecipe")
+#' download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
+#' download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+#' }
 
 download_data <- function(project_folder, name = "all", reformat = FALSE){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
@@ -83,6 +89,11 @@ download_data <- function(project_folder, name = "all", reformat = FALSE){
 #' }
 #' @param raw_folder_path a character string with the path where the "raw" folder is located.
 #' @export
+#' @examples
+#' \donttest{
+#' reformat_data("~/global_precipitation/pRecipe/data/raw")
+#' reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+#' }
 
 reformat_data <- function(raw_folder_path, name = "all"){
   if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
@@ -134,6 +145,12 @@ reformat_data <- function(raw_folder_path, name = "all"){
 #' @param database_folder_path a character string with the path where the "database" folder is located.
 #' @return a data.table with the requested precipitation data sets.
 #' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/global_precipitation/pRecipe/data/database", "all)
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' x <- import_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+#' }
 
 import_data <- function(database_folder_path, name){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
@@ -162,6 +179,11 @@ import_data <- function(database_folder_path, name){
 #' @param box numeric vector. Bounding box in the form: (xmin, ymin, xmax, ymax).
 #' @return a data.table with the subsetted data sets
 #' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' }
 
 subset_data <- function(x, start_year, end_year, box){
   if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
@@ -178,6 +200,12 @@ subset_data <- function(x, start_year, end_year, box){
 #' @param resolution numeric. Desired spatial resolution (original is 0.5)
 #' @return a data.table with the resampled data sets
 #' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- resample_data(x, yearly = FALSE, 2.5)
+#' z <- resample_data(x, yearly = TRUE, 2.5)
+#' }
 
 resample_data <- function(x, yearly = TRUE, resolution){
   if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
@@ -204,6 +232,11 @@ resample_data <- function(x, yearly = TRUE, resolution){
 #' @param shp_path a character string with the path to the ".shp" file.
 #' @return a data.table with the cropped data sets
 #' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- resample_data(x, "~/Downloads/cze.shp")
+#' }
 
 crop_data <- function(x, shp_path){
   if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")

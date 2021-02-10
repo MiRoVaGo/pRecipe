@@ -21,3 +21,9 @@ a data.table with the subsetted data sets
 \description{
 The function \code{subset_data} subsets the imported data sets.
 }
+\examples{
+\donttest{
+x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+}
+}

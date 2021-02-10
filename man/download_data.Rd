@@ -32,3 +32,10 @@ download_data(project_folder, name = "all", reformat = FALSE)
 \description{
 The function \code{download_data} downloads the selected data product.
 }
+\examples{
+\donttest{
+download_data("~/global_precipitation/pRecipe")
+download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
+download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+}
+}
