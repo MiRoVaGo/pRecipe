@@ -81,12 +81,15 @@ download_data <- function(project_folder, name = "all", reformat = FALSE){
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param folder_path a character string with the path where the "raw" folder is located.
+#' @param raw_folder_path a character string with the path where the "raw" folder is located.
 #' @export
 
-reformat_data <- function(folder_path, name = "all"){
+reformat_data <- function(raw_folder_path, name = "all"){
   if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  }
+  if (!grepl("*/data/raw", raw_folder_path)){
+    stop("Error: raw_folder_path should point to the location of 'data/raw'")
   }
   lapply(name, function(dataset) switch(dataset,
          "20cr" = reformat_20cr(folder_path),
@@ -128,13 +131,16 @@ reformat_data <- function(folder_path, name = "all"){
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param folder_path a character string with the path where the "database" folder is located.
+#' @param database_folder_path a character string with the path where the "database" folder is located.
 #' @return a data.table with the requested precipitation data sets.
 #' @export
 
-import_data <- function(folder_path, name){
+import_data <- function(database_folder_path, name){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  }
+  if (!grepl("*/data/database", database_folder_path)){
+    stop("Error: database_folder_path should point to the location of 'data/database'")
   }
   if (name == "all"){
     name <- list.files(folder_path, full.names = TRUE)

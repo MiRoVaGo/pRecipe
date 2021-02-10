@@ -3,9 +3,13 @@
 #' Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/20cr")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -35,9 +39,13 @@ reformat_20cr <- function(folder_path){
 #' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_cmap <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/cmap")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -67,9 +75,13 @@ reformat_cmap <- function(folder_path){
 #' Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_cpc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/cpc")
   dummie_list <- list.files(folder_path, full.names = TRUE) %>% as.list()
   no_cores <- detectCores() - 1
@@ -99,9 +111,13 @@ reformat_cpc <- function(folder_path){
 #' Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_cru_ts <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/cru_ts")
   file_name <- list.files(folder_path, full.names = TRUE, pattern = "*.gz")
   dummie_list <- gunzip(file_name, remove = FALSE, skip = TRUE) %>% raster::brick(varname = "pre") %>% raster::as.list()
@@ -127,9 +143,13 @@ reformat_cru_ts <- function(folder_path){
 #' Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_ghcn <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/ghcn")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -158,9 +178,13 @@ reformat_ghcn <- function(folder_path){
 #' Function for reading GPCC NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_gpcc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/gpcc")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -186,9 +210,13 @@ reformat_gpcc <- function(folder_path){
 #' Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_gpcp <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/gpcp")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -218,9 +246,13 @@ reformat_gpcp <- function(folder_path){
 #' Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_gpm_imergm <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   if (!requireNamespace("rhdf5", quietly = TRUE)){
     if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
     BiocManager::install("rhdf5")
@@ -257,9 +289,13 @@ reformat_gpm_imergm <- function(folder_path){
 #' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_ncep_ncar <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/ncep_ncar")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -292,9 +328,13 @@ reformat_ncep_ncar <- function(folder_path){
 #' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_ncep_doe <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/ncep_doe")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -327,9 +367,13 @@ reformat_ncep_doe <- function(folder_path){
 #' Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_precl <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/precl")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -356,9 +400,13 @@ reformat_precl <- function(folder_path){
 #' Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_trmm_3b43 <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/trmm_3b43")
   dummie_list <- list.files(folder_path, full.names = TRUE)
   no_cores <- detectCores() - 1
@@ -395,9 +443,13 @@ reformat_trmm_3b43 <- function(folder_path){
 #' Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_udel <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   folder_path <- paste0(folder_path, "/udel")
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_list <- raster::brick(file_name) %>% raster::as.list()
@@ -424,8 +476,13 @@ reformat_udel <- function(folder_path){
 #' Function for reformatting all of the available data sets.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
 reformat_all <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   reformat_20cr(folder_path)
   reformat_cmap(folder_path)
   reformat_cpc(folder_path)

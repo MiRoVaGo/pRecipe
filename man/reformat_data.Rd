@@ -4,10 +4,10 @@
 \alias{reformat_data}
 \title{Reformat the downloaded data sets into .Rds files}
 \usage{
-reformat_data(folder_path, name = "all")
+reformat_data(raw_folder_path, name = "all")
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "raw" folder is located.}
+\item{raw_folder_path}{a character string with the path where the "raw" folder is located.}
 
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{

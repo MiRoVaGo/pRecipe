@@ -4,10 +4,10 @@
 \alias{import_data}
 \title{Read precipitation data.table from database}
 \usage{
-import_data(folder_path, name)
+import_data(database_folder_path, name)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "database" folder is located.}
+\item{database_folder_path}{a character string with the path where the "database" folder is located.}
 
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
