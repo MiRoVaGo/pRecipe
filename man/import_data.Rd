@@ -33,3 +33,10 @@ a data.table with the requested precipitation data sets.
 \description{
 The function \code{import_data} imports the requested data sets.
 }
+\examples{
+\donttest{
+x <- import_data("~/global_precipitation/pRecipe/data/database", "all")
+x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+x <- import_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+}
+}

@@ -20,6 +20,8 @@ The function \code{crop_data} crops the data sets using a shapefile mask.
 \examples{
 \donttest{
 x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-y <- resample_data(x, "~/Downloads/cze.shp")
+y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+w <- crop_data(x, "~/Downloads/cze.shp")
+z <- crop_data(y, "~/Downloads/cze.shp")
 }
 }

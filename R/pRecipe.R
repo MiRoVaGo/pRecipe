@@ -147,7 +147,7 @@ reformat_data <- function(raw_folder_path, name = "all"){
 #' @export
 #' @examples
 #' \donttest{
-#' x <- import_data("~/global_precipitation/pRecipe/data/database", "all)
+#' x <- import_data("~/global_precipitation/pRecipe/data/database", "all")
 #' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 #' x <- import_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
 #' }
@@ -203,7 +203,7 @@ subset_data <- function(x, start_year, end_year, box){
 #' @examples
 #' \donttest{
 #' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' y <- resample_data(x, yearly = FALSE, 2.5)
+#' y <- resample_data(x, yearly = FALSE, 5)
 #' z <- resample_data(x, yearly = TRUE, 2.5)
 #' }
 
@@ -235,7 +235,9 @@ resample_data <- function(x, yearly = TRUE, resolution){
 #' @examples
 #' \donttest{
 #' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' y <- resample_data(x, "~/Downloads/cze.shp")
+#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' w <- crop_data(x, "~/Downloads/cze.shp")
+#' z <- crop_data(y, "~/Downloads/cze.shp")
 #' }
 
 crop_data <- function(x, shp_path){
