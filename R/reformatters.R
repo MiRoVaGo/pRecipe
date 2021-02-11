@@ -253,22 +253,22 @@ reformat_gpm_imergm <- function(folder_path){
   if (!grepl("*/data/raw", folder_path)){
     stop("Error: folder_path should point to the location of 'data/raw'")
   }
-  if (!requireNamespace("rhdf5", quietly = TRUE)){
-    if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
-    BiocManager::install("rhdf5")
-  }
   folder_path <- paste0(folder_path, "/gpm_imergm")
   dummie_list <- list.files(folder_path, full.names = TRUE)
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
+  clusterEvalQ(cluster, library("hdf5r"))
   precip <- parLapply(cluster, dummie_list, function(year){
     layer_name <- sub(".*3IMERG.", "", year)
     layer_name <- substr(layer_name, 1, 8)
-    dummie_table <- rhdf5::h5read(year, name = "/Grid/precipitation")
-    dummie_table <- raster::brick(dummie_table, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
-    dummie_table <- raster::flip(dummie_table, direction = "y")
+    dummie_file <- H5File$new(year, mode="r+")
+    dummie_table <- dummie_file[["Grid/precipitation"]]
+    dummie_table <- dummie_table[1:1800, 1:3600, 1]
     dummie_table[dummie_table < 0] <- NA
+    dummie_file$close_all()
+    dummie_table <- raster::raster(dummie_table, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
+    dummie_table <- raster::flip(dummie_table, direction = "y")
     dummie_table <- raster::aggregate(dummie_table, fact = 5, fun = mean, na.rm = TRUE)
     names(dummie_table) <- layer_name
     dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)

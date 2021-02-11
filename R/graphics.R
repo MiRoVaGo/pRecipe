@@ -151,7 +151,7 @@ plot_map <- function(x, monthly = FALSE){
 #' @return list with ggplot objects
 #' @export
  
-plot_matrix <- function(x, monthly = FALSE){
+plot_matrix <- function(x){
   dummie_box <- c(min(x$x), min(x$y), max(x$x), max(x$y))
   dummie_min <- copy(x)
   dummie_min <- dummie_min[, value := mean(value, na.rm = TRUE), by = .(month(Z), year(Z), name)][, .(value)] %>% min() %>% floor()
