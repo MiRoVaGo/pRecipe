@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^data$
+^CODEOWNERS$
+^CONTRIBUTING\.md$
+^README\.md$

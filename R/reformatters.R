@@ -253,10 +253,10 @@ reformat_gpm_imergm <- function(folder_path){
   if (!grepl("*/data/raw", folder_path)){
     stop("Error: folder_path should point to the location of 'data/raw'")
   }
-  if (!requireNamespace("rhdf5", quietly = TRUE)){
-    if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
-    BiocManager::install("rhdf5")
-  }
+  #if (!requireNamespace("rhdf5", quietly = TRUE)){
+  #  if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
+  #  BiocManager::install("rhdf5")
+  #}
   folder_path <- paste0(folder_path, "/gpm_imergm")
   dummie_list <- list.files(folder_path, full.names = TRUE)
   no_cores <- detectCores() - 1

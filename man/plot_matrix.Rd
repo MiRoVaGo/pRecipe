@@ -4,7 +4,7 @@
 \alias{plot_matrix}
 \title{Precipitation matrix}
 \usage{
-plot_matrix(x, monthly = FALSE)
+plot_matrix(x)
 }
 \arguments{
 \item{x}{a pRecipe data.table.}

@@ -20,7 +20,7 @@ a data.table with the resampled data sets
 The function \code{resample_data} resamples the imported data.
 }
 \examples{
-\donttest{
+\dontrun{
 x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 y <- resample_data(x, yearly = FALSE, 5)
 z <- resample_data(x, yearly = TRUE, 2.5)

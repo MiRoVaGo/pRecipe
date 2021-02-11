@@ -18,7 +18,7 @@ a data.table with the cropped data sets
 The function \code{crop_data} crops the data sets using a shapefile mask.
 }
 \examples{
-\donttest{
+\dontrun{
 x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 w <- crop_data(x, "~/Downloads/cze.shp")
