@@ -2,13 +2,12 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table gdalUtils ggplot2 ncdf4 parallel rgdal
+#' @import data.table gdalUtils ggplot2 hdf5r ncdf4 parallel rgdal
 #' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
 #' @importFrom lubridate day days_in_month
 #' @importFrom methods as is
 #' @importFrom raster aggregate as.data.frame as.list brick disaggregate extend extent flip metadata ncell raster rasterFromXYZ res resample setValues setZ t zApply
-#' @importFrom rhdf5 h5read
 #' @importFrom R.utils gunzip
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd

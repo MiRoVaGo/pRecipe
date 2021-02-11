@@ -8,8 +8,7 @@ Authors@R: c(
   )
 Description: TBC.
 Depends: R (>= 3.5.0)
-biocViews:
-Imports: data.table, dplyr, gdalUtils, getPass, ggplot2, lubridate, maptools, methods, ncdf4, parallel, raster, rhdf5, rgdal, R.utils, sp, stats, stringr, utils, viridis, zoo
+Imports: data.table, dplyr, gdalUtils, getPass, ggplot2, hdf5r, lubridate, maptools, methods, ncdf4, parallel, raster, rgdal, R.utils, sp, stats, stringr, utils, viridis, zoo
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -18,5 +17,4 @@ BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 4.8.0, https://proj.org/download.html) and GDAL (>= 1.11.4, https://gdal.org/download.html).
 RoxygenNote: 7.1.1
 Suggests:
-  BiocManager (>= 1.30.10),
   testthat (>= 2.1.0)
