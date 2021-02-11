@@ -12,7 +12,7 @@
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd
 #' @importFrom stringr str_pad
-#' @importFrom utils download.file install.packages URLencode
+#' @importFrom utils download.file URLencode
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
 #' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
