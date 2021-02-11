@@ -4,7 +4,7 @@
 \alias{download_precl}
 \title{PRECL data downloader}
 \usage{
-download_precl(destination, resolution)
+download_precl(destination, resolution = 0.5)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}

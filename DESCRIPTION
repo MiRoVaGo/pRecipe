@@ -2,13 +2,14 @@ Package: pRecipe
 Title: My package
 Version: 0.1.0
 Authors@R: c(
-  person("Mijael", "Vargas", email = "mirovago@gmail.com", role = c("aut", "cre")),
-  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut"))
+  person("Mijael R.", "Vargas G.", email = "mirovago@gmail.com", role = c("aut", "cre")),
+  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
+  person("Rajani K.", "Pradhan", role = "ctb")
   )
 Description: TBC.
 Depends: R (>= 3.4.0)
 biocViews:
-Imports: data.table, gdalUtils, ncdf4, parallel, raster, readr, rgdal
+Imports: data.table, dplyr, gdalUtils, getPass, ggplot2, lubridate, maptools, ncdf4, parallel, raster, rgdal, R.utils, sp, stringr, utils, viridis, zoo
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -16,5 +17,4 @@ URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat (>= 2.1.0),
-    rhdf5
+    testthat (>= 2.1.0)

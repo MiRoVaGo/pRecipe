@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_udel}
 \alias{reformat_udel}
-\title{UDEL data reader}
+\title{UDEL data reformatter}
 \usage{
-reformat_udel(folder_path, save, preserve)
+reformat_udel(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with total monthly precipitation in [cm] at 0.5 degrees for 1900-2017.
+\item{folder_path}{a character string with the path to the "raw" folder.}
 }
 \description{
-Function for reading UDEL NC file.
+Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 }

@@ -2,144 +2,253 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @importFrom stringr str_pad
+#' @import data.table gdalUtils ggplot2 ncdf4 parallel rgdal
+#' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
-#' @importFrom utils download.file
-#' @param name a character string with the name of the desired data set. Suitable options are:
-#' \itemize{
-#' \item{"20cr" for 20CR v3,}
-#' \item{"cmap" for CMAP standard version,}
-#' \item{"cpc" for CPC-Global,}
-#' \item{"cru" for CRU_TS v4.04,}
-#' \item{"ghcn" for GHCN-M v2}
-#' \item{"gpcc" for GPCC v2018,}
-#' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
-#' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
-#' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
-#' \item{"udel" for UDEL v501.}
-#' }
-#' @param destination a character string with the path where the downloaded file is saved.
-#' @param resolution numeric. Data spatial resolution for GPCC and PRECL. Suitable options are:
-#' \itemize{
-#' \item{0.5 for 0.5 degree,}
-#' \item{1 for 1 degree,}
-#' \item{2.5 for 2.5 degree.}
-#' }
-#' @param start_year numeric. Start year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM).
-#' @param end_year numeric. End year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM), and should be greater or equal to start year.
-#' @export
-
-download_data <- function(name, destination, resolution = NULL, start_year = NULL, end_year = NULL){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
-  }
-  switch(name,
-         "20cr" = download_20cr(destination),
-         "cmap" = download_cmap(destination),
-         "cpc" = download_cpc(destination, start_year, end_year),
-         "cru" = download_cru(destination),
-         "ghcn" = download_ghcn(destination),
-         "gpcc" = download_gpcc(destination, resolution),
-         "gpcp" = download_gpcp(destination),
-         "gpm" = download_gpm(destination, start_year, end_year),
-         "ncep" = download_ncep(destination),
-         "ncep2" = download_ncep2(destination),
-         "precl" = download_precl(destination, resolution),
-         "trmm" = download_trmm(destination, start_year, end_year),
-         "udel" = download_udel(destination)
-  )
-}
-
-#' Read precipitation data from various sources and reformat them into .Rds files
-#'
-#' The function \code{reformat_data} reformats the selected data product.
-#'
-#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
-#' @importFrom dplyr %>% slice
+#' @importFrom lubridate day days_in_month
+#' @importFrom raster aggregate as.data.frame as.list brick disaggregate extend extent flip metadata ncell raster rasterFromXYZ res resample setValues setZ t zApply
 #' @importFrom R.utils gunzip
-#' @param name a character string with the name of the desired data set. Suitable options are:
+#' @importFrom sp CRS coordinates over proj4string spTransform
+#' @importFrom stringr str_pad
+#' @importFrom utils download.file
+#' @importFrom viridis scale_fill_viridis
+#' @importFrom zoo as.yearmon as.Date.yearmon
+#' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
+#' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
+#' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
-#' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
+#' \item{"ncep_ncar" for NCEP/NCAR,}
+#' \item{"ncep_doe" for NCEP/DOE,}
 #' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param folder_path a character string with the folder path where the data set is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
+#' @param reformat logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
 #' @export
+#' @examples
+#' \donttest{
+#' download_data("~/global_precipitation/pRecipe")
+#' download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
+#' download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+#' }
 
-reformat_data <- function(name, folder_path, save = TRUE, preserve = TRUE){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("20cr", "cmap", "cpc", "cru", "ghcn", "gpcc", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
+download_data <- function(project_folder, name = "all", reformat = FALSE){
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  switch(name,
-         "20cr" = {precip_20cr <<- reformat_20cr(folder_path, save, preserve)},
-         "cmap" = {precip_cmap <<- reformat_cmap(folder_path, save, preserve)},
-         "cpc" = {precip_cpc <<- reformat_cpc(folder_path, save, preserve)},
-         "cru" = {precip_cru <<- reformat_cru(folder_path, save, preserve)},
-         "ghcn" = {precip_ghcn <<- reformat_ghcn(folder_path, save, preserve)},
-         "gpcc" = {precip_gpcc <<- reformat_gpcc(folder_path, save, preserve)},
-         "gpcp" = {precip_gpcp <<- reformat_gpcp(folder_path, save, preserve)},
-         "gpm" = {precip_gpm <<- reformat_gpm(folder_path, save, preserve)},
-         "ncep" = {precip_ncep <<- reformat_ncep(folder_path, save, preserve)},
-         "ncep2" = {precip_ncep2 <<- reformat_ncep2(folder_path, save, preserve)},
-         "precl" = {precip_precl <<- reformat_precl(folder_path, save, preserve)},
-         "trmm" = {precip_trmm <<- reformat_trmm(folder_path, save, preserve)},
-         "udel" = {precip_udel <<- reformat_udel(folder_path, save, preserve)}
-  )
+  create_folders(project_folder)
+  destination <- paste0(project_folder,"/data/raw")
+  lapply(name, function(dataset) switch(dataset,
+         "20cr" = download_20cr(destination),
+         "all"  = download_all(destination),
+         "cmap" = download_cmap(destination),
+         "cpc" = download_cpc(destination),
+         "cru_ts" = download_cru_ts(destination),
+         "ghcn" = download_ghcn(destination),
+         "gpcc" = download_gpcc(destination),
+         "gpcp" = download_gpcp(destination),
+         "gpm_imergm" = download_gpm_imergm(destination),
+         "ncep_ncar" = download_ncep_ncar(destination),
+         "ncep_doe" = download_ncep_doe(destination),
+         "precl" = download_precl(destination),
+         "trmm_3b43" = download_trmm_3b43(destination),
+         "udel" = download_udel(destination)
+  ))
+  if (reformat == TRUE) reformat_data(destination, name)
+  return(invisible())
 }
 
-#' Transforms the data from precipitation rate into total precipitation.
+#' Reformat the downloaded data sets into .Rds files
 #'
-#' The function \code{prate_to_psum} accumulates precipitation of the selected data product.
+#' The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables at 0.5 degree resolution. 
 #'
-#' @import gdalUtils ncdf4 parallel raster rgdal rhdf5
-#' @importFrom dplyr %>% slice
-#' @importFrom lubridate days_in_month
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
+#' \item{"all" for all of the below listed data sets (default),}
+#' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
+#' \item{"cpc" for CPC-Global,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"ghcn" for GHCN-M v2}
+#' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm" for GPM IMERG Final v06,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep" for NCEP/NCAR,}
 #' \item{"ncep2" for NCEP/DOE,}
 #' \item{"precl" for PRECL,}
-#' \item{"trmm" for TRMM 3B43 v7,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param file a character string with the folder path where the data set is located.
-#' @param overwrite logical. If TRUE (default) the original file with precipitation data will be replaced with a file with total precipitation.
-#' @note For Udel data only the units are transformed to mm because it is already in terms of total precipitation
+#' @param raw_folder_path a character string with the path where the "raw" folder is located.
 #' @export
+#' @examples
+#' \donttest{
+#' reformat_data("~/global_precipitation/pRecipe/data/raw")
+#' reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+#' }
 
-prate_to_psum <- function(name, file, overwrite = TRUE){
-  '%!in%' <- function(x, y)!('%in%'(x, y))
-  if (name %!in% c("cmap", "gpcp", "gpm", "ncep", "ncep2", "precl", "trmm", "udel")){
-    stop("Error: Data set not supported. Select one of 20cr, cmap, cpc, cru, ghcn, gpcc, gpcp, gpm, ncep, ncep2, precl, trmm, udel")
+reformat_data <- function(raw_folder_path, name = "all"){
+  if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  switch(name,
-         "cmap" = {precip_cmap <<- prate_to_psum_cmap(file, overwrite)},
-         "gpcp" = {precip_gpcp <<- prate_to_psum_gpcp(file, overwrite)},
-         "gpm" = {precip_gpm <<- prate_to_psum_gpm(file, overwrite)},
-         "ncep" = {precip_ncep <<- prate_to_psum_ncep(file, overwrite)},
-         "ncep2" = {precip_ncep2 <<- prate_to_psum_ncep2(file, overwrite)},
-         "precl" = {precip_precl <<- prate_to_psum_precl(file, overwrite)},
-         "trmm" = {precip_trmm <<- prate_to_psum_trmm(file, overwrite)},
-         "udel" = {precip_udel <<- prate_to_psum_udel(file, overwrite)}
-  )
+  if (!grepl("*/data/raw", raw_folder_path)){
+    stop("Error: raw_folder_path should point to the location of 'data/raw'")
+  }
+  lapply(name, function(dataset) switch(dataset,
+         "20cr" = reformat_20cr(folder_path),
+         "all" = reformat_all(folder_path),
+         "cmap" = reformat_cmap(folder_path),
+         "cpc" = reformat_cpc(folder_path),
+         "cru_ts" = reformat_cru_ts(folder_path),
+         "ghcn" = reformat_ghcn(folder_path),
+         "gpcc" = reformat_gpcc(folder_path),
+         "gpcp" = reformat_gpcp(folder_path),
+         "gpm_imergm" = reformat_gpm_imergm(folder_path),
+         "ncep_ncar" = reformat_ncep_ncar(folder_path),
+         "ncep_doe" = reformat_ncep_doe(folder_path),
+         "precl" = reformat_precl(folder_path),
+         "trmm_3b43" = reformat_trmm_3b43(folder_path),
+         "udel" = reformat_udel(folder_path)
+  ))
+  return(invisible())
+}
+
+#' Read precipitation data.table from database
+#'
+#' The function \code{import_data} imports the requested data sets.
+#'
+#' @param name a character string with the name of the desired data set. Suitable options are:
+#' \itemize{
+#' \item{"all" for all of the below listed data sets,}
+#' \item{"20cr" for 20CR v3,}
+#' \item{"cmap" for CMAP standard version,}
+#' \item{"cpc" for CPC-Global,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"ghcn" for GHCN-M v2}
+#' \item{"gpcc" for GPCC v2018,}
+#' \item{"gpcp" for GPCP v2.3,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
+#' \item{"ncep" for NCEP/NCAR,}
+#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"precl" for PRECL,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
+#' \item{"udel" for UDEL v501.}
+#' }
+#' @param database_folder_path a character string with the path where the "database" folder is located.
+#' @return a data.table with the requested precipitation data sets.
+#' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/global_precipitation/pRecipe/data/database", "all")
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' x <- import_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+#' }
+
+import_data <- function(database_folder_path, name){
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  }
+  if (!grepl("*/data/database", database_folder_path)){
+    stop("Error: database_folder_path should point to the location of 'data/database'")
+  }
+  if (name == "all"){
+    name <- list.files(folder_path, full.names = TRUE)
+  } else {
+    
+    name <- grep(paste(name, collapse = "|"), list.files(folder_path, full.names = TRUE), value = TRUE)
+  }
+  precip <- lapply(name, readRDS) %>% rbindlist()
+  return(precip)
+}
+
+#' Subset precipitation data sets
+#'
+#' The function \code{subset_data} subsets the imported data sets.
+#'
+#' @param x a pRecipe data.table imported using \code{import_data}.
+#' @param start_year numeric.
+#' @param end_year numeric.
+#' @param box numeric vector. Bounding box in the form: (xmin, ymin, xmax, ymax).
+#' @return a data.table with the subsetted data sets
+#' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' }
+
+subset_data <- function(x, start_year, end_year, box){
+  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
+  x <- x[year(Z) >= start_year & year(Z) <= end_year & x >= box[1] & x <= box[3] & y >= box[2] & y <= box[4]]
+  return(x)
+}
+
+#' Resampling precipitation data sets
+#'
+#' The function \code{resample_data} resamples the imported data.
+#'
+#' @param x a pRecipe data.table imported using \code{import_data}.
+#' @param yearly logical. If TRUE (default) monthly data will be aggregated into yearly.
+#' @param resolution numeric. Desired spatial resolution (original is 0.5)
+#' @return a data.table with the resampled data sets
+#' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- resample_data(x, yearly = FALSE, 5)
+#' z <- resample_data(x, yearly = TRUE, 2.5)
+#' }
+
+resample_data <- function(x, yearly = TRUE, resolution){
+  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
+  if (yearly == TRUE){
+    x <- x[, value := sum(value, na.rm = TRUE), by = .(x, y, Z)]
+    x <- split(x, x$name)
+    no_cores <- detectCores() - 1
+    if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+    cluster <- makeCluster(no_cores, type = "PSOCK")
+    clusterExport(cluster, varlist = c("dt_aggregate", "resolution"))
+    precip <- parLapply(cluster, x, function(dataset){
+      precip <- dt_aggregate(x, resolution)
+    })
+  }
+  x <- x[year(Z) >= start_year & year(Z) <= end_year & x >= box[1] & x <= box[3] & y >= box[2] & y <= box[4]]
+  return(x)
+}
+
+#' Crop precipitation data sets
+#'
+#' The function \code{crop_data} crops the data sets using a shapefile mask.
+#'
+#' @param x a pRecipe data.table imported using \code{\link{import_data}}.
+#' @param shp_path a character string with the path to the ".shp" file.
+#' @return a data.table with the cropped data sets
+#' @export
+#' @examples
+#' \donttest{
+#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' w <- crop_data(x, "~/Downloads/cze.shp")
+#' z <- crop_data(y, "~/Downloads/cze.shp")
+#' }
+
+crop_data <- function(x, shp_path){
+  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
+  shp_mask <- rearOGR(shp_path)
+  shp_mask <- spTransform(shp_mask, "+proj=longlat +datum=WGS84 +ellps=WGS84")
+  x <- as.data.frame(x)
+  coordinates(x) <- ~ x + y
+  proj4string(x) <- proj4string(shp_mask)
+  x <- x[!is.na(over(x, as(shp_mask, "SpatialPolygons"))), ]
+  x <- as.data.table(x)
+  class(x) <- append(class(x),"pRecipe")
+  return(x)
 }

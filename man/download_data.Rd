@@ -4,45 +4,38 @@
 \alias{download_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-download_data(
-  name,
-  destination,
-  resolution = NULL,
-  start_year = NULL,
-  end_year = NULL
-)
+download_data(project_folder, name = "all", reformat = FALSE)
 }
 \arguments{
-\item{name}{a character string with the name of the desired data set. Suitable options are:
+\item{project_folder}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
+
+\item{name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
+\item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
-\item{"cru" for CRU_TS v4.04,}
+\item{"cru_ts" for CRU_TS v4.04,}
 \item{"ghcn" for GHCN-M v2}
 \item{"gpcc" for GPCC v2018,}
 \item{"gpcp" for GPCP v2.3,}
-\item{"gpm" for GPM IMERG Final v06,}
-\item{"ncep" for NCEP/NCAR,}
-\item{"ncep2" for NCEP/DOE,}
+\item{"gpm_imergm" for GPM IMERGM Final v06,}
+\item{"ncep_ncar" for NCEP/NCAR,}
+\item{"ncep_doe" for NCEP/DOE,}
 \item{"precl" for PRECL,}
-\item{"trmm" for TRMM 3B43 v7,}
+\item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
 }}
 
-\item{destination}{a character string with the path where the downloaded file is saved.}
-
-\item{resolution}{numeric. Data spatial resolution for GPCC and PRECL. Suitable options are:
-\itemize{
-\item{0.5 for 0.5 degree,}
-\item{1 for 1 degree,}
-\item{2.5 for 2.5 degree.}
-}}
-
-\item{start_year}{numeric. Start year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM).}
-
-\item{end_year}{numeric. End year should be between 1979-2019 (CPC), 2000-2019 (GPM), or 1998-2019 (TRMM), and should be greater or equal to start year.}
+\item{reformat}{logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }
 \description{
 The function \code{download_data} downloads the selected data product.
+}
+\examples{
+\donttest{
+download_data("~/global_precipitation/pRecipe")
+download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
+download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+}
 }

@@ -2,20 +2,13 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_gpcp}
 \alias{reformat_gpcp}
-\title{GPCP data reader}
+\title{GPCP data reformatter}
 \usage{
-reformat_gpcp(folder_path, save, preserve)
+reformat_gpcp(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path where the data set file is located.}
-
-\item{save}{logical. If TRUE (default) an .Rds file will be saved in the same location.}
-
-\item{preserve}{logical. If TRUE (default) the original file will be preserved.}
-}
-\value{
-a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
+\item{folder_path}{a character string with the path to the "raw" folder.}
 }
 \description{
-Function for reading GPCP NC file.
+Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 }

@@ -4,7 +4,7 @@
 \alias{download_cpc}
 \title{CPC data downloader}
 \usage{
-download_cpc(destination, start_year, end_year)
+download_cpc(destination, start_year = 1979, end_year = 2019)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}

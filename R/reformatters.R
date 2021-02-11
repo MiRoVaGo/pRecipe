@@ -1,295 +1,499 @@
-#' 20CR data reader
+#' 20CR data reformatter
 #'
-#' Function for reading 20CR NC files.
+#' Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [mm] at 1 degrees for 1863-2015.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_20cr <- function(folder_path, save, preserve){
+reformat_20cr <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/20cr_M_1_186301_201512.Rds"))
-}
-
-#' CMAP data reader
-#'
-#' Function for reading CMAP NC files.
-#'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
-
-reformat_cmap <- function(folder_path, save, preserve){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cmap_M_25_197901_201912.Rds"))
-}
-
-#' CPC data reader
-#'
-#' Function for reading CPC-GLOBAL NC files.
-#'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with total daily precipitation in [mm] at 0.5 degrees for 1979-2019.
-
-reformat_cpc <- function(folder_path, save, preserve, check = FALSE){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  if (check == TRUE) {
-    no_cores <- 2L
-  } else {
-    no_cores <- detectCores() -1
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
   }
+  folder_path <- paste0(folder_path, "/20cr")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
-  precip <- vector(mode = "list", length = length(file_name))
-  precip <- parLapply(cluster, file_name, function(year){
-    dummie_brick <- raster::brick(year)
-    dummie_brick[dummie_brick < 0] <- NA
-    return(dummie_brick)
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * (24/3)
+    return(dummie_table)
   })
   stopCluster(cluster)
-  return(precip)
-  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cpc_d_05_197901_201912.Rds"))
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "20cr"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/20cr.Rds"))
 }
 
-#' CRU data reader
+#' CMAP data reformatter
 #'
-#' Function for reading CRU_TS NC.GZ file.
+#' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/month] at 0.5 degrees for 1901-2019.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_cru <- function(folder_path, save, preserve){
+reformat_cmap <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/cmap")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- gunzip(file_name, remove = FALSE) %>% brick()
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/cru_M_05_190101_201912.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "cmap"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/cmap.Rds"))
 }
 
-#' GHCN-M data reader
+#' CPC data reformatter
 #'
-#' Function for reading GHCN-M NC file.
+#' Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [mm] at 5 degrees for 1900-2015.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_ghcn <- function(folder_path, save, preserve){
+reformat_cpc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/cpc")
+  dummie_list <- list.files(folder_path, full.names = TRUE) %>% as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::brick(year)
+    layer_days <- as.Date(names(dummie_table), format = "X%Y.%m.%d")
+    layer_months <- c(layer_days[1], layer_days[length(layer_days)])
+    layer_months <- seq(layer_months[1], layer_months[2], 'month')
+    dummie_table <- raster::zApply(dummie_table, by = data.table::month, fun = sum, na.rm = TRUE)
+    dummie_table <- raster::setZ(dummie_table, layer_months)
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "cpc"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/cpc.Rds"))
+}
+
+#' CRU data reformatter
+#'
+#' Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
+#'
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
+
+reformat_cru_ts <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/cru_ts")
+  file_name <- list.files(folder_path, full.names = TRUE, pattern = "*.gz")
+  dummie_list <- gunzip(file_name, remove = FALSE, skip = TRUE) %>% raster::brick(varname = "pre") %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- year
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$Z <- as.Date(dummie_table$Z)
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip$name <- "cru_ts"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/cru_ts.Rds"))
+}
+
+#' GHCN-M data reformatter
+#'
+#' Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
+#'
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
+
+reformat_ghcn <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/ghcn")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ghcn_M_5_190001_201505.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "ghcn"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/ghcn.Rds"))
 }
 
-#' GPCC data reader
+#' GPCC data reformatter
 #'
-#' Function for reading GPCC NC file.
+#' Function for reading GPCC NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [mm] at 0.5 degrees for 1891-2016.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_gpcc <- function(folder_path, save, preserve){
+reformat_gpcc <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/gpcc")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcc_M_05_189101_201612.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$Z <- as.Date(dummie_table$Z)
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "gpcc"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/gpcc.Rds"))
 }
 
-#' GPCP data reader
+#' GPCP data reformatter
 #'
-#' Function for reading GPCP NC file.
+#' Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 2.5 degrees for 1979-2019.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_gpcp <- function(folder_path, save, preserve){
+reformat_gpcp <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/gpcp")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpcp_M_25_197901_201912.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::disaggregate(year, fact = raster::res(year)/0.5)
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "gpcp"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/gpcp.Rds"))
 }
 
-#' GPM data reader
+#' GPM data reformatter
 #'
-#' Function for reading GPM HDF5 files.
+#' Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with monthly precipitation rate in [mm/hour] at 0.1 degrees for 2000-2019.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_gpm <- function(folder_path, save, preserve, check = FALSE){
+reformat_gpm_imergm <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
   if (!requireNamespace("rhdf5", quietly = TRUE)){
     if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager") 
     BiocManager::install("rhdf5")
   }
-  file_name <- list.files(folder_path, full.names = TRUE)
-  if (check == TRUE) {
-    no_cores <- 2L
-  } else {
-    no_cores <- detectCores() -1
-  }
+  folder_path <- paste0(folder_path, "/gpm_imergm")
+  dummie_list <- list.files(folder_path, full.names = TRUE)
+  no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
-  precip <- parLapply(cluster, file_name, function(year){
-    dummie_brick <- rhdf5::h5read(year, name = "/Grid/precipitation")
-    dummie_brick <- raster::brick(dummie_brick, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
-    dummie_brick <- raster::flip(dummie_brick, direction = "y")
-    dummie_brick[dummie_brick < 0] <- NA
-    return(dummie_brick)
+  precip <- parLapply(cluster, dummie_list, function(year){
+    layer_name <- sub(".*3IMERG.", "", year)
+    layer_name <- substr(layer_name, 1, 8)
+    dummie_table <- rhdf5::h5read(year, name = "/Grid/precipitation")
+    dummie_table <- raster::brick(dummie_table, xmn = -180, xmx = 180, ymn = -90, ymx = 90, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
+    dummie_table <- raster::flip(dummie_table, direction = "y")
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::aggregate(dummie_table, fact = 5, fun = mean, na.rm = TRUE)
+    names(dummie_table) <- layer_name
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$Z <- as.Date(dummie_table$Z, format = "X%Y%m%d")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 24
+    return(dummie_table)
   })
   stopCluster(cluster)
-  return(precip)
-  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/gpm_M_01_200006_201912.Rds"))
+  precip <- data.table::rbindlist(precip)
+  precip$name <- "gpm_imergm"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/gpm_imergm.Rds"))
 }
 
-#' NCEP/NCAR data reader
+#' NCEP/NCAR data reformatter
 #'
-#' Function for reading NCEP/NCAR NC files.
+#' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1948-2019.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_ncep <- function(folder_path, save, preserve){
+reformat_ncep_ncar <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/ncep_ncar")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep_M_T62_194801_201912.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
+    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "ncep_ncar"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar.Rds"))
 }
 
-#' NCEP/DOE data reader
+#' NCEP/DOE data reformatter
 #'
-#' Function for reading NCEP/DOE NC files.
+#' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/s] at T62 Gaussian grid for 1979-2019.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_ncep2 <- function(folder_path, save, preserve){
+reformat_ncep_doe <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/ncep_doe")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/ncep2_M_T62_197901_201912.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
+    dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
+    dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "ncep_doe"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe.Rds"))
 }
 
-#' PRECL data reader
+#' PRECL data reformatter
 #'
-#' Function for reading PRECL NC file.
+#' Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with monthly precipitation rate in [mm/day] at 0.5 degrees for 1948-2012.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_precl <- function(folder_path, save, preserve){
+reformat_precl <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be character string.")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/precl_M_05_194801_201212.Rds"))
-}
-
-#' TRMM data reader
-#'
-#' Function for reading TRMM 3B43 HDF files.
-#'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @param check logical. If TRUE parallel works only with 2 cores for CRAN tests.
-#' @return a list of bricks with monthly precipitation rate in [mm/h] at 0.25 degrees for 1998-2019.
-
-reformat_trmm <- function(folder_path, save, preserve, check = FALSE){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  if (check == TRUE) {
-    no_cores <- 2L
-  } else {
-    no_cores <- detectCores() -1
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
   }
+  folder_path <- paste0(folder_path, "/precl")
+  file_name <- list.files(folder_path, full.names = TRUE)
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
-  precip <- parLapply(cluster, file_name, function(year){
-    dummie_brick <- gdalUtils::get_subdatasets(year)
-    dummie_brick <- rgdal::readGDAL(dummie_brick[1])
-    dummie_brick <- raster::brick(dummie_brick)
-    dummie_brick <- raster::t(dummie_brick)
-    sp::proj4string(dummie_brick) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    raster::extent(dummie_brick) <- c(-180, 180, -50, 50)
-    dummie_brick <- raster::flip(dummie_brick, direction = "y")
-    dummie_brick[dummie_brick < 0] <- NA
-    return(dummie_brick)
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$Z <- as.Date(dummie_table$Z)
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z)
+    return(dummie_table)
   })
   stopCluster(cluster)
-  return(precip)
-  if (preserve == FALSE) file.remove(paste0(folder_path, "/*"))
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/trmm_M_025_199801_201912.Rds"))
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "precl"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/precl.Rds"))
 }
 
-#' UDEL data reader
+#' TRMM data reformatter
 #'
-#' Function for reading UDEL NC file.
+#' Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 #'
-#' @param folder_path a character string with the path where the data set file is located.
-#' @param save logical. If TRUE (default) an .Rds file will be saved in the same location.
-#' @param preserve logical. If TRUE (default) the original file will be preserved.
-#' @return a brick with total monthly precipitation in [cm] at 0.5 degrees for 1900-2017.
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
 
-reformat_udel <- function(folder_path, save, preserve){
+reformat_trmm_3b43 <- function(folder_path){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/trmm_3b43")
+  dummie_list <- list.files(folder_path, full.names = TRUE)
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    layer_name <- sub(".*3B43.", "", year)
+    layer_name <- substr(layer_name, 1, 8)
+    dummie_table <- gdalUtils::get_subdatasets(year)
+    dummie_table <- rgdal::readGDAL(dummie_table[1])
+    dummie_table <- raster::brick(dummie_table)
+    dummie_table <- raster::t(dummie_table)
+    sp::proj4string(dummie_table) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    raster::extent(dummie_table) <- c(-180, 180, -50, 50)
+    dummie_table <- raster::flip(dummie_table, direction = "y")
+    dummie_table[dummie_table < 0] <- NA
+    dummie_table <- raster::aggregate(dummie_table, fact = 2, fun = mean, na.rm = TRUE)
+    names(dummie_table) <- layer_name
+    dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
+    data.table::setnames(dummie_table, "layer", "Z")
+    dummie_table$Z <- as.Date(dummie_table$Z, format = "X%Y%m%d")
+    dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 24
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip$name <- "trmm_3b43"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/trmm_3b43.Rds"))
+}
+
+#' UDEL data reformatter
+#'
+#' Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
+#'
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
+
+reformat_udel <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  folder_path <- paste0(folder_path, "/udel")
   file_name <- list.files(folder_path, full.names = TRUE)
-  precip <- brick(file_name)
-  precip[precip < 0] <- NA
-  return(precip)
-  if (preserve == FALSE) file.remove(file_name)
-  if (save == TRUE) saveRDS(precip, paste0(folder_path, "/udel_M_05_190001_201712.Rds"))
+  dummie_list <- raster::brick(file_name) %>% raster::as.list()
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  precip <- parLapply(cluster, dummie_list, function(year){
+    dummie_table <- raster::as.data.frame(year, xy = TRUE, long = TRUE, na.rm = TRUE)
+    dummie_table <- data.table::as.data.table(dummie_table)
+    dummie_table$Z <- as.Date(dummie_table$Z)
+    dummie_table$value <- dummie_table$value * 10
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- data.table::rbindlist(precip)
+  precip[x > 180, x := x - 360]
+  precip$name <- "udel"
+  class(precip) <- append(class(precip),"pRecipe")
+  saveRDS(precip, paste0(folder_path, "/../../database/udel.Rds"))
+}
+
+#' All data reformatter
+#'
+#' Function for reformatting all of the available data sets.
+#'
+#' @param folder_path a character string with the path to the "raw" folder.
+#' @export
+
+reformat_all <- function(folder_path){
+  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+  if (!grepl("*/data/raw", folder_path)){
+    stop("Error: folder_path should point to the location of 'data/raw'")
+  }
+  reformat_20cr(folder_path)
+  reformat_cmap(folder_path)
+  reformat_cpc(folder_path)
+  reformat_cru_ts(folder_path)
+  reformat_ghcn(folder_path)
+  reformat_gpcc(folder_path)
+  reformat_gpcp(folder_path)
+  reformat_gpm_imergm(folder_path)
+  reformat_ncep_ncar(folder_path)
+  reformat_ncep_doe(folder_path)
+  reformat_precl(folder_path)
+  reformat_trmm_3b43(folder_path)
+  reformat_udel(folder_path)
 }
