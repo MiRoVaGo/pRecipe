@@ -7,7 +7,7 @@
 #' @importFrom getPass getPass
 #' @importFrom lubridate day days_in_month
 #' @importFrom methods as is
-#' @importFrom raster aggregate as.data.frame as.list brick disaggregate extend extent flip metadata ncell raster rasterFromXYZ res resample setValues setZ t zApply
+#' @importFrom raster aggregate as.data.frame as.list brick disaggregate extend extent flip metadata ncell raster rasterFromXYZ res resample setValues setZ subset t zApply
 #' @importFrom R.utils gunzip
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd
@@ -125,7 +125,7 @@ reformat_data <- function(raw_folder_path, name = "all"){
 
 #' Read precipitation data.table from database
 #'
-#' The function \code{import_data} imports the requested data sets.
+#' The function \code{import_full_data} imports the requested data sets.
 #'
 #' @param name a character string with the name of the desired data set. Suitable options are:
 #' \itemize{
@@ -149,12 +149,12 @@ reformat_data <- function(raw_folder_path, name = "all"){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_data("~/global_precipitation/pRecipe/data/database", "all")
-#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' x <- import_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+#' x <- import_full_data("~/global_precipitation/pRecipe/data/database", "all")
+#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' x <- import_full_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
 #' }
 
-import_data <- function(database_folder_path, name){
+import_full_data <- function(database_folder_path, name){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
@@ -171,26 +171,56 @@ import_data <- function(database_folder_path, name){
   return(precip)
 }
 
-#' Subset precipitation data sets
+#' Read and subset precipitation data sets
 #'
-#' The function \code{subset_data} subsets the imported data sets.
+#' The function \code{import_subset_data} reads and subsets the requested data sets.
 #'
-#' @param x a pRecipe data.table imported using \code{import_data}.
+#' @param name a character string with the name of the desired data set. Suitable options are:
+#' \itemize{
+#' \item{"all" for all of the below listed data sets,}
+#' \item{"20cr" for 20CR v3,}
+#' \item{"cmap" for CMAP standard version,}
+#' \item{"cpc" for CPC-Global,}
+#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"ghcn" for GHCN-M v2}
+#' \item{"gpcc" for GPCC v2018,}
+#' \item{"gpcp" for GPCP v2.3,}
+#' \item{"gpm_imergm" for GPM IMERGM Final v06,}
+#' \item{"ncep" for NCEP/NCAR,}
+#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"precl" for PRECL,}
+#' \item{"trmm_3b43" for TRMM 3B43 v7,}
+#' \item{"udel" for UDEL v501.}
+#' }
+#' @param database_folder_path a character string with the path where the "database" folder is located.
 #' @param start_year numeric.
 #' @param end_year numeric.
-#' @param box numeric vector. Bounding box in the form: (xmin, ymin, xmax, ymax).
-#' @return a data.table with the subsetted data sets
+#' @param bbox numeric vector. Bounding box in the form: (xmin, ymin, xmax, ymax).
+#' @return a data.table with the requested data sets subset
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' x <- import_subset_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 #' }
 
-subset_data <- function(x, start_year, end_year, box){
-  if (!is(x, "pRecipe")) stop("Error: x must be a pRecipe data.table")
-  x <- x[year(Z) >= start_year & year(Z) <= end_year & x >= box[1] & x <= box[3] & y >= box[2] & y <= box[4]]
-  return(x)
+import_subset_data <- function(database_folder_path, name, start_year, end_year, bbox){
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  }
+  if (!grepl("*/data/database", database_folder_path)){
+    stop("Error: database_folder_path should point to the location of 'data/database'")
+  }
+  if (Reduce("&", name == "all")){
+    name <- list.files(database_folder_path, full.names = TRUE)
+  } else {
+    
+    name <- grep(paste(name, collapse = "|"), list.files(database_folder_path, full.names = TRUE), value = TRUE)
+  }
+  dummie_years <- paste(seq(start_year, end_year), collapse = "|")
+  name <- grep(dummie_years, name, value = TRUE)
+  precip <- lapply(name, readRDS) %>% rbindlist()
+  precip <- precip[x >= bbox[1] & x <= bbox[3] & y >= bbox[2] & y <= bbox[4]]
+  return(precip)
 }
 
 #' Resampling precipitation data sets
