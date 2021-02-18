@@ -7,7 +7,7 @@
 crop_data(x, shp_path)
 }
 \arguments{
-\item{x}{a pRecipe data.table imported using \code{\link{import_data}}.}
+\item{x}{a pRecipe data.table imported using \code{\link{import_full_data}} or \code{\link{import_subset_data}}.}
 
 \item{shp_path}{a character string with the path to the ".shp" file.}
 }
@@ -19,9 +19,10 @@ The function \code{crop_data} crops the data sets using a shapefile mask.
 }
 \examples{
 \dontrun{
-x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 w <- crop_data(x, "~/Downloads/cze.shp")
+y <- import_subset_data("~/projects/czu/pRecipe/data/database", 
+c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 z <- crop_data(y, "~/Downloads/cze.shp")
 }
 }

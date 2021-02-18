@@ -7,7 +7,7 @@
 merge_1836_1890(folder_path)
 }
 \arguments{
-\item{folder_path}{a character string with the path to the "integration" folder.}
+\item{folder_path}{a character string with the path to the "database" folder.}
 }
 \description{
 Function for merging the data sets overlapping by time periods.

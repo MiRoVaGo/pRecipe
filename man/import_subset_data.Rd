@@ -41,6 +41,7 @@ The function \code{import_subset_data} reads and subsets the requested data sets
 }
 \examples{
 \dontrun{
-x <- import_subset_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+x <- import_subset_data("~/projects/czu/pRecipe/data/database", 
+c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 }
 }

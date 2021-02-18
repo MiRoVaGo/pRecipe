@@ -12,7 +12,7 @@
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd
 #' @importFrom stringr str_pad
-#' @importFrom utils download.file URLencode
+#' @importFrom utils download.file URLencode View
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
 #' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
@@ -200,7 +200,8 @@ import_full_data <- function(database_folder_path, name){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_subset_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' x <- import_subset_data("~/projects/czu/pRecipe/data/database", 
+#' c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 #' }
 
 import_subset_data <- function(database_folder_path, name, start_year, end_year, bbox){
@@ -227,14 +228,14 @@ import_subset_data <- function(database_folder_path, name, start_year, end_year,
 #'
 #' The function \code{resample_data} resamples the imported data.
 #'
-#' @param x a pRecipe data.table imported using \code{import_data}.
+#' @param x a pRecipe data.table imported using \code{\link{import_full_data}} or \code{\link{import_subset_data}}.
 #' @param yearly logical. If TRUE (default) monthly data will be aggregated into yearly.
 #' @param resolution numeric. Desired spatial resolution (original is 0.5)
 #' @return a data.table with the resampled data sets
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 #' y <- resample_data(x, yearly = FALSE, 5)
 #' z <- resample_data(x, yearly = TRUE, 2.5)
 #' }
@@ -259,15 +260,16 @@ resample_data <- function(x, yearly = TRUE, resolution){
 #'
 #' The function \code{crop_data} crops the data sets using a shapefile mask.
 #'
-#' @param x a pRecipe data.table imported using \code{\link{import_data}}.
+#' @param x a pRecipe data.table imported using \code{\link{import_full_data}} or \code{\link{import_subset_data}}.
 #' @param shp_path a character string with the path to the ".shp" file.
 #' @return a data.table with the cropped data sets
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' y <- subset_data(x, 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
 #' w <- crop_data(x, "~/Downloads/cze.shp")
+#' y <- import_subset_data("~/projects/czu/pRecipe/data/database", 
+#' c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
 #' z <- crop_data(y, "~/Downloads/cze.shp")
 #' }
 
