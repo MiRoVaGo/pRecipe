@@ -4,10 +4,10 @@
 \alias{download_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-download_data(project_folder, name = "all", reformat = FALSE)
+download_data(project_folder_path = ".", name, reformat = TRUE)
 }
 \arguments{
-\item{project_folder}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
+\item{project_folder_path}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
 
 \item{name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
@@ -27,7 +27,7 @@ download_data(project_folder, name = "all", reformat = FALSE)
 \item{"udel" for UDEL v501.}
 }}
 
-\item{reformat}{logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
+\item{reformat}{logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }
 \description{
 The function \code{download_data} downloads the selected data product.

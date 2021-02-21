@@ -15,7 +15,7 @@
 #' @importFrom utils download.file URLencode View
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
-#' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
+#' @param project_folder_path a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
 #' @param name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
@@ -33,7 +33,7 @@
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param reformat logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
+#' @param reformat logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
 #' @export
 #' @examples
 #' \dontrun{
@@ -42,12 +42,12 @@
 #' download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
 #' }
 
-download_data <- function(project_folder, name = "all", reformat = FALSE){
+download_data <- function(project_folder_path = ".", name, reformat = TRUE){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
-  create_folders(project_folder)
-  destination <- paste0(project_folder,"/data/raw")
+  create_folders(project_folder_path)
+  destination <- paste0(project_folder_path,"/data/raw")
   lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),
