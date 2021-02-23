@@ -4,7 +4,7 @@
 \alias{reformat_data}
 \title{Reformat the downloaded data sets into .Rds files}
 \usage{
-reformat_data(raw_folder_path, name = "all")
+reformat_data(raw_folder_path = "./data/raw", name = "all")
 }
 \arguments{
 \item{raw_folder_path}{a character string with the path where the "raw" folder is located.}

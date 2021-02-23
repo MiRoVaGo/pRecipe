@@ -42,7 +42,7 @@
 #' download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
 #' }
 
-download_data <- function(project_folder_path = ".", name, reformat = TRUE){
+download_data <- function(name = "all", project_folder_path = ".", reformat = TRUE){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
@@ -97,7 +97,7 @@ download_data <- function(project_folder_path = ".", name, reformat = TRUE){
 #' reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
 #' }
 
-reformat_data <- function(raw_folder_path, name = "all"){
+reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
   if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
@@ -149,12 +149,12 @@ reformat_data <- function(raw_folder_path, name = "all"){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_full_data("~/global_precipitation/pRecipe/data/database", "all")
-#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' x <- import_full_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+#' x <- import_full_data("all", "~/global_precipitation/pRecipe/data/database")
+#' x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), "~/projects/czu/pRecipe/data/database")
+#' x <- import_full_data(c("gpm_imergm", "trmm_3b43"), "~/research/pRecipe/data/database")
 #' }
 
-import_full_data <- function(database_folder_path, name){
+import_full_data <- function(name, database_folder_path = "./data/database"){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }
@@ -200,11 +200,11 @@ import_full_data <- function(database_folder_path, name){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_subset_data("~/projects/czu/pRecipe/data/database", 
-#' c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+#' x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12), 
+#' "~/projects/czu/pRecipe/data/database")
 #' }
 
-import_subset_data <- function(database_folder_path, name, start_year, end_year, bbox){
+import_subset_data <- function(name, start_year, end_year, bbox, database_folder_path = "./data/database"){
   if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
     stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
   }

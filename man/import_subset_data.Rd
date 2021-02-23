@@ -4,11 +4,15 @@
 \alias{import_subset_data}
 \title{Read and subset precipitation data sets}
 \usage{
-import_subset_data(database_folder_path, name, start_year, end_year, bbox)
+import_subset_data(
+  name,
+  start_year,
+  end_year,
+  bbox,
+  database_folder_path = "./data/database"
+)
 }
 \arguments{
-\item{database_folder_path}{a character string with the path where the "database" folder is located.}
-
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets,}
@@ -32,6 +36,8 @@ import_subset_data(database_folder_path, name, start_year, end_year, bbox)
 \item{end_year}{numeric.}
 
 \item{bbox}{numeric vector. Bounding box in the form: (xmin, ymin, xmax, ymax).}
+
+\item{database_folder_path}{a character string with the path where the "database" folder is located.}
 }
 \value{
 a data.table with the requested data sets subset
@@ -41,7 +47,7 @@ The function \code{import_subset_data} reads and subsets the requested data sets
 }
 \examples{
 \dontrun{
-x <- import_subset_data("~/projects/czu/pRecipe/data/database", 
-c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
+x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12), 
+"~/projects/czu/pRecipe/data/database")
 }
 }

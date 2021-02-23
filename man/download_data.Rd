@@ -4,11 +4,9 @@
 \alias{download_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-download_data(project_folder_path = ".", name, reformat = TRUE)
+download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 }
 \arguments{
-\item{project_folder_path}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
-
 \item{name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets (default),}
@@ -26,6 +24,8 @@ download_data(project_folder_path = ".", name, reformat = TRUE)
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
 }}
+
+\item{project_folder_path}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
 
 \item{reformat}{logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }

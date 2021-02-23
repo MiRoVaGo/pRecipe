@@ -4,11 +4,9 @@
 \alias{import_full_data}
 \title{Read precipitation data.table from database}
 \usage{
-import_full_data(database_folder_path, name)
+import_full_data(name, database_folder_path = "./data/database")
 }
 \arguments{
-\item{database_folder_path}{a character string with the path where the "database" folder is located.}
-
 \item{name}{a character string with the name of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets,}
@@ -26,6 +24,8 @@ import_full_data(database_folder_path, name)
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
 }}
+
+\item{database_folder_path}{a character string with the path where the "database" folder is located.}
 }
 \value{
 a data.table with the requested precipitation data sets.
@@ -35,8 +35,8 @@ The function \code{import_full_data} imports the requested data sets.
 }
 \examples{
 \dontrun{
-x <- import_full_data("~/global_precipitation/pRecipe/data/database", "all")
-x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-x <- import_full_data("~/research/pRecipe/data/database", c("gpm_imergm", "trmm_3b43"))
+x <- import_full_data("all", "~/global_precipitation/pRecipe/data/database")
+x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), "~/projects/czu/pRecipe/data/database")
+x <- import_full_data(c("gpm_imergm", "trmm_3b43"), "~/research/pRecipe/data/database")
 }
 }
