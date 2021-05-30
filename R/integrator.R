@@ -30,14 +30,14 @@ merge_1836_1890 <- function(folder_path){
   return(invisible())
 }
 
-#' Data integrator for 1891_2019.
+#' Data integrator for 1891_2020.
 #'
 #' Function for merging the data sets overlapping by time periods.
 #'
 #' @param folder_path a character string with the path to the "database" folder.
 
-merge_1891_2019 <- function(folder_path){
-  dummie_years <- seq(1891, 2019)
+merge_1891_2020 <- function(folder_path){
+  dummie_years <- seq(1891, 2020)
   no_cores <- detectCores() - 1
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
@@ -68,6 +68,6 @@ merge_1891_2019 <- function(folder_path){
 
 merge_time <- function(database_folder_path){
   merge_1836_1890(database_folder_path)
-  merge_1891_2019(database_folder_path)
+  merge_1891_2020(database_folder_path)
   return(invisible())
 }
