@@ -4,7 +4,11 @@
 
 display_data <- function(){
   dummie_table <- data.frame(name = c("20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel"),
-                             time_coverage = c("1836-2015", "1979-2019", "1979-2019", "1901-2019", "1900-2015", "1891-2016", "1979-2019", "2001-2019", "1948-2019", "1979-2019", "1948-2011", "1998-2019", "1900-2017"))
+                             time_res = c("Monthly", "Monthly", "Daily", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly", "Monthly"),
+                             time_coverage = c("1836-2015", "1979-2020", "1979-2020", "1901-2020", "1900-2015", "1891-2016", "1979-2020", "2001-2020", "1948-2020", "1979-2020", "1948-2020", "1998-2020", "1900-2017"),
+                             res = c("1.0° x 1.0°", "2.5° x 2.5°", "0.5° x 0.5°", "0.5° x 0.5°", "5° x 5°", "0.5° x 0.5°", "2.5° x 2.5°", "0.1° x 0.1°", "T62 Gaussian grid", "T62 Gaussian grid", "0.5° x 0.5°", "0.25° x 0.25°", "0.5° x 0.5°"),
+                             format = c(".nc", ".nc", ".nc", ".gz", ".nc", ".nc", ".nc", ".HDF5", ".nc", ".nc", ".nc", ".HDF", ".nc"),
+                             approx_size = c("393 MB", "14 MB", "2.5 GB", "214 MB", "14 MB", "390 MB", "18 MB", "12.5 GB", "48 MB", "21 MB", "214 MB", "1.1 GB", "306 MB"))
   View(dummie_table, "pRecipe data sets")
 }
 
@@ -98,7 +102,7 @@ dt_parallel <- function(dummie_table){
 
 sd_20cr <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
-  options(timeout = 600)
+  options(timeout = 6000)
   file_url <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/spreads/Monthlies/accumsSI-MO/apcp.mon.mean.nc"
   file_destination <- paste0(destination, "/apcp.mon.sd.nc")
   download.file(file_url, file_destination, mode = "wb")

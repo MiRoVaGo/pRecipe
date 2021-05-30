@@ -19,7 +19,7 @@ import_subset_data(
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
-\item{"cru_ts" for CRU_TS v4.04,}
+\item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
 \item{"gpcc" for GPCC v2018,}
 \item{"gpcp" for GPCP v2.3,}

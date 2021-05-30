@@ -4,14 +4,14 @@
 \alias{download_gpm_imergm}
 \title{GPM data downloader}
 \usage{
-download_gpm_imergm(destination, start_year = 2000, end_year = 2019)
+download_gpm_imergm(destination, start_year = 2000, end_year = 2020)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}
 
-\item{start_year}{numeric. Start year should be between 2000-2019.}
+\item{start_year}{numeric. Start year should be between 2000-2020.}
 
-\item{end_year}{numeric. End year should be between 2000-2019, and should be greater or equal to start year.}
+\item{end_year}{numeric. End year should be between 2000-2020, and should be greater or equal to start year.}
 }
 \description{
 Function for downloading GPM HDF5 files.

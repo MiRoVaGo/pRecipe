@@ -22,7 +22,7 @@
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
@@ -48,6 +48,7 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
   }
   create_folders(project_folder_path)
   destination <- paste0(project_folder_path,"/data/raw")
+  options(timeout = 6000)
   lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),
@@ -78,7 +79,7 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
@@ -133,7 +134,7 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
@@ -181,7 +182,7 @@ import_full_data <- function(name, database_folder_path = "./data/database"){
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
 #' \item{"cpc" for CPC-Global,}
-#' \item{"cru_ts" for CRU_TS v4.04,}
+#' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
 #' \item{"gpcc" for GPCC v2018,}
 #' \item{"gpcp" for GPCP v2.3,}
