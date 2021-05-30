@@ -7,7 +7,7 @@
 sd_20cr(destination)
 }
 \arguments{
-\item{destination}{a character string with the path to the "integration/1838_1890" folder.}
+\item{destination}{a character string with the path to the "integration/aux" folder.}
 }
 \description{
 Function for downloading and reformatting 20cr sd values between 1836 and 1890.

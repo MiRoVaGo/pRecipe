@@ -4,7 +4,7 @@
 \alias{reformat_data}
 \title{Reformat the downloaded data sets into .Rds files}
 \usage{
-reformat_data(raw_folder_path, name = "all")
+reformat_data(raw_folder_path = "./data/raw", name = "all")
 }
 \arguments{
 \item{raw_folder_path}{a character string with the path where the "raw" folder is located.}
@@ -15,7 +15,7 @@ reformat_data(raw_folder_path, name = "all")
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
-\item{"cru_ts" for CRU_TS v4.04,}
+\item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
 \item{"gpcc" for GPCC v2018,}
 \item{"gpcp" for GPCP v2.3,}

@@ -10,7 +10,7 @@ dt_parallel(dummie_table)
 \item{dummie_table}{A pRecipe data table with multiple data sets.}
 }
 \value{
-the aggregated data table at the new spatial resolution.
+a data table with the weighted average of the original.
 }
 \description{
 Function for merging data sets available in pRecipe data table by weighted mean.

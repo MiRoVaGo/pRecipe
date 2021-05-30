@@ -4,14 +4,14 @@
 \alias{download_cpc}
 \title{CPC data downloader}
 \usage{
-download_cpc(destination, start_year = 1979, end_year = 2019)
+download_cpc(destination, start_year = 1979, end_year = 2020)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}
 
-\item{start_year}{numeric. Start year should be between 1979-2019.}
+\item{start_year}{numeric. Start year should be between 1979-2020.}
 
-\item{end_year}{numeric. End year should be between 1979-2019, and should be greater or equal to start year.}
+\item{end_year}{numeric. End year should be between 1979-2020, and should be greater or equal to start year.}
 }
 \description{
 Function for downloading CPC-GLOBAL NC files.

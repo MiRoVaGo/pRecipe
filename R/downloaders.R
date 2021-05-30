@@ -33,14 +33,14 @@ download_cmap <- function(destination){
 #' Function for downloading CPC-GLOBAL NC files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
-#' @param start_year numeric. Start year should be between 1979-2019.
-#' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
+#' @param start_year numeric. Start year should be between 1979-2020.
+#' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
 
-download_cpc <- function(destination, start_year = 1979, end_year = 2019){
+download_cpc <- function(destination, start_year = 1979, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 1979:2019)) | (!any(end_year == 1979:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 1979-2019, and end_year should be greater or equal to start_year")
+  if ((!any(start_year == 1979:2020)) | (!any(end_year == 1979:2020)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 1979-2020, and end_year should be greater or equal to start_year")
   }
   
   file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cpc_global_precip/"
@@ -60,8 +60,8 @@ download_cpc <- function(destination, start_year = 1979, end_year = 2019){
 
 download_cru_ts <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
-  file_name <- "cru_ts4.04.1901.2019.pre.dat.nc.gz"
-  file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.04/cruts.2004151855.v4.04/pre/"
+  file_name <- "cru_ts4.05.1901.2020.pre.dat.nc.gz"
+  file_url_base <- "https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.05/cruts.2103051243.v4.05/pre/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/cru_ts/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -131,15 +131,15 @@ download_gpcp <- function(destination){
 #' Function for downloading GPM HDF5 files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
-#' @param start_year numeric. Start year should be between 2000-2019.
-#' @param end_year numeric. End year should be between 2000-2019, and should be greater or equal to start year.
+#' @param start_year numeric. Start year should be between 2000-2020.
+#' @param end_year numeric. End year should be between 2000-2020, and should be greater or equal to start year.
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 
-download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2019){
+download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 2000:2019)) | (!any(end_year == 2000:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 2000-2019, and end_year should be greater or equal to start_year")
+  if ((!any(start_year == 2000:2020)) | (!any(end_year == 2000:2020)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 2000-2020, and end_year should be greater or equal to start_year")
   }
   username <- getPass("Enter the username: ") %>% URLencode(reserved = TRUE)
   password <- getPass("Enter the password: ") %>% URLencode(reserved = TRUE)
@@ -228,15 +228,15 @@ download_precl <- function(destination, resolution = 0.5){
 #' Function for downloading TRMM 3B43 HDF files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
-#' @param start_year numeric. Start year should be between 1998-2019.
-#' @param end_year numeric. End year should be between 1979-2019, and should be greater or equal to start year.
+#' @param start_year numeric. Start year should be between 1998-2020.
+#' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
 
-download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2019){
+download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 1998:2019)) | (!any(end_year == 1998:2019)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 1998-2019, and end_year should be greater or equal to start_year")
+  if ((!any(start_year == 1998:2020)) | (!any(end_year == 1998:2020)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 1998-2020, and end_year should be greater or equal to start_year")
   }
   username <- getPass("Enter the username: ") %>% URLencode(reserved = TRUE)
   password <- getPass("Enter the password: ") %>% URLencode(reserved = TRUE)

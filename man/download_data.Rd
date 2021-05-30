@@ -4,18 +4,16 @@
 \alias{download_data}
 \title{Download and import precipitation data from various sources}
 \usage{
-download_data(project_folder, name = "all", reformat = FALSE)
+download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 }
 \arguments{
-\item{project_folder}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
-
 \item{name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
 \item{"cpc" for CPC-Global,}
-\item{"cru_ts" for CRU_TS v4.04,}
+\item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
 \item{"gpcc" for GPCC v2018,}
 \item{"gpcp" for GPCP v2.3,}
@@ -27,7 +25,9 @@ download_data(project_folder, name = "all", reformat = FALSE)
 \item{"udel" for UDEL v501.}
 }}
 
-\item{reformat}{logical. If TRUE the downloaded datasets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
+\item{project_folder_path}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}}
+
+\item{reformat}{logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }
 \description{
 The function \code{download_data} downloads the selected data product.

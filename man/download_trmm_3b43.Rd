@@ -4,14 +4,14 @@
 \alias{download_trmm_3b43}
 \title{TRMM data downloader}
 \usage{
-download_trmm_3b43(destination, start_year = 1998, end_year = 2019)
+download_trmm_3b43(destination, start_year = 1998, end_year = 2020)
 }
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}
 
-\item{start_year}{numeric. Start year should be between 1998-2019.}
+\item{start_year}{numeric. Start year should be between 1998-2020.}
 
-\item{end_year}{numeric. End year should be between 1979-2019, and should be greater or equal to start year.}
+\item{end_year}{numeric. End year should be between 1979-2020, and should be greater or equal to start year.}
 }
 \description{
 Function for downloading TRMM 3B43 HDF files.
