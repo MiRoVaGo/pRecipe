@@ -17,5 +17,7 @@ BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 4.8.0, https://proj.org/download.html) and GDAL (>= 1.11.4, https://gdal.org/download.html).
 RoxygenNote: 7.1.1
 Suggests:
+    spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Language: en-US
