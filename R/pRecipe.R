@@ -21,6 +21,7 @@
 #' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
+#' \item{"cmorph" for CMORPH,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
@@ -29,6 +30,7 @@
 #' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep_ncar" for NCEP/NCAR,}
 #' \item{"ncep_doe" for NCEP/DOE,}
+#' \item{"persiann_cdr" for PERSIANN CDR,}
 #' \item{"precl" for PRECL,}
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
@@ -43,8 +45,8 @@
 #' }
 
 download_data <- function(name = "all", project_folder_path = ".", reformat = TRUE){
-  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
-    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cmorph", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "persiann_cdr", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cmorph, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, persiann_cdr, precl, trmm_3b43, udel")
   }
   create_folders(project_folder_path)
   destination <- paste0(project_folder_path,"/data/raw")
@@ -53,6 +55,7 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),
          "cmap" = download_cmap(destination),
+         "cmorph" = download_cmorph(destination),
          "cpc" = download_cpc(destination),
          "cru_ts" = download_cru_ts(destination),
          "ghcn" = download_ghcn(destination),
@@ -61,6 +64,7 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
          "gpm_imergm" = download_gpm_imergm(destination),
          "ncep_ncar" = download_ncep_ncar(destination),
          "ncep_doe" = download_ncep_doe(destination),
+         "persiann_cdr" = download_persiann_cdr(destination),
          "precl" = download_precl(destination),
          "trmm_3b43" = download_trmm_3b43(destination),
          "udel" = download_udel(destination)
@@ -78,6 +82,7 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
 #' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
+#' \item{"cmorph" for CMORPH,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
@@ -85,7 +90,8 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
 #' \item{"gpcp" for GPCP v2.3,}
 #' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"ncep_doe" for NCEP/DOE,}
+#' \item{"persiann_cdr" for PERSIANN CDR,}
 #' \item{"precl" for PRECL,}
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
@@ -99,8 +105,8 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
 #' }
 
 reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
-  if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
-    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  if (!Reduce("&", is.element(name, c("all", "20cr", "cmap", "cmorph", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "persiann_cdr", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cmorph, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, persiann_cdr, precl, trmm_3b43, udel")
   }
   if (!grepl("*/data/raw", raw_folder_path)){
     stop("Error: raw_folder_path should point to the location of 'data/raw'")
@@ -109,6 +115,7 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
          "20cr" = reformat_20cr(raw_folder_path),
          "all" = reformat_all(raw_folder_path),
          "cmap" = reformat_cmap(raw_folder_path),
+         "cmorph" = reformat_cmorph(raw_folder_path),
          "cpc" = reformat_cpc(raw_folder_path),
          "cru_ts" = reformat_cru_ts(raw_folder_path),
          "ghcn" = reformat_ghcn(raw_folder_path),
@@ -117,6 +124,7 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
          "gpm_imergm" = reformat_gpm_imergm(raw_folder_path),
          "ncep_ncar" = reformat_ncep_ncar(raw_folder_path),
          "ncep_doe" = reformat_ncep_doe(raw_folder_path),
+         "persiann_cdr" = reformat_persiann_cdr(raw_folder_path),
          "precl" = reformat_precl(raw_folder_path),
          "trmm_3b43" = reformat_trmm_3b43(raw_folder_path),
          "udel" = reformat_udel(raw_folder_path)
@@ -133,6 +141,7 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
 #' \item{"all" for all of the below listed data sets,}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
+#' \item{"cmorph" for CMORPH,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
@@ -140,7 +149,8 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
 #' \item{"gpcp" for GPCP v2.3,}
 #' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"ncep_doe" for NCEP/DOE,}
+#' \item{"persiann_cdr" for PERSIANN CDR,}
 #' \item{"precl" for PRECL,}
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
@@ -156,8 +166,8 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
 #' }
 
 import_full_data <- function(name, database_folder_path = "./data/database"){
-  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
-    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cmorph", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "persiann_cdr", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cmorph, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, persiann_cdr, precl, trmm_3b43, udel")
   }
   if (!grepl("*/data/database", database_folder_path)){
     stop("Error: database_folder_path should point to the location of 'data/database'")
@@ -181,6 +191,7 @@ import_full_data <- function(name, database_folder_path = "./data/database"){
 #' \item{"all" for all of the below listed data sets,}
 #' \item{"20cr" for 20CR v3,}
 #' \item{"cmap" for CMAP standard version,}
+#' \item{"cmorph" for CMORPH,}
 #' \item{"cpc" for CPC-Global,}
 #' \item{"cru_ts" for CRU_TS v4.05,}
 #' \item{"ghcn" for GHCN-M v2}
@@ -188,7 +199,8 @@ import_full_data <- function(name, database_folder_path = "./data/database"){
 #' \item{"gpcp" for GPCP v2.3,}
 #' \item{"gpm_imergm" for GPM IMERGM Final v06,}
 #' \item{"ncep" for NCEP/NCAR,}
-#' \item{"ncep2" for NCEP/DOE,}
+#' \item{"ncep_doe" for NCEP/DOE,}
+#' \item{"persiann_cdr" for PERSIANN CDR,}
 #' \item{"precl" for PRECL,}
 #' \item{"trmm_3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
@@ -201,13 +213,13 @@ import_full_data <- function(name, database_folder_path = "./data/database"){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12), 
-#' "~/projects/czu/pRecipe/data/database")
+#' x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, 
+#' c(12.24, 48.56, 18.85, 51.12), "~/projects/czu/pRecipe/data/database")
 #' }
 
 import_subset_data <- function(name, start_year, end_year, bbox, database_folder_path = "./data/database"){
-  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "precl", "trmm_3b43", "udel")))){
-    stop("Error: Data set not supported. Select from 20cr, cmap, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, precl, trmm_3b43, udel")
+  if (!Reduce("&", is.element(name, c("20cr", "all", "cmap", "cmorph", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "persiann_cdr", "precl", "trmm_3b43", "udel")))){
+    stop("Error: Data set not supported. Select from 20cr, cmap, cmorph, cpc, cru_ts, ghcn, gpcc, gpcp, gpm_imergm, ncep_ncar, ncep_doe, persiann_cdr, precl, trmm_3b43, udel")
   }
   if (!grepl("*/data/database", database_folder_path)){
     stop("Error: database_folder_path should point to the location of 'data/database'")

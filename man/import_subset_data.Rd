@@ -18,6 +18,7 @@ import_subset_data(
 \item{"all" for all of the below listed data sets,}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
+\item{"cmorph" for CMORPH,}
 \item{"cpc" for CPC-Global,}
 \item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
@@ -25,7 +26,8 @@ import_subset_data(
 \item{"gpcp" for GPCP v2.3,}
 \item{"gpm_imergm" for GPM IMERGM Final v06,}
 \item{"ncep" for NCEP/NCAR,}
-\item{"ncep2" for NCEP/DOE,}
+\item{"ncep_doe" for NCEP/DOE,}
+\item{"persiann_cdr" for PERSIANN CDR,}
 \item{"precl" for PRECL,}
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
@@ -47,7 +49,7 @@ The function \code{import_subset_data} reads and subsets the requested data sets
 }
 \examples{
 \dontrun{
-x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12), 
-"~/projects/czu/pRecipe/data/database")
+x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, 
+c(12.24, 48.56, 18.85, 51.12), "~/projects/czu/pRecipe/data/database")
 }
 }
