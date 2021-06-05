@@ -160,7 +160,7 @@ download_gpcp <- function(destination){
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 2000-2020.
 #' @param end_year numeric. End year should be between 2000-2020, and should be greater or equal to start year.
-#' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+#' @note user must \href{"https://urs.earthdata.nasa.gov./"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 
 download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -331,7 +331,7 @@ download_precl <- function(destination, resolution = 0.5){
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 1998-2020.
 #' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
-#' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
+#' @note user must \href{"https://urs.earthdata.nasa.gov./"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
 
 download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
