@@ -11,7 +11,7 @@ Depends: R (>= 4.0.0)
 Imports: data.table, dplyr, gdalUtils, getPass, ggplot2, hdf5r, lubridate, methods, ncdf4, parallel, raster, rgdal, R.utils, sp, stats, stringr, utils, viridis, zoo
 License: GPL-2
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 4.8.0, https://proj.org/download.html) and GDAL (>= 1.11.4, https://gdal.org/download.html).
