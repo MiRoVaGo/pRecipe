@@ -17,5 +17,5 @@ download_trmm_3b43(destination, start_year = 1998, end_year = 2020)
 Function for downloading TRMM 3B43 HDF files.
 }
 \note{
-user must \href{"https://urs.earthdata.nasa.gov"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+user must \href{https://urs.earthdata.nasa.gov}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 }
