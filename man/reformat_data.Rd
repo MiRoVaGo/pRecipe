@@ -29,12 +29,15 @@ reformat_data(raw_folder_path = "./data/raw", name = "all")
 \item{"udel" for UDEL v501.}
 }}
 }
+\value{
+No return value, called to reformat the downloaded data sets into pRecipe objects.
+}
 \description{
 The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables at 0.5 degree resolution.
 }
 \examples{
 \dontrun{
-reformat_data("~/global_precipitation/pRecipe/data/raw")
-reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+reformat_data(tempdir())
+reformat_data(tempdir(), c("gpm_imergm", "trmm_3b43"))
 }
 }

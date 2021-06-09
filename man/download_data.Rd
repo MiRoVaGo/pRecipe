@@ -31,13 +31,14 @@ download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 
 \item{reformat}{logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }
+\value{
+No return value, called to download the required data sets.
+}
 \description{
 The function \code{download_data} downloads the selected data product.
 }
 \examples{
-\dontrun{
-download_data("~/global_precipitation/pRecipe")
-download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
-download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+\donttest{
+download_data(c("cmap", "ghcn", "gpcp"), tempdir(), reformat = FALSE)
 }
 }

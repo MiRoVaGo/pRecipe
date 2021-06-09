@@ -13,6 +13,9 @@ download_trmm_3b43(destination, start_year = 1998, end_year = 2020)
 
 \item{end_year}{numeric. End year should be between 1979-2020, and should be greater or equal to start year.}
 }
+\value{
+No return value, called to download the data set.
+}
 \description{
 Function for downloading TRMM 3B43 HDF files.
 }

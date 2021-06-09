@@ -9,6 +9,9 @@ sd_20cr(destination)
 \arguments{
 \item{destination}{a character string with the path to the "integration/aux" folder.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Function for downloading and reformatting 20cr sd values between 1836 and 1890.
 }

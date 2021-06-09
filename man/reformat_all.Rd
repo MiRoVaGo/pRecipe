@@ -9,6 +9,9 @@ reformat_all(folder_path)
 \arguments{
 \item{folder_path}{a character string with the path to the "raw" folder.}
 }
+\value{
+No return value, called to reformat the downloaded data sets into pRecipe objects.
+}
 \description{
 Function for reformatting all of the available data sets.
 }

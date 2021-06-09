@@ -19,6 +19,9 @@ create_folders(destination)
 \item{\code{destination}/data/raw/...}}}
 }}
 }
+\value{
+No return value, called to create tidy directories for pRecipe.
+}
 \description{
 Function for creating tidy folders to store pRecipe.
 }

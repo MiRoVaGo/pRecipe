@@ -3,6 +3,7 @@
 #' Function for reading 20CR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_20cr <- function(folder_path){
@@ -44,6 +45,7 @@ reformat_20cr <- function(folder_path){
 #' Function for reading CMAP NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_cmap <- function(folder_path){
@@ -85,6 +87,7 @@ reformat_cmap <- function(folder_path){
 #' Function for reading CMORPH NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_cmorph <- function(folder_path){
@@ -126,6 +129,7 @@ reformat_cmorph <- function(folder_path){
 #' Function for reading CPC-GLOBAL NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_cpc <- function(folder_path){
@@ -162,6 +166,7 @@ reformat_cpc <- function(folder_path){
 #' Function for reading CRU_TS NC.GZ file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_cru_ts <- function(folder_path){
@@ -199,6 +204,7 @@ reformat_cru_ts <- function(folder_path){
 #' Function for reading GHCN-M NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_ghcn <- function(folder_path){
@@ -239,6 +245,7 @@ reformat_ghcn <- function(folder_path){
 #' Function for reading GPCC NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_gpcc <- function(folder_path){
@@ -276,6 +283,7 @@ reformat_gpcc <- function(folder_path){
 #' Function for reading GPCP NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_gpcp <- function(folder_path){
@@ -317,6 +325,7 @@ reformat_gpcp <- function(folder_path){
 #' Function for reading GPM HDF5 files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_gpm_imergm <- function(folder_path){
@@ -364,6 +373,7 @@ reformat_gpm_imergm <- function(folder_path){
 #' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_ncep_doe <- function(folder_path){
@@ -408,6 +418,7 @@ reformat_ncep_doe <- function(folder_path){
 #' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_ncep_ncar <- function(folder_path){
@@ -447,11 +458,12 @@ reformat_ncep_ncar <- function(folder_path){
   stopCluster(cluster)
 }
 
-#' PERSIANN CDR data reformatter
+#' PERSIANN data reformatter
 #'
-#' Function for reading PERCIAN CDR NC files, and reformatting them into data.table which is stored in an .Rds file.
+#' Function for reading PERSIANN CDR NC files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_persiann_cdr <- function(folder_path){
@@ -493,6 +505,7 @@ reformat_persiann_cdr <- function(folder_path){
 #' Function for reading PRECL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_precl <- function(folder_path){
@@ -531,6 +544,7 @@ reformat_precl <- function(folder_path){
 #' Function for reading TRMM 3B43 HDF files, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_trmm_3b43 <- function(folder_path){
@@ -578,6 +592,7 @@ reformat_trmm_3b43 <- function(folder_path){
 #' Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
 reformat_udel <- function(folder_path){
@@ -616,6 +631,7 @@ reformat_udel <- function(folder_path){
 #' Function for reformatting all of the available data sets.
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
+#' @return No return value, called to reformat the downloaded data sets into pRecipe objects.
 #' @export
 
 reformat_all <- function(folder_path){

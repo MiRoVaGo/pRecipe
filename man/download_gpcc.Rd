@@ -16,6 +16,9 @@ download_gpcc(destination, resolution = 0.5)
 \item{2.5 for 2.5 degree.}
 }}
 }
+\value{
+No return value, called to download the data set.
+}
 \description{
 Function for downloading GPCC NC file.
 }

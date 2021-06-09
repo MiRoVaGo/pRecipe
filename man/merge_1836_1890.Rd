@@ -9,6 +9,9 @@ merge_1836_1890(folder_path)
 \arguments{
 \item{folder_path}{a character string with the path to the "database" folder.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Function for merging the data sets overlapping by time periods.
 }

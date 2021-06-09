@@ -37,8 +37,8 @@ The function \code{import_full_data} imports the requested data sets.
 }
 \examples{
 \dontrun{
-x <- import_full_data("all", "~/global_precipitation/pRecipe/data/database")
-x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), "~/projects/czu/pRecipe/data/database")
-x <- import_full_data(c("gpm_imergm", "trmm_3b43"), "~/research/pRecipe/data/database")
+x <- import_full_data("all", tempdir())
+x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
+x <- import_full_data(c("gpm_imergm", "trmm_3b43"), tempdir())
 }
 }

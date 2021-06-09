@@ -36,12 +36,11 @@
 #' \item{"udel" for UDEL v501.}
 #' }
 #' @param reformat logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}
+#' @return No return value, called to download the required data sets.
 #' @export
 #' @examples
-#' \dontrun{
-#' download_data("~/global_precipitation/pRecipe")
-#' download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
-#' download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+#' \donttest{
+#' download_data(c("cmap", "ghcn", "gpcp"), tempdir(), reformat = FALSE)
 #' }
 
 download_data <- function(name = "all", project_folder_path = ".", reformat = TRUE){
@@ -50,7 +49,9 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
   }
   create_folders(project_folder_path)
   destination <- paste0(project_folder_path,"/data/raw")
+  old_options <- options()
   options(timeout = 6000)
+  on.exit(options(old_options))
   lapply(name, function(dataset) switch(dataset,
          "20cr" = download_20cr(destination),
          "all"  = download_all(destination),
@@ -97,11 +98,12 @@ download_data <- function(name = "all", project_folder_path = ".", reformat = TR
 #' \item{"udel" for UDEL v501.}
 #' }
 #' @param raw_folder_path a character string with the path where the "raw" folder is located.
+#' @return No return value, called to reformat the downloaded data sets into pRecipe objects.
 #' @export
 #' @examples
 #' \dontrun{
-#' reformat_data("~/global_precipitation/pRecipe/data/raw")
-#' reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+#' reformat_data(tempdir())
+#' reformat_data(tempdir(), c("gpm_imergm", "trmm_3b43"))
 #' }
 
 reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
@@ -160,9 +162,9 @@ reformat_data <- function(raw_folder_path = "./data/raw", name = "all"){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_full_data("all", "~/global_precipitation/pRecipe/data/database")
-#' x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), "~/projects/czu/pRecipe/data/database")
-#' x <- import_full_data(c("gpm_imergm", "trmm_3b43"), "~/research/pRecipe/data/database")
+#' x <- import_full_data("all", tempdir())
+#' x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
+#' x <- import_full_data(c("gpm_imergm", "trmm_3b43"), tempdir())
 #' }
 
 import_full_data <- function(name, database_folder_path = "./data/database"){
@@ -214,7 +216,7 @@ import_full_data <- function(name, database_folder_path = "./data/database"){
 #' @examples
 #' \dontrun{
 #' x <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, 
-#' c(12.24, 48.56, 18.85, 51.12), "~/projects/czu/pRecipe/data/database")
+#' c(12.24, 48.56, 18.85, 51.12), tempdir())
 #' }
 
 import_subset_data <- function(name, start_year, end_year, bbox, database_folder_path = "./data/database"){
@@ -248,7 +250,7 @@ import_subset_data <- function(name, start_year, end_year, bbox, database_folder
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+#' x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
 #' y <- resample_data(x, yearly = FALSE, 5)
 #' z <- resample_data(x, yearly = TRUE, 2.5)
 #' }
@@ -279,11 +281,11 @@ resample_data <- function(x, yearly = TRUE, resolution){
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-#' w <- crop_data(x, "~/Downloads/cze.shp")
-#' y <- import_subset_data("~/projects/czu/pRecipe/data/database", 
-#' c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
-#' z <- crop_data(y, "~/Downloads/cze.shp")
+#' x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
+#' w <- crop_data(x, "cze.shp")
+#' y <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, 
+#' c(12.24, 48.56, 18.85, 51.12), tempdir())
+#' z <- crop_data(y, "cze.shp")
 #' }
 
 crop_data <- function(x, shp_path){
@@ -297,4 +299,18 @@ crop_data <- function(x, shp_path){
   x <- as.data.table(x)
   class(x) <- append(class(x),"pRecipe")
   return(x)
+}
+
+#' Data integrator.
+#'
+#' Function for merging the available data sets of a given year by weighted average.
+#'
+#' @param database_folder_path a character string with the path to the "database" folder.
+#' @return No return value, called to merge all available data sets into one.
+#' @export
+
+merge_time <- function(database_folder_path){
+  merge_1836_1890(database_folder_path)
+  merge_1891_2020(database_folder_path)
+  return(invisible())
 }

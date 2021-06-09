@@ -1,6 +1,8 @@
 #' Display available data sets
 #'
 #' Function for displaying available data sets in pRecipe.
+#' @return a data.frame listing the data sets pRecipe is able to work with.
+#' @export
 
 display_data <- function(){
   dummie_table <- data.frame(name = c("20cr", "cmap", "cmorph", "cpc", "cru_ts", "ghcn", "gpcc", "gpcp", "gpm_imergm", "ncep_ncar", "ncep_doe", "persiann_cdr", "precl", "trmm_3b43", "udel"),
@@ -27,7 +29,8 @@ display_data <- function(){
 #' \item{\code{destination}/data/raw/cmap}
 #' \item{\code{destination}/data/raw/...}}}
 #'}
-#' 
+#' @return No return value, called to create tidy directories for pRecipe.
+#' @export
 
 create_folders <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -101,10 +104,13 @@ dt_parallel <- function(dummie_table){
 #' Function for downloading and reformatting 20cr sd values between 1836 and 1890.
 #'
 #' @param destination a character string with the path to the "integration/aux" folder.
+#' @return No return value, called for side effects.
 
 sd_20cr <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
+  old_options <- options()
   options(timeout = 6000)
+  on.exit(options(old_options))
   file_url <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/spreads/Monthlies/accumsSI-MO/apcp.mon.mean.nc"
   file_destination <- paste0(destination, "/apcp.mon.sd.nc")
   download.file(file_url, file_destination, mode = "wb")

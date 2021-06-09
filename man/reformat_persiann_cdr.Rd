@@ -2,13 +2,16 @@
 % Please edit documentation in R/reformatters.R
 \name{reformat_persiann_cdr}
 \alias{reformat_persiann_cdr}
-\title{PERSIANN CDR data reformatter}
+\title{PERSIANN data reformatter}
 \usage{
 reformat_persiann_cdr(folder_path)
 }
 \arguments{
 \item{folder_path}{a character string with the path to the "raw" folder.}
 }
+\value{
+No return value, called to reformat the downloaded data set into pRecipe object.
+}
 \description{
-Function for reading PERCIAN CDR NC files, and reformatting them into data.table which is stored in an .Rds file.
+Function for reading PERSIANN CDR NC files, and reformatting them into data.table which is stored in an .Rds file.
 }

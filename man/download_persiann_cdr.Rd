@@ -13,6 +13,9 @@ download_persiann_cdr(destination, start_year = 1983, end_year = 2020)
 
 \item{end_year}{numeric. End year should be between 1983-2020, and should be greater or equal to start year.}
 }
+\value{
+No return value, called to download the data set.
+}
 \description{
 Function for downloading PERSIANN CDR NC files.
 }
