@@ -14,6 +14,7 @@ reformat_data(raw_folder_path = "./data/raw", name = "all")
 \item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
+\item{"cmorph" for CMORPH,}
 \item{"cpc" for CPC-Global,}
 \item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
@@ -21,18 +22,22 @@ reformat_data(raw_folder_path = "./data/raw", name = "all")
 \item{"gpcp" for GPCP v2.3,}
 \item{"gpm_imergm" for GPM IMERGM Final v06,}
 \item{"ncep" for NCEP/NCAR,}
-\item{"ncep2" for NCEP/DOE,}
+\item{"ncep_doe" for NCEP/DOE,}
+\item{"persiann_cdr" for PERSIANN CDR,}
 \item{"precl" for PRECL,}
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
 }}
+}
+\value{
+No return value, called to reformat the downloaded data sets into pRecipe objects.
 }
 \description{
 The function \code{reformat_data} reformats the data sets into monthly total precipitation data.tables at 0.5 degree resolution.
 }
 \examples{
 \dontrun{
-reformat_data("~/global_precipitation/pRecipe/data/raw")
-reformat_data("~/research/pRecipe/data/raw", c("gpm_imergm", "trmm_3b43"))
+reformat_data(tempdir())
+reformat_data(tempdir(), c("gpm_imergm", "trmm_3b43"))
 }
 }

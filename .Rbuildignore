@@ -4,3 +4,5 @@
 ^CODEOWNERS$
 ^CONTRIBUTING\.md$
 ^README\.md$
+^CRAN-RELEASE$
+^cran-comments\.md$

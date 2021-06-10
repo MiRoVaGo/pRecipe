@@ -6,6 +6,9 @@
 \usage{
 display_data()
 }
+\value{
+a data.frame listing the data sets pRecipe is able to work with.
+}
 \description{
 Function for displaying available data sets in pRecipe.
 }

@@ -9,6 +9,9 @@ reformat_udel(folder_path)
 \arguments{
 \item{folder_path}{a character string with the path to the "raw" folder.}
 }
+\value{
+No return value, called to reformat the downloaded data set into pRecipe object.
+}
 \description{
 Function for reading UDEL NC file, and reformatting them into data.table which is stored in an .Rds file.
 }

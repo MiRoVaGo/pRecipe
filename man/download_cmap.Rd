@@ -9,6 +9,9 @@ download_cmap(destination)
 \arguments{
 \item{destination}{a character string with the path where the downloaded file is saved.}
 }
+\value{
+No return value, called to download the data set.
+}
 \description{
 Function for downloading CMAP NC files.
 }

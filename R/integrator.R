@@ -3,6 +3,10 @@
 #' Function for merging the data sets overlapping by time periods.
 #'
 #' @param folder_path a character string with the path to the "database" folder.
+<<<<<<< HEAD
+=======
+#' @return No return value, called for side effects.
+>>>>>>> dev
 
 merge_1836_1890 <- function(folder_path){
   sd_20cr(paste0(folder_path, "/../integration/aux"))
@@ -35,6 +39,10 @@ merge_1836_1890 <- function(folder_path){
 #' Function for merging the data sets overlapping by time periods.
 #'
 #' @param folder_path a character string with the path to the "database" folder.
+<<<<<<< HEAD
+=======
+#' @return No return value, called for side effects.
+>>>>>>> dev
 
 merge_1891_2020 <- function(folder_path){
   dummie_years <- seq(1891, 2020)
@@ -57,6 +65,7 @@ merge_1891_2020 <- function(folder_path){
     saveRDS(dummie_table, paste0(folder_path, "/../integration/pRecipe_", year, ".Rds"))
   })
   stopCluster(cluster)
+<<<<<<< HEAD
   return(invisible())
 }
 
@@ -69,5 +78,7 @@ merge_1891_2020 <- function(folder_path){
 merge_time <- function(database_folder_path){
   merge_1836_1890(database_folder_path)
   merge_1891_2020(database_folder_path)
+=======
+>>>>>>> dev
   return(invisible())
 }

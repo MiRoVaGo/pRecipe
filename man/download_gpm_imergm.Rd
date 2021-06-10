@@ -13,9 +13,12 @@ download_gpm_imergm(destination, start_year = 2000, end_year = 2020)
 
 \item{end_year}{numeric. End year should be between 2000-2020, and should be greater or equal to start year.}
 }
+\value{
+No return value, called to download the data set.
+}
 \description{
 Function for downloading GPM HDF5 files.
 }
 \note{
-user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+user must \href{https://urs.earthdata.nasa.gov}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
 }

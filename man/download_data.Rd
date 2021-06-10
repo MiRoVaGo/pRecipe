@@ -12,6 +12,7 @@ download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 \item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
 \item{"cmap" for CMAP standard version,}
+\item{"cmorph" for CMORPH,}
 \item{"cpc" for CPC-Global,}
 \item{"cru_ts" for CRU_TS v4.05,}
 \item{"ghcn" for GHCN-M v2}
@@ -20,6 +21,7 @@ download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 \item{"gpm_imergm" for GPM IMERGM Final v06,}
 \item{"ncep_ncar" for NCEP/NCAR,}
 \item{"ncep_doe" for NCEP/DOE,}
+\item{"persiann_cdr" for PERSIANN CDR,}
 \item{"precl" for PRECL,}
 \item{"trmm_3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
@@ -29,13 +31,14 @@ download_data(name = "all", project_folder_path = ".", reformat = TRUE)
 
 \item{reformat}{logical. If TRUE (default) the downloaded data sets are reformatted into data.table and stored in .Rds files. See \code{\link{reformat_data}}}
 }
+\value{
+No return value, called to download the required data sets.
+}
 \description{
 The function \code{download_data} downloads the selected data product.
 }
 \examples{
-\dontrun{
-download_data("~/global_precipitation/pRecipe")
-download_data("~/projects/czu/pRecipe", c("cru_ts", "cpc", "ghcn", "gpcp"), reformat = TRUE)
-download_data("~/research/pRecipe", c("gpm_imergm", "trmm_3b43"))
+\donttest{
+download_data(c("cmap", "ghcn", "gpcp"), tempdir(), reformat = FALSE)
 }
 }

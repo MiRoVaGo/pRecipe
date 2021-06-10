@@ -19,10 +19,10 @@ The function \code{crop_data} crops the data sets using a shapefile mask.
 }
 \examples{
 \dontrun{
-x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
-w <- crop_data(x, "~/Downloads/cze.shp")
-y <- import_subset_data("~/projects/czu/pRecipe/data/database", 
-c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, c(12.24, 48.56, 18.85, 51.12))
-z <- crop_data(y, "~/Downloads/cze.shp")
+x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
+w <- crop_data(x, "cze.shp")
+y <- import_subset_data(c("cru_ts", "cpc", "ghcn", "gpcp"), 2000, 2009, 
+c(12.24, 48.56, 18.85, 51.12), tempdir())
+z <- crop_data(y, "cze.shp")
 }
 }

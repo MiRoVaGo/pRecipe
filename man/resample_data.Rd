@@ -21,7 +21,11 @@ The function \code{resample_data} resamples the imported data.
 }
 \examples{
 \dontrun{
+<<<<<<< HEAD
 x <- import_full_data("~/projects/czu/pRecipe/data/database", c("cru_ts", "cpc", "ghcn", "gpcp"))
+=======
+x <- import_full_data(c("cru_ts", "cpc", "ghcn", "gpcp"), tempdir())
+>>>>>>> dev
 y <- resample_data(x, yearly = FALSE, 5)
 z <- resample_data(x, yearly = TRUE, 2.5)
 }

@@ -3,6 +3,8 @@
 #' Function for downloading 20CR NC files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_20cr <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -18,6 +20,8 @@ download_20cr <- function(destination){
 #' Function for downloading CMAP NC files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_cmap <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -28,6 +32,35 @@ download_cmap <- function(destination){
   download.file(file_url, file_destination, mode = "wb")
 }
 
+#' CMORPH data downloader
+#'
+#' Function for downloading CMORPH NC files.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+#' @param start_year numeric. Start year should be between 1998-2020.
+#' @param end_year numeric. End year should be between 1998-2020, and should be greater or equal to start year.
+#' @return No return value, called to download the data set.
+#' @export
+
+download_cmorph <- function(destination, start_year = 1998, end_year = 2020){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
+  if ((!any(start_year == 1998:2020)) | (!any(end_year == 1998:2020)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 1998-2020, and end_year should be greater or equal to start_year")
+  }
+  file_url_base <- "https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/access/daily/0.25deg/"
+  for (year in start_year:end_year){
+    for(month in 1:12){
+      for (day in 1:days_in_month(month)){
+        file_name <- paste0("CMORPH_V1.0_ADJ_0.25deg-DLY_00Z_", year, str_pad(month, 2, pad = "0"), str_pad(day, 2, pad = "0"), ".nc")
+        file_url <- paste0(file_url_base, year, "/", str_pad(month, 2, pad = "0"), "/", file_name)
+        file_destination <- paste0(destination, "/cmorph/", file_name)
+        download.file(file_url, file_destination, mode = "wb")
+      }
+    }
+  }
+}
+
 #' CPC data downloader
 #'
 #' Function for downloading CPC-GLOBAL NC files.
@@ -35,6 +68,11 @@ download_cmap <- function(destination){
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 1979-2020.
 #' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
+<<<<<<< HEAD
+=======
+#' @return No return value, called to download the data set.
+#' @export
+>>>>>>> dev
 
 download_cpc <- function(destination, start_year = 1979, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -57,6 +95,8 @@ download_cpc <- function(destination, start_year = 1979, end_year = 2020){
 #' Function for downloading CRU_TS NC.GZ file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_cru_ts <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -72,6 +112,8 @@ download_cru_ts <- function(destination){
 #' Function for downloading GHCN-M NC file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_ghcn <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -93,6 +135,8 @@ download_ghcn <- function(destination){
 #' \item{1 for 1 degree,}
 #' \item{2.5 for 2.5 degree.}
 #' }
+#' @return No return value, called to download the data set.
+#' @export
 
 download_gpcc <- function(destination, resolution = 0.5){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -116,6 +160,8 @@ download_gpcc <- function(destination, resolution = 0.5){
 #' Function for downloading GPCP NC file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_gpcp <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -133,7 +179,13 @@ download_gpcp <- function(destination){
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 2000-2020.
 #' @param end_year numeric. End year should be between 2000-2020, and should be greater or equal to start year.
+<<<<<<< HEAD
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+=======
+#' @note user must \href{https://urs.earthdata.nasa.gov}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC}
+#' @return No return value, called to download the data set.
+#' @export
+>>>>>>> dev
 
 download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -164,6 +216,8 @@ download_gpm_imergm <- function(destination, start_year = 2000, end_year = 2020)
 #' Function for downloading NCEP/NCAR NC files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_ncep_ncar<- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -179,7 +233,8 @@ download_ncep_ncar<- function(destination){
 #' Function for downloading NCEP/DOE NC files.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
-
+#' @return No return value, called to download the data set.
+#' @export
 
 download_ncep_doe <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -188,6 +243,82 @@ download_ncep_doe <- function(destination){
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(destination, "/ncep_doe/", file_name)
   download.file(file_url, file_destination, mode = "wb")
+}
+
+#' PERSIANN CDR data downloader
+#'
+#' Function for downloading PERSIANN CDR NC files.
+#'
+#' @param destination a character string with the path where the downloaded file is saved.
+#' @param start_year numeric. Start year should be between 1983-2020.
+#' @param end_year numeric. End year should be between 1983-2020, and should be greater or equal to start year.
+#' @return No return value, called to download the data set.
+#' @export
+
+download_persiann_cdr <- function(destination, start_year = 1983, end_year = 2020){
+  if (!is.character(destination)) stop ("destination should be a character string.")
+  if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
+  if ((!any(start_year == 1983:2020)) | (!any(end_year == 1983:2020)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 1983-2020, and end_year should be greater or equal to start_year")
+  }
+  file_url_base <- "https://www.ncei.noaa.gov/data/precipitation-persiann/access/"
+  for (year in start_year:end_year){
+    for(month in 1:12){
+      if ((year >= 1983) && (year <= 2012)){
+        last_pattern <- "_c20140523.nc"
+      } else if ((year == 2013) | ((year == 2014) && (month <= 3))){
+        last_pattern <- "_c20140908.nc"
+      } else if ((year == 2014) && (month > 3)){
+        last_pattern <- "_c20150330.nc"
+      } else if ((year == 2015) && (month <= 3)){
+        last_pattern <- "_c20150728.nc"
+      } else if ((year == 2015) && (month > 3) && (month <= 6)){
+        last_pattern <- "_c20151028.nc"
+      } else if ((year == 2015) && (month > 6)){
+        last_pattern <- "_c20160324.nc"
+      } else if ((year == 2016) && (month <= 3)){
+        last_pattern <- "_c20160720.nc"
+      } else if ((year == 2016) && (month > 3) && (month <= 6)){
+        last_pattern <- "_c20161115.nc"
+      } else if ((year == 2016) && (month > 6) && (month <= 8)){
+        last_pattern <- "_c20170119.nc"
+      } else if (((year == 2016) && (month > 8)) | ((year == 2017) && (month <= 4))){
+        last_pattern <- "_c20170930.nc"
+      } else if ((year == 2017) && (month == 5)){
+        last_pattern <- "_c20171211.nc"
+      } else if ((year == 2017) && (month >= 6) && (month <= 7)){
+        last_pattern <- "_c20180801.nc"
+      } else if ((year == 2017) && (month > 7)){
+        last_pattern <- "_c20180327.nc"
+      } else if ((year == 2018) && (month <= 6)){
+        last_pattern <- "_c20181102.nc"
+      } else if ((year == 2018) && (month > 6) && (month <= 9)){
+        last_pattern <- "_c20190204.nc"
+      } else if ((year == 2018) && (month > 6)){
+        last_pattern <- "_c20190509.nc"
+      } else if ((year == 2019) && (month <= 3)){
+        last_pattern <- "_c20190806.nc"
+      } else if ((year == 2019) && (month > 3) && (month <= 6)){
+        last_pattern <- "_c20190923.nc"
+      } else if ((year == 2019) && (month > 6) && (month <= 9)){
+        last_pattern <- "_c20200214.nc"
+      } else if ((year == 2019) && (month > 9)){
+        last_pattern <- "_c20200522.nc"
+      } else if ((year == 2020) && (month <= 3)){
+        last_pattern <- "_c20200810.nc"
+      } else if ((year == 2020) && (month > 3) && (month <= 9)){
+        last_pattern <- "_c20210208.nc"
+      } else if ((year == 2020) && (month > 9)){
+        last_pattern <- "_c20210504.nc"
+      }
+      for (day in 1:days_in_month(month)){
+        file_name <- paste0("PERSIANN-CDR_v01r01_", year, str_pad(month, 2, pad = "0"), str_pad(day, 2, pad = "0"), last_pattern)
+        file_url <- paste0(file_url_base, year, "/", file_name)
+        file_destination <- paste0(destination, "/persiann_cdr/", file_name)
+        download.file(file_url, file_destination, mode = "wb")
+      }
+    }
+  }
 }
 
 #' PRECL data downloader
@@ -201,6 +332,8 @@ download_ncep_doe <- function(destination){
 #' \item{1 for 1 degree,}
 #' \item{2.5 for 2.5 degree.}
 #' }
+#' @return No return value, called to download the data set.
+#' @export
 
 download_precl <- function(destination, resolution = 0.5){
   if (!is.character(destination)) stop ("destination should be character string.")
@@ -230,7 +363,13 @@ download_precl <- function(destination, resolution = 0.5){
 #' @param destination a character string with the path where the downloaded file is saved.
 #' @param start_year numeric. Start year should be between 1998-2020.
 #' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
+<<<<<<< HEAD
 #' @note user must \href{"https://wiki.earthdata.nasa.gov/display/EL/How+To+Register+For+an+EarthData+Login+Profile"}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
+=======
+#' @note user must \href{https://urs.earthdata.nasa.gov}{Create an Earthdata account} and \href{https://disc.gsfc.nasa.gov/earthdata-login}{Link GES DISC} 
+#' @return No return value, called to download the data set.
+#' @export
+>>>>>>> dev
 
 download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2020){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -260,6 +399,8 @@ download_trmm_3b43 <- function(destination, start_year = 1998, end_year = 2020){
 #' Function for downloading UDEL NC file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_udel <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
@@ -275,6 +416,8 @@ download_udel <- function(destination){
 #' Function for downloading GPCP NC file.
 #'
 #' @param destination a character string with the path where the downloaded file is saved.
+#' @return No return value, called to download the data set.
+#' @export
 
 download_all <- function(destination){
   if (!is.character(destination)) stop ("destination should be a character string.")
