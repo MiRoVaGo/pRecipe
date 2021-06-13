@@ -4,10 +4,10 @@
 \alias{download_all}
 \title{All data downloader}
 \usage{
-download_all(destination)
+download_all(folder_path)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \value{
 No return value, called to download the data set.

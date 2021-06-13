@@ -4,10 +4,10 @@
 \alias{download_gpcc}
 \title{GPCC data downloader}
 \usage{
-download_gpcc(destination, resolution = 0.5)
+download_gpcc(folder_path, resolution = 0.5)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 
 \item{resolution}{numeric. Data spatial resolution. Suitable options are:
 \itemize{
