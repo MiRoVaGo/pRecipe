@@ -4,10 +4,10 @@
 \alias{download_udel}
 \title{UDEL data downloader}
 \usage{
-download_udel(destination)
+download_udel(folder_path)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 }
 \value{
 No return value, called to download the data set.

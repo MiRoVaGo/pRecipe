@@ -4,10 +4,10 @@
 \alias{download_gpm_imergm}
 \title{GPM data downloader}
 \usage{
-download_gpm_imergm(destination, start_year = 2000, end_year = 2020)
+download_gpm_imergm(folder_path, start_year = 2000, end_year = 2020)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 
 \item{start_year}{numeric. Start year should be between 2000-2020.}
 

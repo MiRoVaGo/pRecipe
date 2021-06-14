@@ -79,51 +79,6 @@ reformat_cmap <- function(folder_path){
     class(precip) <- append(class(precip),"pRecipe")
     saveRDS(precip, paste0(folder_path, "/../../database/cmap_", dummie_layers, ".Rds"))
   }
-<<<<<<< HEAD
-=======
-  stopCluster(cluster)
-}
-
-#' CMORPH data reformatter
-#'
-#' Function for reading CMORPH NC files, and reformatting them into data.table which is stored in an .Rds file.
-#'
-#' @param folder_path a character string with the path to the "raw" folder.
-#' @return No return value, called to reformat the downloaded data set into pRecipe object.
-#' @export
-
-reformat_cmorph <- function(folder_path){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  if (!grepl("*/data/raw", folder_path)){
-    stop("Error: folder_path should point to the location of 'data/raw'")
-  }
-  folder_path <- paste0(folder_path, "/cmorph")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  dummie_raster <- raster::brick(file_name)
-  dummie_years <- names(dummie_raster) %>% as.Date(format = "X%Y.%m.%d") %>% year() %>% unique()
-  no_cores <- detectCores() - 1
-  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
-  cluster <- makeCluster(no_cores, type = "PSOCK")
-  for (dummie_layers in dummie_years) {
-    dummie_list <- raster::subset(dummie_raster, grep(dummie_layers, names(dummie_raster), value = TRUE)) %>% raster::as.list()
-    precip <- parLapply(cluster, dummie_list, function(year){
-      year <- raster::setZ(year, as.Date(names(year), format = "X%Y.%m.%d"))
-      dummie_table <- raster::zApply(year, by = data.table::month, fun = sum, na.rm = TRUE)
-      dummie_table <- raster::aggregate(dummie_table, fact = 2, fun = mean, na.rm = TRUE)
-      dummie_table[dummie_table < 0] <- NA
-      dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
-      dummie_table <- data.table::as.data.table(dummie_table)
-      dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
-      data.table::setnames(dummie_table, "layer", "Z")
-      return(dummie_table)
-    })
-    precip <- data.table::rbindlist(precip)
-    precip[x > 180, x := x - 360]
-    precip$name <- "cmorph"
-    class(precip) <- append(class(precip),"pRecipe")
-    saveRDS(precip[(y >= -90) & (y <= 90)], paste0(folder_path, "/../../database/cmorph_", dummie_layers, ".Rds"))
-  }
->>>>>>> dev
   stopCluster(cluster)
 }
 
@@ -368,8 +323,6 @@ reformat_gpm_imergm <- function(folder_path){
     class(precip) <- append(class(precip),"pRecipe")
     saveRDS(precip, paste0(folder_path, "/../../database/gpm_imergm_", dummie_layers, ".Rds"))
   }
-<<<<<<< HEAD
-=======
   stopCluster(cluster)
 }
 
@@ -415,89 +368,23 @@ reformat_ncep_doe <- function(folder_path){
     class(precip) <- append(class(precip),"pRecipe")
     saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe_", dummie_layers, ".Rds"))
   }
->>>>>>> dev
   stopCluster(cluster)
 }
 
-#' NCEP/DOE data reformatter
-#'
-#' Function for reading NCEP/DOE NC files, and reformatting them into data.table which is stored in an .Rds file.
-#'
-#' @param folder_path a character string with the path to the "raw" folder.
-#' @return No return value, called to reformat the downloaded data set into pRecipe object.
-#' @export
-
-reformat_ncep_doe <- function(folder_path){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
-  if (!grepl("*/data/raw", folder_path)){
-    stop("Error: folder_path should point to the location of 'data/raw'")
-  }
-  folder_path <- paste0(folder_path, "/ncep_doe")
-  file_name <- list.files(folder_path, full.names = TRUE)
-  dummie_raster <- raster::brick(file_name)
-  dummie_years <- names(dummie_raster) %>% as.Date(format = "X%Y.%m.%d") %>% year() %>% unique()
-  no_cores <- detectCores() - 1
-  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
-  cluster <- makeCluster(no_cores, type = "PSOCK")
-  for (dummie_layers in dummie_years) {
-    dummie_list <- raster::subset(dummie_raster, grep(dummie_layers, names(dummie_raster), value = TRUE)) %>% raster::as.list()
-    precip <- parLapply(cluster, dummie_list, function(year){
-      year <- raster::setZ(year, as.Date(names(year), format = "X%Y.%m.%d"))
-      dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
-      dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
-      dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
-      dummie_table[dummie_table < 0] <- NA
-      dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
-      dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
-      dummie_table <- data.table::as.data.table(dummie_table)
-      dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
-      data.table::setnames(dummie_table, "layer", "Z")
-      dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
-      return(dummie_table)
-    })
-    precip <- data.table::rbindlist(precip)
-    precip[x > 180, x := x - 360]
-<<<<<<< HEAD
-    precip$name <- "ncep_doe"
-    class(precip) <- append(class(precip),"pRecipe")
-    saveRDS(precip, paste0(folder_path, "/../../database/ncep_doe_", dummie_layers, ".Rds"))
-=======
-    precip$name <- "ncep_ncar"
-    class(precip) <- append(class(precip),"pRecipe")
-    saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar_", dummie_layers, ".Rds"))
->>>>>>> dev
-  }
-  stopCluster(cluster)
-}
-
-<<<<<<< HEAD
 #' NCEP/NCAR data reformatter
 #'
 #' Function for reading NCEP/NCAR NC files, and reformatting them into data.table which is stored in an .Rds file.
-=======
-#' PERSIANN data reformatter
-#'
-#' Function for reading PERSIANN CDR NC files, and reformatting them into data.table which is stored in an .Rds file.
->>>>>>> dev
 #'
 #' @param folder_path a character string with the path to the "raw" folder.
 #' @return No return value, called to reformat the downloaded data set into pRecipe object.
 #' @export
 
-<<<<<<< HEAD
 reformat_ncep_ncar <- function(folder_path){
-=======
-reformat_persiann_cdr <- function(folder_path){
->>>>>>> dev
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   if (!grepl("*/data/raw", folder_path)){
     stop("Error: folder_path should point to the location of 'data/raw'")
   }
-<<<<<<< HEAD
   folder_path <- paste0(folder_path, "/ncep_ncar")
-=======
-  folder_path <- paste0(folder_path, "/persiann_cdr")
->>>>>>> dev
   file_name <- list.files(folder_path, full.names = TRUE)
   dummie_raster <- raster::brick(file_name)
   dummie_years <- names(dummie_raster) %>% as.Date(format = "X%Y.%m.%d") %>% year() %>% unique()
@@ -508,38 +395,23 @@ reformat_persiann_cdr <- function(folder_path){
     dummie_list <- raster::subset(dummie_raster, grep(dummie_layers, names(dummie_raster), value = TRUE)) %>% raster::as.list()
     precip <- parLapply(cluster, dummie_list, function(year){
       year <- raster::setZ(year, as.Date(names(year), format = "X%Y.%m.%d"))
-<<<<<<< HEAD
       dummie_raster <- raster::raster(xmn=-0, xmx=360, ymn=-90, ymx=90, ncols=720, nrows=360)
       dummie_raster <- raster::setValues(dummie_raster, 1:(raster::ncell(dummie_raster)))
       dummie_table <- raster::disaggregate(year, fact = round(raster::res(year)/0.5))
       dummie_table[dummie_table < 0] <- NA
       dummie_table <- raster::resample(dummie_table, dummie_raster, method = "bilinear")
-=======
-      dummie_table <- raster::zApply(year, by = data.table::month, fun = sum, na.rm = TRUE)
-      dummie_table <- raster::aggregate(dummie_table, fact = 2, fun = mean, na.rm = TRUE)
-      dummie_table[dummie_table < 0] <- NA
->>>>>>> dev
       dummie_table <- raster::as.data.frame(dummie_table, xy = TRUE, long = TRUE, na.rm = TRUE)
       dummie_table <- data.table::as.data.table(dummie_table)
       dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
       data.table::setnames(dummie_table, "layer", "Z")
-<<<<<<< HEAD
       dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
-=======
->>>>>>> dev
       return(dummie_table)
     })
     precip <- data.table::rbindlist(precip)
     precip[x > 180, x := x - 360]
-<<<<<<< HEAD
     precip$name <- "ncep_ncar"
     class(precip) <- append(class(precip),"pRecipe")
     saveRDS(precip, paste0(folder_path, "/../../database/ncep_ncar_", dummie_layers, ".Rds"))
-=======
-    precip$name <- "persiann_cdr"
-    class(precip) <- append(class(precip),"pRecipe")
-    saveRDS(precip[(y >= -90) & (y <= 90)], paste0(folder_path, "/../../database/persiann_cdr_", dummie_layers, ".Rds"))
->>>>>>> dev
   }
   stopCluster(cluster)
 }

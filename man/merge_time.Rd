@@ -4,7 +4,7 @@
 \alias{merge_time}
 \title{Data integrator.}
 \usage{
-merge_time(database_folder_path)
+merge_time(database_folder_path = "./data/database")
 }
 \arguments{
 \item{database_folder_path}{a character string with the path to the "database" folder.}

@@ -4,10 +4,10 @@
 \alias{download_precl}
 \title{PRECL data downloader}
 \usage{
-download_precl(destination, resolution = 0.5)
+download_precl(folder_path, resolution = 0.5)
 }
 \arguments{
-\item{destination}{a character string with the path where the downloaded file is saved.}
+\item{folder_path}{a character string with the path where the "raw" folder is located.}
 
 \item{resolution}{numeric. Data spatial resolution. Suitable options are:
 \itemize{
