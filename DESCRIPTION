@@ -1,6 +1,6 @@
 Package: pRecipe
 Title: A Multiscale Framework for Data Analysis of Global Precipitation
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
   person("Mijael R.", "Vargas G.", email = "mirovago@gmail.com", role = c("aut", "cre")),
   person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
