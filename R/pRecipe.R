@@ -298,7 +298,7 @@ crop_data <- function(x, shp_path){
 #' @return No return value, called to merge all available data sets into one.
 #' @export
 
-merge_time <- function(database_folder_path){
+merge_time <- function(database_folder_path = "./data/database"){
   merge_1836_1890(database_folder_path)
   merge_1891_2020(database_folder_path)
   return(invisible())
