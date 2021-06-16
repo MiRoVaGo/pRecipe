@@ -1,3 +1,7 @@
+# pRecipe <img src='man/figures/logo.png' align="right" height="139" />
+
+An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
+
 # Who will use the package? 
 
 * Researchers
