@@ -1,5 +1,12 @@
 # pRecipe <img src='man/figures/logo.png' align="right" height="139" />
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/MiRoVaGo/pRecipe/workflows/R-CMD-check/badge.svg)](https://github.com/MiRoVaGo/pRecipe/actions)
+[![pRecipe](https://img.shields.io/badge/pRecipe-ready%20to%20use-brightgreen)](https://github.com/MiRoVaGo/pRecipe)
+[![R badge](https://img.shields.io/badge/build%20with-%E2%99%A5%20and%20R-blue)](https://github.com/MiRoVaGo/pRecipe)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/pRecipe)](https://cran.r-project.org/package=pRecipe)
+<!-- badges: end -->
+
 An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
 
 # Who will use the package? 
