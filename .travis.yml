@@ -3,5 +3,15 @@ language: r
 r_packages:
   - covr
 
+addons:
+  apt:
+    packages:
+      - libproj-dev
+      - libgeos-dev
+      - libgdal-dev
+      - libnetcdf-dev
+      - libhdf5-dev
+
 after_success:
   - Rscript -e 'library(covr); codecov()'
+  
