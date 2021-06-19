@@ -1,9 +1,6 @@
 # pRecipe <img src='man/figures/logo.png' align="right" height="139" />
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/MiRoVaGo/pRecipe/workflows/R-CMD-check/badge.svg)](https://github.com/MiRoVaGo/pRecipe/actions)
-[![Build Status](https://travis-ci.com/MiRoVaGo/pRecipe.svg?branch=master)](https://travis-ci.com/MiRoVago/pRecipe)
-[![codecov](https://codecov.io/gh/MiRoVaGo/pRecipe/branch/master/graph/badge.svg)](https://travis-ci.com/github/MiRoVaGo/pRecipe)
 [![pRecipe](https://img.shields.io/badge/pRecipe-ready%20to%20use-brightgreen)](https://github.com/MiRoVaGo/pRecipe)
 [![R badge](https://img.shields.io/badge/build%20with-%E2%99%A5%20and%20R-blue)](https://github.com/MiRoVaGo/pRecipe)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/pRecipe)](https://cran.r-project.org/package=pRecipe)
