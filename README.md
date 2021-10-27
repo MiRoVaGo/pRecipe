@@ -12,13 +12,13 @@ An open-access tool/framework to download, validate, visualize, and analyze mult
 # Who will use the package? 
 
 * Researchers
-* Climatology
-* Meteorology
+* Climatologists
+* Meteorologists
 * Remote sensing community (e.g., for validation)
-* Hydrology
-* Broader audience (earth sciences/agricultural sciences etc.)
+* Hydrologists
+* Broader audience (earth scientists, agricultural scientists, etc.)
 * Professors & Students (teaching)
-* Data analysts from industry
+* Data analysts from the industry
 
 # Functionality: 
 
@@ -36,7 +36,7 @@ If you would like to contribute to `pRecipe` you should create an issue with the
 enhancement label and state your possible addition in order to check if it 
 belongs in the package or if it is not something we are already working on. If 
 we agree your suggestion should be part of `pRecipe` and no one is already 
-working on your it, fork the dev branch, work on your fork, and then create a 
+working on it, fork the dev branch, work on your fork, and then create a 
 pull request to merge it into dev.
 
 ## Scripting:

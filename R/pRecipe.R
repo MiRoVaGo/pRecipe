@@ -223,8 +223,18 @@ import_subset_data <- function(name, start_year, end_year, bbox, database_folder
   }
   dummie_years <- paste(seq(start_year, end_year), collapse = "|")
   name <- grep(dummie_years, name, value = TRUE)
-  precip <- lapply(name, readRDS) %>% rbindlist()
-  precip <- precip[x >= bbox[1] & x <= bbox[3] & y >= bbox[2] & y <= bbox[4]]
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  clusterEvalQ(cluster, library("data.table"))
+  clusterExport(cluster, "bbox", envir = environment())
+  precip <- parLapply(cluster, name, function(dataset){
+    dummie_table <- readRDS(dataset)
+    dummie_table <- dummie_table[x >= bbox[1] & x <= bbox[3] & y >= bbox[2] & y <= bbox[4]]
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- rbindlist(precip)
   return(precip)
 }
 
