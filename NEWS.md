@@ -1,3 +1,7 @@
+# pRecipe 0.1.1
+
+* `import_subset_data` now performs in parallel
+
 # pRecipe 0.1.0
 
 * Fixed HTTPS authentication issue when downloading *gpm_imergm* or *trmm_3b43*.
