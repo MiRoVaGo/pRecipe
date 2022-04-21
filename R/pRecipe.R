@@ -2,7 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table ggplot2 hdf5r maps ncdf4 parallel rgdal sf
+#' @import data.table ggplot2 hdf5r ncdf4 parallel rgdal sf
 #' @importFrom curl curl_download new_handle handle_setopt
 #' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
