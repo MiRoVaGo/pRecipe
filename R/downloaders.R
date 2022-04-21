@@ -11,8 +11,8 @@ download_20cr <- function(folder_path){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_name <- "apcp.mon.mean.nc"
-  file_url_base <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/accumsSI-MO/"
+  file_name <- "prate.mon.mean.nc"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/20thC_ReanV3/Monthlies/sfcSI-MO/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/20cr/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -31,7 +31,7 @@ download_cmap <- function(folder_path){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cmap/std/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/cmap/std/"
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/cmap/", file_name)
@@ -43,21 +43,21 @@ download_cmap <- function(folder_path){
 #' Function for downloading CPC-GLOBAL NC files.
 #'
 #' @param folder_path a character string with the path where the "raw" folder is located.
-#' @param start_year numeric. Start year should be between 1979-2020.
-#' @param end_year numeric. End year should be between 1979-2020, and should be greater or equal to start year.
+#' @param start_year numeric. Start year should be between 1979-2021.
+#' @param end_year numeric. End year should be between 1979-2021, and should be greater or equal to start year.
 #' @return No return value, called to download the data set.
 #' @export
 
-download_cpc <- function(folder_path, start_year = 1979, end_year = 2020){
+download_cpc <- function(folder_path, start_year = 1979, end_year = 2021){
   if (!is.character(folder_path)) stop ("folder_path should be a character string.")
   if (!(is.numeric(start_year) & is.numeric(end_year))) stop ("start_year and end_year should be numeric.")
-  if ((!any(start_year == 1979:2020)) | (!any(end_year == 1979:2020)) | !(end_year >= start_year)){
-    stop("Error: start_year and end_year should be between 1979-2020, and end_year should be greater or equal to start_year")
+  if ((!any(start_year == 1979:2021)) | (!any(end_year == 1979:2021)) | !(end_year >= start_year)){
+    stop("Error: start_year and end_year should be between 1979-2021, and end_year should be greater or equal to start_year")
   }
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/cpc_global_precip/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/cpc_global_precip/"
   file_url_list <- c() 
   for (year in start_year:end_year){
     file_name <- paste0("precip.", year, ".nc")
@@ -110,7 +110,7 @@ download_ghcn <- function(folder_path){
   options(timeout = 6000)
   on.exit(options(old_options))
   file_name <- "precip.mon.total.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ghcngridded/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/ghcngridded/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/ghcn/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -144,7 +144,7 @@ download_gpcc <- function(folder_path, resolution = 0.5){
          "1" = "precip.mon.total.1x1.v2018.nc",
          "2.5" = "precip.mon.total.2.5x2.5.v2018.nc"
   )
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcc/full_v2018/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/gpcc/full_v2018/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/gpcc/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -163,7 +163,7 @@ download_gpcp <- function(folder_path){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/gpcp/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/gpcp/"
   file_name <- "precip.mon.mean.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/gpcp/", file_name)
@@ -238,7 +238,7 @@ download_ncep_ncar<- function(folder_path){
   options(timeout = 6000)
   on.exit(options(old_options))
   file_name <- "prate.sfc.mon.mean.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/ncep_ncar/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -258,7 +258,7 @@ download_ncep_doe <- function(folder_path){
   options(timeout = 6000)
   on.exit(options(old_options))
   file_name <- "prate.sfc.mon.mean.nc"
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis2.derived/gaussian_grid/"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/ncep_doe/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -296,7 +296,7 @@ download_precl <- function(folder_path, resolution = 0.5){
                         "1" = "1.0deg/",
                         "2.5" = "2.5deg/"
   )
-  file_url_base <-"ftp://ftp.cdc.noaa.gov/Datasets/precl/"
+  file_url_base <-"https://downloads.psl.noaa.gov/Datasets/precl/"
   file_url <- paste0(file_url_base, file_folder, file_name)
   file_destination <- paste0(folder_path, "/precl/", file_name)
   download.file(file_url, file_destination, mode = "wb")
@@ -368,7 +368,7 @@ download_udel <- function(folder_path){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_url_base <- "ftp://ftp.cdc.noaa.gov/Datasets/udel.airt.precip/"
+  file_url_base <- "https://downloads.psl.noaa.gov/Datasets/udel.airt.precip/"
   file_name <- "precip.mon.total.v501.nc"
   file_url <- paste0(file_url_base, file_name)
   file_destination <- paste0(folder_path, "/udel/", file_name)

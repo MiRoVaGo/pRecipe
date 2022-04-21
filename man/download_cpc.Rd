@@ -4,14 +4,14 @@
 \alias{download_cpc}
 \title{CPC data downloader}
 \usage{
-download_cpc(folder_path, start_year = 1979, end_year = 2020)
+download_cpc(folder_path, start_year = 1979, end_year = 2021)
 }
 \arguments{
 \item{folder_path}{a character string with the path where the "raw" folder is located.}
 
-\item{start_year}{numeric. Start year should be between 1979-2020.}
+\item{start_year}{numeric. Start year should be between 1979-2021.}
 
-\item{end_year}{numeric. End year should be between 1979-2020, and should be greater or equal to start year.}
+\item{end_year}{numeric. End year should be between 1979-2021, and should be greater or equal to start year.}
 }
 \value{
 No return value, called to download the data set.

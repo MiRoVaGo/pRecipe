@@ -28,7 +28,7 @@ reformat_20cr <- function(folder_path){
       dummie_table <- data.table::as.data.table(dummie_table)
       dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
       data.table::setnames(dummie_table, "layer", "Z")
-      dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * (24/3)
+      dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
       return(dummie_table)
     })
     precip <- data.table::rbindlist(precip)
@@ -299,7 +299,7 @@ reformat_gpm_imergm <- function(folder_path){
   cluster <- makeCluster(no_cores, type = "PSOCK")
   clusterEvalQ(cluster, library("hdf5r"))
   for (dummie_layers in dummie_years) {
-    dummie_list <- grep(dummie_layers, file_name, value = TRUE)
+    dummie_list <- grep(paste0("3IMERG.", dummie_layers), file_name, value = TRUE)
     precip <- parLapply(cluster, dummie_list, function(year){
       layer_name <- sub(".*3IMERG.", "", year)
       layer_name <- substr(layer_name, 1, 8)
@@ -475,11 +475,18 @@ reformat_trmm_3b43 <- function(folder_path){
   if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
   cluster <- makeCluster(no_cores, type = "PSOCK")
   for (dummie_layers in dummie_years) {
-    dummie_list <- grep(dummie_layers, file_name, value = TRUE)
+    dummie_list <- grep(paste0("3B43.", dummie_layers), file_name, value = TRUE)
     precip <- parLapply(cluster, dummie_list, function(year){
       layer_name <- sub(".*3B43.", "", year)
       layer_name <- substr(layer_name, 1, 8)
-      dummie_table <- gdalUtils::get_subdatasets(year)
+      dummie_table <- sf::gdal_utils("info", year)
+      dummie_table <- strsplit(dummie_table, "\n")
+      dummie_table <- dummie_table[[1]]
+      dummie_table <- dummie_table[grep(glob2rx("*SUBDATASET*NAME*"),dummie_table)]
+      dummie_table <- sapply(X = seq(length(dummie_table)), FUN = function(X){
+        split1 <- strsplit(dummie_table[X],"=")
+        return(gsub("\"","",split1[[1]][2]))	
+      })
       dummie_table <- rgdal::readGDAL(dummie_table[1])
       dummie_table <- raster::brick(dummie_table)
       dummie_table <- raster::t(dummie_table)

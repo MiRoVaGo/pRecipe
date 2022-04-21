@@ -1,6 +1,6 @@
 Package: pRecipe
 Title: A Multiscale Framework for Data Analysis of Global Precipitation
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: c(
   person("Mijael Rodrigo", "Vargas Godoy", email = "mirovago@gmail.com", role = c("aut", "cre")),
   person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
@@ -8,7 +8,7 @@ Authors@R: c(
   )
 Description: An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
 Depends: R (>= 4.0.0)
-Imports: curl, data.table, dplyr, gdalUtils, getPass, ggplot2, hdf5r, lubridate, maps, methods, ncdf4, parallel, raster, rgdal, R.utils, sp, stats, stringr, utils, viridis, zoo
+Imports: curl, data.table, dplyr, getPass, ggplot2, hdf5r, lubridate, maps, methods, ncdf4, parallel, raster, rgdal, R.utils, sf, sp, stats, stringr, utils, viridis, zoo
 License: GPL-3
 Encoding: UTF-8
 LazyData: false

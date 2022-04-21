@@ -2,7 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table gdalUtils ggplot2 hdf5r ncdf4 parallel rgdal
+#' @import data.table ggplot2 hdf5r maps ncdf4 parallel rgdal sf
 #' @importFrom curl curl_download new_handle handle_setopt
 #' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
@@ -13,7 +13,7 @@
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd
 #' @importFrom stringr str_pad
-#' @importFrom utils download.file URLencode View
+#' @importFrom utils download.file URLencode View glob2rx
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
 #' @param project_folder_path a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
