@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This is is an introductory presentation of the `pRecipe` package, as implemented in the study of [Vargas Godoy et al. [2022]](link), to assess global water cycle intensification in Czechia.
+This is is an introductory presentation of the `pRecipe` package, as implemented in the study of Vargas Godoy et al. (2022), to assess global water cycle intensification in Czechia.
 
 ## Create database
 
