@@ -1,10 +1,19 @@
 ## Test environments
-* local R installation, R 4.0.3
-* ubuntu 16.04 (on travis-ci), R 4.0.3
-* win-builder (devel)
+- R-hub windows-x86_64-devel (r-devel)
+- R-hub ubuntu-gcc-release (r-release)
+- R-hub fedora-clang-devel (r-devel)
 
 ## R CMD check results
+> On windows-x86_64-devel (r-devel), ubuntu-gcc-release (r-release), fedora-clang-devel (r-devel)
+  checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Mijael Rodrigo Vargas Godoy <mirovago@gmail.com>'
+  New submission
+  
+  Package was archived on CRAN
+  
+    X-CRAN-Comment: Archived on 2022-04-18 as requires archived package
+  CRAN repository db overrides:
+  
+      'gdalUtils'.
 
-0 errors | 0 warnings | 1 note
-
-* This is a new release.
+0 errors ✓ | 0 warnings ✓ | 1 notes x

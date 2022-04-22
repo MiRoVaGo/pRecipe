@@ -15,16 +15,20 @@ merge_1836_1890 <- function(folder_path){
   cluster <- makeCluster(no_cores, type = "PSOCK")
   clusterExport(cluster, c("dummie_list_values", "dummie_list_sd", "folder_path"), envir = environment())
   clusterEvalQ(cluster, library("data.table"))
+  clusterEvalQ(cluster, library("zoo"))
   parLapply(cluster, dummie_years, function(year){
     dummie_value <- grep(year, dummie_list_values, value = TRUE)
     dummie_value <- readRDS(dummie_value)
+    dummie_value <- dummie_value[, Z := as.yearmon(Z)]
     dummie_value <- dummie_value[,-5]
     setnames(dummie_value, "value", "wvalue")
     dummie_sd <- grep(year, dummie_list_sd, value = TRUE)
     dummie_sd <- readRDS(dummie_sd)
+    dummie_sd <- dummie_sd[, Z := as.yearmon(Z)]
     dummie_sd <- dummie_sd[,-5]
     setnames(dummie_sd, "value", "sum_err")
     dummie_table <- merge(dummie_value, dummie_sd, by = c("x", "y", "Z"))
+    dummie_table$name <- "pRecipe"
     saveRDS(dummie_table, paste0(folder_path, "/../integration/pRecipe_", year, ".Rds"))
   })
   stopCluster(cluster)
@@ -46,6 +50,7 @@ merge_1891_2020 <- function(folder_path){
   clusterExport(cluster, "folder_path", envir = environment())
   clusterExport(cluster, varlist = "dt_parallel")
   clusterEvalQ(cluster, library("data.table"))
+  clusterEvalQ(cluster, library("zoo"))
   parLapply(cluster, dummie_years, function(year){
     if (year >= 1979){
       dummie_table <- grep(year, list.files(folder_path, full.names = TRUE), value = TRUE)
@@ -56,6 +61,7 @@ merge_1891_2020 <- function(folder_path){
     dummie_table <- lapply(dummie_table, readRDS)
     dummie_table <- rbindlist(dummie_table)
     dummie_table <- dt_parallel(dummie_table)
+    dummie_table$name <- "pRecipe"
     saveRDS(dummie_table, paste0(folder_path, "/../integration/pRecipe_", year, ".Rds"))
   })
   stopCluster(cluster)

@@ -2,7 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @import data.table gdalUtils ggplot2 hdf5r ncdf4 parallel rgdal
+#' @import data.table ggplot2 hdf5r ncdf4 parallel rgdal sf
 #' @importFrom curl curl_download new_handle handle_setopt
 #' @importFrom dplyr %>% 
 #' @importFrom getPass getPass
@@ -13,7 +13,7 @@
 #' @importFrom sp CRS coordinates over proj4string spTransform
 #' @importFrom stats sd
 #' @importFrom stringr str_pad
-#' @importFrom utils download.file URLencode View
+#' @importFrom utils download.file URLencode View glob2rx
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom zoo as.yearmon as.Date.yearmon
 #' @param project_folder_path a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created see \code{\link{create_folders}}
@@ -223,8 +223,18 @@ import_subset_data <- function(name, start_year, end_year, bbox, database_folder
   }
   dummie_years <- paste(seq(start_year, end_year), collapse = "|")
   name <- grep(dummie_years, name, value = TRUE)
-  precip <- lapply(name, readRDS) %>% rbindlist()
-  precip <- precip[x >= bbox[1] & x <= bbox[3] & y >= bbox[2] & y <= bbox[4]]
+  no_cores <- detectCores() - 1
+  if(no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+  cluster <- makeCluster(no_cores, type = "PSOCK")
+  clusterEvalQ(cluster, library("data.table"))
+  clusterExport(cluster, "bbox", envir = environment())
+  precip <- parLapply(cluster, name, function(dataset){
+    dummie_table <- readRDS(dataset)
+    dummie_table <- dummie_table[x >= bbox[1] & x <= bbox[3] & y >= bbox[2] & y <= bbox[4]]
+    return(dummie_table)
+  })
+  stopCluster(cluster)
+  precip <- rbindlist(precip)
   return(precip)
 }
 

@@ -85,13 +85,14 @@ dt_aggregate <- function(data, resolution){
 #' @return a data table with the weighted average of the original.
 
 dt_parallel <- function(dummie_table){
-  dummie_table[, means := mean(value, na.rm = TRUE), by = .(x, y, month(Z))]
+  dummie_table[, Z := as.yearmon(Z)]
+  dummie_table[, means := mean(value, na.rm = TRUE), by = .(x, y, Z)]
   dummie_table[, err := (means - value)^(-2)]
-  dummie_table[, sum_err := sum(err, na.rm = TRUE), by = .(x, y, month(Z))]
+  dummie_table[, sum_err := sum(err, na.rm = TRUE), by = .(x, y, Z)]
   dummie_table[, weight := err/sum_err]
   dummie_table[, wvalue := value * weight]
-  dummie_table <- dummie_table[, .(x, y, Z, sum_err, wvalue)]
-  dummie_table[, wvalue := sum(wvalue, na.rm = TRUE), by = .(x, y, month(Z))]
+  dummie_table <- dummie_table[, .(x, y, Z, wvalue, sum_err)]
+  dummie_table[, wvalue := sum(wvalue, na.rm = TRUE), by = .(x, y, Z)]
   dummie_table[, sum_err := 1/sum_err]
   dummie_table <- unique(dummie_table)
   return(dummie_table)
@@ -109,8 +110,8 @@ sd_20cr <- function(destination){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  file_url <- "ftp://ftp2.psl.noaa.gov/Datasets/20thC_ReanV3/spreads/Monthlies/accumsSI-MO/apcp.mon.mean.nc"
-  file_destination <- paste0(destination, "/apcp.mon.sd.nc")
+  file_url <- "https://downloads.psl.noaa.gov/Datasets/20thC_ReanV3/spreads/Monthlies/sfcSI-MO/prate.mon.mean.nc"
+  file_destination <- paste0(destination, "/prate.mon.mean.nc")
   download.file(file_url, file_destination, mode = "wb")
   dummie_raster <- raster::brick(file_destination)
   dummie_years <- names(dummie_raster) %>% as.Date(format = "X%Y.%m.%d") %>% year() %>% unique()
@@ -128,6 +129,7 @@ sd_20cr <- function(destination){
       dummie_table <- data.table::as.data.table(dummie_table)
       dummie_table$layer <- as.Date(dummie_table$layer, format = "X%Y.%m.%d")
       data.table::setnames(dummie_table, "layer", "Z")
+      dummie_table$value <- dummie_table$value * lubridate::days_in_month(dummie_table$Z) * 86400
       return(dummie_table)
     })
     precip <- data.table::rbindlist(precip)

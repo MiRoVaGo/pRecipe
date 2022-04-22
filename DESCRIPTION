@@ -1,23 +1,26 @@
 Package: pRecipe
 Title: A Multiscale Framework for Data Analysis of Global Precipitation
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
-  person("Mijael R.", "Vargas Godoy", email = "mirovago@gmail.com", role = c("aut", "cre")),
+  person("Mijael Rodrigo", "Vargas Godoy", email = "mirovago@gmail.com", role = c("aut", "cre")),
   person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
   person("Rajani K.", "Pradhan", role = "ctb")
   )
 Description: An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
 Depends: R (>= 4.0.0)
-Imports: curl, data.table, dplyr, gdalUtils, getPass, ggplot2, hdf5r, lubridate, methods, ncdf4, parallel, raster, rgdal, R.utils, sp, stats, stringr, utils, viridis, zoo
-License: GPL-2
+Imports: curl, data.table, dplyr, getPass, ggplot2, hdf5r, lubridate, methods, ncdf4, parallel, raster, rgdal, R.utils, sf, sp, stats, stringr, utils, viridis, zoo
+License: GPL-3
 Encoding: UTF-8
 LazyData: false
 URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 4.8.0, https://proj.org/download.html) and GDAL (>= 1.11.4, https://gdal.org/download.html).
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests:
+    rmarkdown,
+    knitr,
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US
+VignetteBuilder: knitr
