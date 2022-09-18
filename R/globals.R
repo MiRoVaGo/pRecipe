@@ -1,1 +1,1 @@
-utils::globalVariables(c(".", "Z", "err", "means", "name", "std", "sum_err", "value", "weight", "wvalue", "x", "y", "year_mean", "year_sd", "year_value"))
+utils::globalVariables(c("value", "x", "y"))

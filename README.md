@@ -5,6 +5,7 @@
 [![R badge](https://img.shields.io/badge/build%20with-%E2%99%A5%20and%20R-blue)](https://github.com/MiRoVaGo/pRecipe)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/pRecipe)](https://cran.r-project.org/package=pRecipe)
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/pRecipe)](https://cran.r-project.org/package=pRecipe)
+[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/pRecipe)](https://CRAN.R-project.org/package=pRecipe)
 <!-- badges: end -->
 
 An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
@@ -20,14 +21,11 @@ An open-access tool/framework to download, validate, visualize, and analyze mult
 * Professors & Students (teaching)
 * Data analysts from the industry
 
-# Functionality: 
+# Main functionalities: 
 
-* pRecipe achieves multiple data set integration for global precipitation.
-* Provides a suite of data sets from their source.
+* Provides a suite of 24 different data sets.
 * Allows for spatiotemporal aggregation and subsetting.
 * Offers exploratory data analysis tools (plots, summary statistics).
-* Uses multiple integration techniques.
-* Estimates the uncertainty of integration.
 
 # Contributing
 ## Workflow:

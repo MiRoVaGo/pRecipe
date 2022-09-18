@@ -5,5 +5,5 @@ test_that("pRecipe works", {
   dummie_table <- data.table::as.data.table(dummie_table)
   dummie_table$name <- "test"
   data.table::setnames(dummie_table, "layer", "Z")
-  expect_output(str(dt_aggregate(dummie_table, 5)), "2592 obs")
+  expect_output(str(dummie_table), "259200 obs")
 })
