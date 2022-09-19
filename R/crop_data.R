@@ -14,7 +14,7 @@
 #' @examples
 #' \dontrun{
 #' x <- crop_data("gpm_imerg.nc", "cze.shp")
-#' crop_data("gpm_imerg.nc", "cze.shp", TRUE, "gpm_imerg.cze.rds")
+#' crop_data("gpm_imerg.nc", "cze.shp", TRUE)
 #' w <- raster::brick("dummie.nc")
 #' z <- crop_data(w, "cze.shp")
 #' }
