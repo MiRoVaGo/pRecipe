@@ -52,7 +52,7 @@ Like many other R packages, `pRecipe` has some system requirements:
 
 `pRecipe` database hosts 24 different precipitation data sets Seven gauge-based, eight satellite-based, five reanalysis, and four model precipitation products. Their native specifications as well as links to their providers and their respective references are detailed in the following subsections. We have already homogenized, compacted to a single file, and stored them in a [Zenodo repository](https://zenodo.org/record/7082507) under the following naming convention:
 
-`<data set>.<variable>.<units>.<coverage>.<start date>.<end date>.<resolution>.<time step>.nc`
+`<data set>_<variable>_<units>_<coverage>_<start date>_<end date>_<resolution>_<time step>.nc`
 
 The `pRecipe` data collection was homogenized to the below specifications:
 
@@ -63,7 +63,7 @@ The `pRecipe` data collection was homogenized to the below specifications:
 
 E.g., GPCP v2.3 [@adler_version-2_2003] would be:
 
-`gpcp.tp.mm.global.197901.202205.025.monthly.nc`
+`gpcp_tp_mm_global_197901_202205_025_monthly.nc`
 
 ### Gauge-Based Products
 
@@ -133,7 +133,7 @@ Let's download the ERA5 data set, and inspect its content with `show_info`:
 
 ```{r}
 download_data(name = "era5", project_folder = ".")
-show_info("./data/database/era5.tp.mm.global.195901.202112.025.monthly.nc")
+show_info("./data/database/era5_tp_mm_global_195901_202112_025_monthly.nc")
 ```
 
 ```
@@ -142,7 +142,7 @@ show_info("./data/database/era5.tp.mm.global.195901.202112.025.monthly.nc")
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)"
 [5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
-[6] "source     : era5.tp.mm.global.195901.202112.025.monthly.nc "
+[6] "source     : era5_tp_mm_global_195901_202112_025_monthly.nc "
 [7] "names      : X1959.01.01, X1959.02.01, X1959.03.01, X1959.04.01, X1959.05.01, X1959.06.01, X1959.07.01, X1959.08.01, X1959.09.01, X1959.10.01, X1959.11.01, X1959.12.01, X1960.01.01, X1960.02.01, X1960.03.01, ... "
 [8] "Date/time  : 1959-01-01, 2021-12-01 (min, max)"
 [9] "varname    : tp " 
@@ -176,7 +176,7 @@ Let's subset the ERA5 data set over Central Europe (2,28,42,58) for the 1981-202
 subset_spacetime("era5", start_year = 1981, end_year = 2020, 
                  bbox = c(2,28,42,58), 
                  database_path = "./data/database/")
-show_info("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.nc")
+show_info("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
 ```
 
 ```
@@ -185,7 +185,7 @@ show_info("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.nc")
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
 [5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
-[6] "source     : era5.tp.mm.subset.1981.2020.025.monthly.nc "
+[6] "source     : era5_tp_mm_subset_1981_2020_025_monthly.nc "
 [7] "names      : X1981.01.01, X1981.02.01, X1981.03.01, X1981.04.01, X1981.05.01, X1981.06.01, X1981.07.01, X1981.08.01, X1981.09.01, X1981.10.01, X1981.11.01, X1981.12.01, X1982.01.01, X1982.02.01, X1982.03.01, ... "
 [8] "Date/time  : 1981-01-01, 2020-12-01 (min, max)"
 [9] "varname    : tp "
@@ -202,10 +202,10 @@ To further crop our data to a desired polygon other than a rectangle, we use the
 Let's crop our ERA5 subset to cover only the Czech Republic with the respective [shape file](https://biogeo.ucdavis.edu/data/diva/adm/CZE_adm.zip), and inspect its content with `show_info`:
 
 ```{r}
-crop_data(nc_path = "./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.nc",
+crop_data(nc_path = "./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc",
           shp_path = "./shapefiles/CZE_adm0.shp",
           save_nc = TRUE)
-show_info("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.cropped.nc")
+show_info("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
 ```
 
 ```
@@ -214,7 +214,7 @@ show_info("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.cropped.nc")
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
 [5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
-[6] "source     : era5.tp.mm.subset.1981.2020.025.monthly.cropped.nc "
+[6] "source     : era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc "
 [7] "names      : X1981.01.01, X1981.02.01, X1981.03.01, X1981.04.01, X1981.05.01, X1981.06.01, X1981.07.01, X1981.08.01, X1981.09.01, X1981.10.01, X1981.11.01, X1981.12.01, X1982.01.01, X1982.02.01, X1982.03.01, ... "
 [8] "Date/time  : 1981-01-01, 2020-12-01 (min, max)"
 [9] "varname    : tp " 
@@ -232,7 +232,7 @@ Let's generate the time series for our three different ERA5 data sets (Global, C
 
 ```{r}
 make_ts("era5", database_path = "./data/database/")
-tp_ts <- readr::read_csv("./data/processed/era5.ts.csv")
+tp_ts <- readr::read_csv("./data/processed/era5_ts.csv")
 head(tp_ts, 12)
 ```
 
@@ -255,9 +255,9 @@ head(tp_ts, 12)
 ```
 
 ```{r}
-era5_subset <- raster::brick("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.nc")
+era5_subset <- raster::brick("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly.nc")
 make_ts(era5_subset)
-subset_ts <- readr::read_csv("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.ts.csv")
+subset_ts <- readr::read_csv("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_ts.csv")
 head(subset_ts, 12)
 ```
 
@@ -280,9 +280,9 @@ head(subset_ts, 12)
 ```
 
 ```{r}
-era5_cropped <- raster::brick("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.cropped.nc")
+era5_cropped <- raster::brick("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_cropped.nc")
 make_ts(era5_cropped)
-cropped_ts <- readr::read_csv("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.cropped.ts.csv")
+cropped_ts <- readr::read_csv("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_cropped_ts.csv")
 head(cropped_ts, 12)
 ```
 
@@ -322,21 +322,21 @@ Let's plot our three different ERA5 data sets (Global, Central Europe, and Czech
 To see a map of any data set raw or processed, we use `plot_map` which takes only a RasterLayer as input.
 
 ```{r}
-global <- raster::raster("./data/database/era5.tp.mm.global.195901.202112.025.monthly.nc")
+global <- raster::raster("./data/database/era5_tp_mm_global_195901_202112_025_monthly.nc")
 plot_map(global)
 ```
 
 ![](plots/map.png){width=75%}
 
 ```{r}
-central_europe <- raster::raster("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.nc")
+central_europe <- raster::raster("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
 plot_map(central_europe)
 ```
 
 ![](plots/map_ceu.png){width=75%}
 
 ```{r}
-czechia <- raster::raster("./data/processed/era5.tp.mm.subset.1981.2020.025.monthly.cropped.nc")
+czechia <- raster::raster("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
 plot_map(czechia)
 ```
 
