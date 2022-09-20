@@ -163,7 +163,7 @@ Once we have downloaded our database, we can start processing the data with:
 
 To subset our data to a desired region and period of interest, we use the `subset_spacetime` function, which has five arguments *name*, *start_year*, *end_year*, *bbox*, and *database_path*.
 
-* *name* is the name of a data set in the database or a raster object. In the first case, the generated ".nc" file will follow the same conventions as previously described and will be stored in [your_project_folder]/data/processed. In the second case, the output file name will be [original_name].subset.nc and will be stored in the same location of the input file.
+* *name* is the name of a data set in the database or a raster object. In the first case, the generated ".nc" file will follow the same conventions as previously described and will be stored in [your_project_folder]/data/processed. In the second case, the output file name will be [original_name]_subset.nc and will be stored in the same location of the input file.
 * *start_year* is the start of the period of interest.
 * *end_year* is the end of the period of interest.
 * *bbox* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
@@ -318,25 +318,25 @@ Let's plot our three different ERA5 data sets (Global, Central Europe, and Czech
 
 ### Maps
 
-To see a map of any data set raw or processed, we use `plot_map` which takes only the first RasterLayer as input.
+To see a map of any data set raw or processed, we use `plot_map` which takes only one layer of the RasterBrick as input.
 
 ```{r}
 global <- raster::raster("./data/database/era5_tp_mm_global_195901_202112_025_monthly.nc")
-plot_map(global)
+plot_map(global[[1]])
 ```
 
 ![](plots/map.png){width=75%}
 
 ```{r}
-central_europe <- raster::raster("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
-plot_map(central_europe)
+central_europe <- raster::brick("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
+plot_map(central_europe[[1]])
 ```
 
 ![](plots/map_ceu.png){width=75%}
 
 ```{r}
-czechia <- raster::raster("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
-plot_map(czechia)
+czechia <- raster::brick("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
+plot_map(czechia[[1]])
 ```
 
 ![](plots/map_cze.png){width=75%}
