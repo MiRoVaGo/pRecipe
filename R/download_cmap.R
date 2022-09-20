@@ -13,9 +13,9 @@ download_cmap <- function(folder_path = "./data/raw/"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  zenodo_base <- "https://zenodo.org/record/7082507/files/"
+  zenodo_base <- "https://zenodo.org/record/7094293/files/"
   zenodo_end <- "?download=1"
-  file_name <- "cmap.tp.mm.global.197901.202207.025.monthly.nc"
+  file_name <- "cmap_tp_mm_global_197901_202207_025_monthly.nc"
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste0(folder_path, file_name)
   download.file(file_url, file_destination, mode = "wb")

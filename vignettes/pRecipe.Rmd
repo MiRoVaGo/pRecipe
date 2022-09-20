@@ -50,7 +50,7 @@ Like many other R packages, `pRecipe` has some system requirements:
 
 ## Data
 
-`pRecipe` database hosts 24 different precipitation data sets Seven gauge-based, eight satellite-based, five reanalysis, and four model precipitation products. Their native specifications as well as links to their providers and their respective references are detailed in the following subsections. We have already homogenized, compacted to a single file, and stored them in a [Zenodo repository](https://zenodo.org/record/7082507) under the following naming convention:
+`pRecipe` database hosts 24 different precipitation data sets Seven gauge-based, eight satellite-based, five reanalysis, and four model precipitation products. Their native specifications as well as links to their providers and their respective references are detailed in the following subsections. We have already homogenized, compacted to a single file, and stored them in a [Zenodo repository](https://zenodo.org/record/7094293) under the following naming convention:
 
 `<data set>_<variable>_<units>_<coverage>_<start date>_<end date>_<resolution>_<time step>.nc`
 

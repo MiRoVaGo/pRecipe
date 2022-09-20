@@ -41,7 +41,7 @@ crop_data <- function(nc_path, shp_path, save_nc = FALSE){
     x <- getValues(x)
     tp[is.na(x)] <- -9999
     nc_out <- sub(".nc.*", "", nc_path)
-    nc_out <- paste0(nc_out, ".ts.csv")
+    nc_out <- paste0(nc_out, "_cropped.nc")
     deflon <- ncdim_def("lon", vals = lon, longname = dimlon$long_name,
                         units = dimlon$units)
     deflat <- ncdim_def("lat", vals = lat, longname = dimlat$long_name,

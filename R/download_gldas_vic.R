@@ -13,9 +13,9 @@ download_gldas_vic <- function(folder_path = "./data/raw/"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  zenodo_base <- "https://zenodo.org/record/7082507/files/"
+  zenodo_base <- "https://zenodo.org/record/7094293/files/"
   zenodo_end <- "?download=1"
-  file_name <- "gldas_vic.tp.mm.land.194801.201412.025.monthly.nc"
+  file_name <- "gldas-vic_tp_mm_land_194801_201412_025_monthly.nc"
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste0(folder_path, file_name)
   download.file(file_url, file_destination, mode = "wb")
