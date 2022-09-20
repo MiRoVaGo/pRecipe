@@ -36,7 +36,7 @@
 #' @export
 #' @examples
 #' \donttest{
-#' download_data("gldas_vic", tempdir())
+#' download_data("gldas-vic", tempdir())
 #' }
 
 download_data <- function(name = "all", project_folder = "."){

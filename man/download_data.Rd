@@ -46,6 +46,6 @@ The function \code{download_data} downloads the selected data product.
 }
 \examples{
 \donttest{
-download_data("gldas_vic", tempdir())
+download_data("gldas-vic", tempdir())
 }
 }
