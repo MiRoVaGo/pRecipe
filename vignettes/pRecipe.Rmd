@@ -81,7 +81,7 @@ UDel v5.01 | 0.5$^\circ$ | Monthly | 1901-01 to 2017-12 | [Download](https://psl
 
 Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
 -------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-CHIRPS v2.0 | 0.05$^\circ$ | Monthly | 1981-01 to 2022-07 | [Download](https://data.chc.ucsb.edu/products/CHIRPS-2.0/) | @funk_climate_2015
+CHIRPS v2.0 | 0.05$^\circ$ | Monthly | 1981-01 to 2022-07 | [Download](https://www.chc.ucsb.edu/data/chirps) | @funk_climate_2015
 CMAP | 2.5$^\circ$ | Monthly | 1979-01 to 2022-07 | [Download](https://psl.noaa.gov/data/gridded/data.cmap.html) | @xie_global_1997
 CMORPH | 0.25$^\circ$ | Daily | 1998-01 to 2021-12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
 GPCP v2.3 | 0.5$^\circ$ | Monthly | 1979-01 to 2022-05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_version-2_2003
@@ -104,9 +104,9 @@ NCEP/DOE R2 | 1.875$^\circ$ | Monthly | 1979-01 to 2022-08 | [Download](https://
 
 Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
 -------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-GLDAS CLSM v2.0 | 0.25$^\circ$ | Daily | 1948-01 to 2014-12 | [Download](https://disc.gsfc.nasa.gov/datasets?keywords=GLDAS) | @rodell_global_2004
-GLDAS NOAH v2.0 | 0.25$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://disc.gsfc.nasa.gov/datasets?keywords=GLDAS) | @rodell_global_2004
-GLDAS VIC v2.0 | 1$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://disc.gsfc.nasa.gov/datasets?keywords=GLDAS) | @rodell_global_2004
+GLDAS CLSM v2.0 | 0.25$^\circ$ | Daily | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS NOAH v2.0 | 0.25$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS VIC v2.0 | 1$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
 TerraClimate | 4$km$ | Monthly | 1958-01 to 2021-12 | [Download](https://www.climatologylab.org/terraclimate.html) | @abatzoglou_terraclimate_2018
 
 # Recipe
