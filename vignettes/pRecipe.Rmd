@@ -389,21 +389,11 @@ plot_density(tp_ts)
 
 ```{r}
 plot_summary(tp_ts)
+#plot_summary(subset_ts)
+#plot_summary(cropped_ts)
 ```
 
 ![](plots/summary.png){width=90%}
-
-```{r}
-plot_summary(subset_ts)
-```
-
-![](plots/summary_ceu.png){width=90%}
-
-```{r}
-plot_summary(cropped_ts)
-```
-
-![](plots/summary_cze.png){width=90%}
 
 # Coming Soon
 
