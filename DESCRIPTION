@@ -1,21 +1,20 @@
 Package: pRecipe
-Title: A Multiscale Framework for Data Analysis of Global Precipitation
-Version: 0.2.0
+Title: Precipitation R Recipe
+Version: 0.3.0
 Authors@R: c(
   person("Mijael Rodrigo", "Vargas Godoy", email = "mirovago@gmail.com", role = c("aut", "cre")),
-  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths")),
-  person("Rajani K.", "Pradhan", role = "ctb")
+  person("Yannis", "Markonis", email = "imarkonis@gmail.com", role = c("aut", "ths"))
   )
 Description: An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
 Depends: R (>= 4.0.0)
-Imports: curl, data.table, dplyr, getPass, ggplot2, hdf5r, lubridate, methods, ncdf4, parallel, raster, rgdal, R.utils, sf, sp, stats, stringr, utils, viridis, zoo
+Imports: data.table, ggplot2, grDevices, gridExtra, methods, ncdf4, raster, sf, stats, utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
 URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
-SystemRequirements: PROJ (>= 4.8.0, https://proj.org/download.html) and GDAL (>= 1.11.4, https://gdal.org/download.html).
-RoxygenNote: 7.1.2
+SystemRequirements: PROJ (>= 6, https://proj.org/download.html), GDAL (>= 3, https://gdal.org/download.html), NetCDF(>= 4, https://www.unidata.ucar.edu/software/netcdf/) and CDO (>= 2, https://code.mpimet.mpg.de/projects/cdo).
+RoxygenNote: 7.2.1
 Suggests:
     rmarkdown,
     knitr,

@@ -1,3 +1,10 @@
+# pRecipe 0.3.0
+
+* Major reworks pRecipe has fewer dependencies
+* Simplified database
+* No need to reformat the data
+* Updated documentation accordingly
+
 # pRecipe 0.2.0
 
 * `import_subset_data` optimized for parallel computing

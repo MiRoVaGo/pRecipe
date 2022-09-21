@@ -1,14 +1,27 @@
 ---
-title: "pRecipe: A Multiscale Framework for Data Analysis of Global Precipitation"
-author: "Mijael R. Vargas Godoy"
-output: rmarkdown::html_vignette
+title: "pRecipe| Precipitation R Recipe"
+author: "Mijael Rodrigo Vargas Godoy, Yannis Markonis"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
 vignette: >
-  %\VignetteIndexEntry{pRecipe}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{pRecipe| Precipitation R Recipe}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-chunk_output_type: console
+  chunk_output_type: console
+bibliography: pRecipe.bib
+link-citations: true
 ---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+***
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -17,44 +30,375 @@ knitr::opts_chunk$set(
 )
 ```
 
-This is is an introductory presentation of the `pRecipe` package, as implemented in the study of Vargas Godoy et al. (2022), to assess global water cycle intensification in Czechia.
+`pRecipe` was conceived back in 2019 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czech Republic. Designed with reproducible science **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales.
 
-## Create database
+<br>
+~_The Global Water Cycle Budget_ | @vargas_godoy_global_2021
 
-In this study multiple precipitation data sets publicly available were used. Namely: [20CR v3](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html), [CMAP](https://psl.noaa.gov/data/gridded/data.cmap.html), [CPC](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html), [CRU TS v4.05](https://crudata.uea.ac.uk/cru/data/hrg/), [GHCN v2](https://psl.noaa.gov/data/gridded/data.ghcngridded.html), [GPCC v2018](https://psl.noaa.gov/data/gridded/data.gpcc.html), [GPCP v2.3](https://psl.noaa.gov/data/gridded/data.gpcp.html), [GPM IMERGM v06](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06), [NCEP/NCAR R1](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html), [NCEP/DOE R2](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis2.html), [PREC/L](https://psl.noaa.gov/data/gridded/data.precl.html), [TRMM 3B43 v7](https://doi.org/10.5067/TRMM/TMPA/MONTH/7), and [UDel v5.01](https://doi.org/10.5067/TRMM/TMPA/MONTH/7). They were all homogenized into monthly 0.5x0.5 `data.table` stored as a `.Rds` file per year per data set under ./data/database.
+_"Like civilization and technology, our understanding of the global water cycle has been continuously evolving, and we have adapted our quantification methods to better exploit new technological resources. The accurate quantification of global water fluxes and storage is crucial in studying the global water cycle."_
 
+***
+
+## Before We Start
+
+Like many other R packages, `pRecipe` has some system requirements:
+
+* [PROJ](https://proj.org/download.html)
+* Geospatial Data Abstraction Library [(GDAL)](https://gdal.org/download.html)
+* Network Common Data Form [(NetCDF)](https://www.unidata.ucar.edu/software/netcdf/)
+* Climate Data Operators [(CDO)](https://code.mpimet.mpg.de/projects/cdo)
+
+## Data
+
+`pRecipe` database hosts 24 different precipitation data sets; seven gauge-based, eight satellite-based, five reanalysis, and four hydrological model precipitation products. Their native specifications, as well as links to their providers, and their respective references are detailed in the following subsections. We have already homogenized, compacted to a single file, and stored them in a [Zenodo repository](https://zenodo.org/record/7094293) under the following naming convention:
+
+`<data set>_<variable>_<units>_<coverage>_<start date>_<end date>_<resolution>_<time step>.nc`
+
+The `pRecipe` data collection was homogenized to these specifications:
+
+* `<variable>` = total precipitation (tp)
+* `<units>` = millimeters (mm)
+* `<resolution>` = 0.25$^\circ$
+* `<time step>` = monthly
+
+E.g., GPCP v2.3 [@adler_version-2_2003] would be:
+
+`gpcp_tp_mm_global_197901_202205_025_monthly.nc`
+
+### Gauge-Based Products
+
+Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
+-------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
+CRU TS v4.06 | 0.5$^\circ$ | Monthly | 1901-01 to 2021-12 | [Download](https://crudata.uea.ac.uk/cru/data/hrg/) | @harris_version_2020
+CPC-Global | 0.5$^\circ$ | Daily | 1979-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html) | @xie_cpc_2010
+EM-EARTH | 0.1$^\circ$ | Daily | 1950-01 to 2019-12 | [Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad) | @tang_em-earth_2022
+GHCN v2 | 5$^\circ$ | Monthly | 1900-01 to 2015-05 | [Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html) | @peterson_overview_1997
+GPCC v2020 | 0.25$^\circ$ | Monthly | 1891-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.gpcc.html) | @schneider_gpcc_2011
+PRECL/L | 0.5$^\circ$ | Monthly | 1948-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.precl.html) | @chen_global_2002
+UDel v5.01 | 0.5$^\circ$ | Monthly | 1901-01 to 2017-12 | [Download](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) | @willmott_terrestrial_2001
+
+### Satellite-Based Products
+
+Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
+-------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
+CHIRPS v2.0 | 0.05$^\circ$ | Monthly | 1981-01 to 2022-07 | [Download](https://www.chc.ucsb.edu/data/chirps) | @funk_climate_2015
+CMAP | 2.5$^\circ$ | Monthly | 1979-01 to 2022-07 | [Download](https://psl.noaa.gov/data/gridded/data.cmap.html) | @xie_global_1997
+CMORPH | 0.25$^\circ$ | Daily | 1998-01 to 2021-12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
+GPCP v2.3 | 0.5$^\circ$ | Monthly | 1979-01 to 2022-05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_version-2_2003
+GPM IMERGM v06 | 0.1$^\circ$ | Monthly | 2000-06 to 2020-12 | [Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06) | @huffman_gpm_2019
+MSWEP v2.8 | 0.1$^\circ$ | Monthly | 1979-02 to 2022-06 | [Download](http://www.gloh2o.org/mswep/) | @beck_mswep_2019
+PERSIANN-CDR | 0.25$^\circ$ | Monthly | 1983-01 to 2022-06 | [Download](https://chrsdata.eng.uci.edu/) | @ashouri_persiann-cdr_2015
+TRMM 3B43 v7 | 0.25$^\circ$ | Monthly | 1998-01 to 2019-12 | [Download](https://doi.org/10.5067/TRMM/TMPA/MONTH/7) | @huffman_trmm_2010
+
+### Reanalysis Products
+
+Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
+-------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
+20CR v3 | 1$^\circ$ | Monthly | 1836-01 to 2015-12 | [Download](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html) | @slivinski_towards_2019
+ERA-20C | 1.125$^\circ$ | Monthly | 1900-01 to 2010-12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era-20c) | @poli_era-20c_2016
+ERA5 | 0.25$^\circ$ | Monthly | 1959-01 to 2021-12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5) | @hersbach_era5_2020
+NCEP/NCAR R1 | 1.875$^\circ$ | Monthly | 1948-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html) | @kalnay_ncepncar_1996
+NCEP/DOE R2 | 1.875$^\circ$ | Monthly | 1979-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis2.html) | @kanamitsu_ncepdoe_2002
+
+### Hydrological Model Forcing
+
+Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
+-------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
+GLDAS CLSM v2.0 | 0.25$^\circ$ | Daily | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS NOAH v2.0 | 0.25$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS VIC v2.0 | 1$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+TerraClimate | 4$km$ | Monthly | 1958-01 to 2021-12 | [Download](https://www.climatologylab.org/terraclimate.html) | @abatzoglou_terraclimate_2018
+
+# Recipe
+
+In this introductory recipe we will first download the ERA5 data set. We will then subset the downloaded data over Central Europe for the 1981-2020 period, and crop it to the national scale for Czech Republic. In the next step, we will generate time series for our data sets and conclude with the visualization of our data.
+
+**NOTE:** While the functions in `pRecipe` are intended to work directly with its data inventory. It can handle most other precipitation data sets in ".nc" format, as well as any other ".nc" file generated by its functions.
+
+## Installation
 
 ```{r}
+install.packages('pRecipe')
 library(pRecipe)
-download_data() #(default) download and reformat all the data sets listed above.
 ```
 
-## Import data
+## Download
 
-To import all data or a subset of interest is straightforward:
+Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has two arguments *name* and *project_folder*.
+
+* *name* is set to "all" by default, but you can specify the names of your data sets of interest only.
+* *project_folder* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder]/data/database.
+
+Let's download the ERA5 data set and inspect its content with `show_info`:
 
 ```{r}
-precip <- import_subset_data(name = "all", start_year = 1836, end_year = 2020, 
-                             bbox = c(12.25, 48.75, 18.75, 50.75))
+download_data(name = "era5", project_folder = ".")
+show_info("./data/database/era5_tp_mm_global_195901_202112_025_monthly.nc")
 ```
 
+```
+[1] "class      : RasterBrick "                                         
+[2] "dimensions : 720, 1440, 1036800, 756  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : era5_tp_mm_global_195901_202112_025_monthly.nc "
+[7] "names      : X1959.01.01, X1959.02.01, X1959.03.01, X1959.04.01, X1959.05.01, X1959.06.01, X1959.07.01, X1959.08.01, X1959.09.01, X1959.10.01, X1959.11.01, X1959.12.01, X1960.01.01, X1960.02.01, X1960.03.01, ... "
+[8] "Date/time  : 1959-01-01, 2021-12-01 (min, max)"
+[9] "varname    : tp " 
+```
 
-## Crop data
+## Processing
 
-To crop the data the used a shapefile for [Czechia](https://www.eea.europa.eu/data-and-maps/data/eea-reference-grids-2/gis-files/czech-republic-shapefile)
+Once we have downloaded our database, we can start processing the data with:
+
+* `subset_spacetime` to subset the data in time and space.
+* `subset_space` to subset the data to the region of interest.
+* `subset_time` to select the years of interest.
+* `mon_to_year` to aggregate the data from monthly into annual.
+* `rescale_data` to go from the native resolution (0.25$^\circ$) to coarser ones (e.g., 0.5$^\circ$, 1$^\circ$, 1.5$^\circ$, 2$^\circ$, etc).
+* `make_ts` to generate a time series by taking the area weighted average over each time step.
+
+### Subset
+
+To subset our data to a desired region and period of interest, we use the `subset_spacetime` function, which has five arguments *name*, *start_year*, *end_year*, *bbox*, and *database_path*.
+
+* *name* is the name of a data set in the database or a raster object. In the first case, the generated ".nc" file will follow the same conventions as previously described and will be stored in [your_project_folder]/data/processed. In the second case, the output file name will be [original_name]_subset.nc and will be stored in the same location of the input file.
+* *start_year* is the start of the period of interest.
+* *end_year* is the end of the period of interest.
+* *bbox* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
+* *database_path* is set to "./data/database" by default. It should direct to [your_project_folder]/data/database. If name is a raster object, this argument is ignored.
+
+Let's subset the ERA5 data set over Central Europe (2,28,42,58) for the 1981-2020 period, and inspect its content with `show_info`:
 
 ```{r}
-precip <- crop_data(precip, "cz_1km.shp")
+subset_spacetime("era5", start_year = 1981, end_year = 2020, 
+                 bbox = c(2,28,42,58), 
+                 database_path = "./data/database/")
+show_info("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
 ```
 
-## Exploratory Data Analysis
+```
+[1] "class      : RasterBrick "
+[2] "dimensions : 64, 104, 6656, 480  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : era5_tp_mm_subset_1981_2020_025_monthly.nc "
+[7] "names      : X1981.01.01, X1981.02.01, X1981.03.01, X1981.04.01, X1981.05.01, X1981.06.01, X1981.07.01, X1981.08.01, X1981.09.01, X1981.10.01, X1981.11.01, X1981.12.01, X1982.01.01, X1982.02.01, X1982.03.01, ... "
+[8] "Date/time  : 1981-01-01, 2020-12-01 (min, max)"
+[9] "varname    : tp "
+```
 
-Now we can start exploring the data through different plot options, e.g.:
+### Crop
+
+To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has three arguments *nc_path*, *shp_path*, and *save_nc*.
+
+* *nc_path* is the path to a ".nc" data set file or a Raster object.
+* *shp_path* is the path to a ".shp" file that we want to use to crop our data.
+* *save_nc* is either TRUE or FALSE (default). If TRUE will write a ".nc" file with the cropped data and there will be no return value. Otherwise, it returns the cropped data as a Raster object.
+
+Let's crop our ERA5 subset to cover only the Czech Republic with the respective [shape file](https://biogeo.ucdavis.edu/data/diva/adm/CZE_adm.zip), and inspect its content with `show_info`:
 
 ```{r}
-plot_box(precip[year(Z)>2000 & year(Z)<=2020])
+crop_data(nc_path = "./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc",
+          shp_path = "./shapefiles/CZE_adm0.shp",
+          save_nc = TRUE)
+show_info("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
 ```
 
-![](CZ_P_2000_2020.png){width=90%}
+```
+[1] "class      : RasterBrick "
+[2] "dimensions : 64, 104, 6656, 480  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc "
+[7] "names      : X1981.01.01, X1981.02.01, X1981.03.01, X1981.04.01, X1981.05.01, X1981.06.01, X1981.07.01, X1981.08.01, X1981.09.01, X1981.10.01, X1981.11.01, X1981.12.01, X1982.01.01, X1982.02.01, X1982.03.01, ... "
+[8] "Date/time  : 1981-01-01, 2020-12-01 (min, max)"
+[9] "varname    : tp " 
+```
+
+### Generate Time series
+
+To make a time series out of our data, we use the `make_ts` function, which has three arguments *name*, *csv_out*, and *database_path*.
+
+* *name* is the name of a data set in the database or a Raster object. In the first case, the generated ".csv" will be stored in [your_project_folder]/data/processed. In the second case, the output file name will be [original_name]_ts.csv and will be stored in the same location of the input file.
+* *csv_out* (optional) is the name of the output ".csv" file. If not provided, the output file will be named [original_name]_ts.csv.
+* *database_path* is set to "./data/database" by default. It should direct to [your_project_folder]/data/database. If name is a raster object, this argument is ignored.
+
+Let's generate the time series for our three different ERA5 data sets (Global, Central Europe, and Czech Republic), and inspect its first 12 rows:
+
+```{r}
+make_ts("era5", database_path = "./data/database/")
+tp_ts <- readr::read_csv("./data/processed/era5_ts.csv")
+head(tp_ts, 12)
+```
+
+```
+# A tibble: 12 × 2
+   date       value
+   <date>     <dbl>
+ 1 1959-01-01  90.6
+ 2 1959-02-01  78.9
+ 3 1959-03-01  87.5
+ 4 1959-04-01  86.9
+ 5 1959-05-01  87.3
+ 6 1959-06-01  89.1
+ 7 1959-07-01  91.8
+ 8 1959-08-01  91.0
+ 9 1959-09-01  85.3
+10 1959-10-01  88.5
+11 1959-11-01  85.5
+12 1959-12-01  90.0
+```
+
+```{r}
+era5_subset <- raster::brick("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly.nc")
+make_ts(era5_subset)
+subset_ts <- readr::read_csv("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_ts.csv")
+head(subset_ts, 12)
+```
+
+```
+# A tibble: 12 × 2
+   date       value
+   <date>     <dbl>
+ 1 1981-01-01  73.8
+ 2 1981-02-01  46.4
+ 3 1981-03-01  89.5
+ 4 1981-04-01  47.8
+ 5 1981-05-01  88.4
+ 6 1981-06-01  98.7
+ 7 1981-07-01 101. 
+ 8 1981-08-01  69.7
+ 9 1981-09-01  89.2
+10 1981-10-01 112. 
+11 1981-11-01  74.9
+12 1981-12-01 113. 
+```
+
+```{r}
+era5_cropped <- raster::brick("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_cropped.nc")
+make_ts(era5_cropped)
+cropped_ts <- readr::read_csv("./data/processed/era5_tp.mm_subset_1981_2020_025_monthly_cropped_ts.csv")
+head(cropped_ts, 12)
+```
+
+```
+# A tibble: 12 × 2
+   date       value
+   <date>     <dbl>
+ 1 1981-01-01  65.0
+ 2 1981-02-01  38.9
+ 3 1981-03-01  68.4
+ 4 1981-04-01  49.7
+ 5 1981-05-01  77.3
+ 6 1981-06-01  67.3
+ 7 1981-07-01 189. 
+ 8 1981-08-01  80.4
+ 9 1981-09-01  90.1
+10 1981-10-01 115. 
+11 1981-11-01  75.2
+12 1981-12-01  89.5
+```
+
+## Visualize
+
+Either after we have processed our data as required or right after downloaded, we have six different options to visualize our data:
+
+* `plot_map` to see the Cartesian lon-lat map of the first raster layer.
+* `plot_line` to see the average time series.
+* `plot_heatmap` to see a heatmap of all monthly values.
+* `plot_box` to see a seasonal boxplot.
+* `plot_density` to see the empirical density of monthly precipitation.
+* `plot_summary` to see line, heatmap, box, and density plot together in a single plot.
+
+Let's plot our three different ERA5 data sets (Global, Central Europe, and Czech Republic)
+
+### Maps
+
+To see a map of any data set raw or processed, we use `plot_map` which takes only one layer of the RasterBrick as input.
+
+```{r}
+global <- raster::raster("./data/database/era5_tp_mm_global_195901_202112_025_monthly.nc")
+plot_map(global[[1]])
+```
+
+![](plots/map.png){width=75%}
+
+```{r}
+central_europe <- raster::brick("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly.nc")
+plot_map(central_europe[[1]])
+```
+
+![](plots/map_ceu.png){width=75%}
+
+```{r}
+czechia <- raster::brick("./data/processed/era5_tp_mm_subset_1981_2020_025_monthly_cropped.nc")
+plot_map(czechia[[1]])
+```
+
+![](plots/map_cze.png){width=75%}
+
+### Time Series Visuals
+
+To draw a time series generated by `make_ts`, we use any of the options below, which take only a `make_ts` ".csv" generated file.
+
+#### Line
+
+```{r}
+plot_line(tp_ts)
+#plot_line(subset_ts)
+#plot_line(cropped_ts)
+```
+
+![](plots/line.png){width=75%}
+
+#### Heatmap
+
+```{r}
+plot_heatmap(tp_ts)
+#plot_heatmap(subset_ts)
+#plot_heatmap(cropped_ts)
+```
+
+![](plots/heatmap.png){width=75%}
+
+#### Boxplot
+
+```{r}
+plot_box(tp_ts)
+#plot_box(subset_ts)
+#plot_box(cropped_ts)
+```
+  
+![](plots/box.png){width=75%}
+
+#### Density
+
+```{r}
+plot_density(tp_ts)
+#plot_density(subset_ts)
+#plot_density(cropped_ts)
+```
+
+![](plots/density.png){width=75%}
+
+#### Summary
+
+```{r}
+plot_summary(tp_ts)
+#plot_summary(subset_ts)
+#plot_summary(cropped_ts)
+```
+
+![](plots/summary.png){width=90%}
+
+# Coming Soon
+
+More functions for data processing and expanding the data collection.
+
+# References
 
 
