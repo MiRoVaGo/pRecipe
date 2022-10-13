@@ -4,51 +4,22 @@
 \alias{rescale_data}
 \title{Subset a precipitation data product in space}
 \usage{
-rescale_data(name, new_res, database_path = "./data/database")
+rescale_data(data_file, new_res)
 }
 \arguments{
-\item{name}{a character string with the name(s) of the desired data set. Suitable options are:
-\itemize{
-\item{"20cr" for 20CR v3,}
-\item{"chirps" for CHIRPS v2.0,}
-\item{"cmap" for CMAP standard version,}
-\item{"cmorph" for CMORPH,}
-\item{"cpc" for CPC-Global,}
-\item{"cru-ts" for CRU_TS v4.06,}
-\item{"em-earth" for EM-EARTH,}
-\item{"era20c" for ERA-20C,}
-\item{"era5" for ERA5,}
-\item{"ghcn" for GHCN-M v2,}
-\item{"gldas-clsm" for GLDAS CLSM,}
-\item{"gldas-noah" for GLDAS NOAH,}
-\item{"gldas-vic" for GLDAS VIC,}
-\item{"gpcc" for GPCC v2020,}
-\item{"gpcp" for GPCP v2.3,}
-\item{"gpm_imerg" for GPM IMERGM Final v06,}
-\item{"mswep" for MSWEP v2.8,}
-\item{"ncep-doe" for NCEP/DOE,}
-\item{"ncep-ncar" for NCEP/NCAR,}
-\item{"persiann" for PERSIANN-CDR,}
-\item{"precl" for PREC/L,}
-\item{"terraclimate" for TerraClimate,}
-\item{"trmm-3b43" for TRMM 3B43 v7,}
-\item{"udel" for UDEL v501.}
-}}
+\item{data_file}{a character string with the path to the data file.}
 
 \item{new_res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).}
-
-\item{database_path}{a character string with the path where the "database" folder is located.}
 }
 \value{
-No return value, called to subset via cdo
+No return value, called to aggregate and store the data file.
 }
 \description{
-The function \code{rescale_data} aggregates the requested data sets into desired resolution and stores it in <project_folder>/data/processed. If the input data set is a Raster object the output will be stored in the same location of the input file.
+The function \code{rescale_data} aggregates the requested data sets into desired resolution and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-x <- rescale_data("gpcp", 1, tempdir())
-w <- raster::brick("dummie.nc")
-z <- rescale_data(w, 1, tempdir())
+x <- rescale_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 1)
+z <- rescale_data("dummie.nc", 1)
 }
 }

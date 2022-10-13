@@ -1,3 +1,8 @@
+# pRecipe 0.4.0
+
+* pRecipe now is windows friendly
+* Updated documentation accordingly
+
 # pRecipe 0.3.0
 
 * Major reworks pRecipe has fewer dependencies

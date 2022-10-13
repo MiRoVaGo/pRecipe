@@ -4,49 +4,20 @@
 \alias{mon_to_year}
 \title{Rescale a precipitation data product in time}
 \usage{
-mon_to_year(name, database_path = "./data/database")
+mon_to_year(data_file)
 }
 \arguments{
-\item{name}{a Raster object or a character string with the name(s) of the desired data set. Suitable options are:
-\itemize{
-\item{"20cr" for 20CR v3,}
-\item{"chirps" for CHIRPS v2.0,}
-\item{"cmap" for CMAP standard version,}
-\item{"cmorph" for CMORPH,}
-\item{"cpc" for CPC-Global,}
-\item{"cru-ts" for CRU_TS v4.06,}
-\item{"em-earth" for EM-EARTH,}
-\item{"era20c" for ERA-20C,}
-\item{"era5" for ERA5,}
-\item{"ghcn" for GHCN-M v2,}
-\item{"gldas-clsm" for GLDAS CLSM,}
-\item{"gldas-noah" for GLDAS NOAH,}
-\item{"gldas-vic" for GLDAS VIC,}
-\item{"gpcc" for GPCC v2020,}
-\item{"gpcp" for GPCP v2.3,}
-\item{"gpm_imerg" for GPM IMERGM Final v06,}
-\item{"mswep" for MSWEP v2.8,}
-\item{"ncep-doe" for NCEP/DOE,}
-\item{"ncep-ncar" for NCEP/NCAR,}
-\item{"persiann" for PERSIANN-CDR,}
-\item{"precl" for PREC/L,}
-\item{"terraclimate" for TerraClimate,}
-\item{"trmm-3b43" for TRMM 3B43 v7,}
-\item{"udel" for UDEL v501.}
-}}
-
-\item{database_path}{a character string with the path where the "database" folder is located.}
+\item{data_file}{a character string with the path to the data file.}
 }
 \value{
-No return value, called to subset via cdo
+No return value, called to aggregate and store store the new data file.
 }
 \description{
-The function \code{mon_to_year} aggregates the requested data set from monthly to yearly time steps and stores it in <project_folder>/data/processed. If the input data set is a Raster object the output will be stored in the same location of the input file.
+The function \code{mon_to_year} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-x <- mon_to_year("gpcp", tempdir())
-w <- raster::brick("dummie.nc")
-z <- mon_to_year(w, tempdir())
+mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+mon_to_year("dummie.nc")
 }
 }

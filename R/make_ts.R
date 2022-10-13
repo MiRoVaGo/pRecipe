@@ -1,101 +1,40 @@
 #' Generate time series
 #'
-#' The function \code{make_ts} generates a csv time series. If the input data set is a Raster object the output will be stored in the same location of the input file.
+#' The function \code{make_ts} generates a csv time series and stored in the same location of the input file.
 #'
-#' @importFrom methods is
-#' @param name a Raster object or a character string with the name(s) of the desired data set. Suitable options are:
-#' \itemize{
-#' \item{"20cr" for 20CR v3,}
-#' \item{"chirps" for CHIRPS v2.0,}
-#' \item{"cmap" for CMAP standard version,}
-#' \item{"cmorph" for CMORPH,}
-#' \item{"cpc" for CPC-Global,}
-#' \item{"cru-ts" for CRU_TS v4.06,}
-#' \item{"em-earth" for EM-EARTH,}
-#' \item{"era20c" for ERA-20C,}
-#' \item{"era5" for ERA5,}
-#' \item{"ghcn" for GHCN-M v2,}
-#' \item{"gldas-clsm" for GLDAS CLSM,}
-#' \item{"gldas-noah" for GLDAS NOAH,}
-#' \item{"gldas-vic" for GLDAS VIC,}
-#' \item{"gpcc" for GPCC v2020,}
-#' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm_imerg" for GPM IMERGM Final v06,}
-#' \item{"mswep" for MSWEP v2.8,}
-#' \item{"ncep-doe" for NCEP/DOE,}
-#' \item{"ncep-ncar" for NCEP/NCAR,}
-#' \item{"persiann" for PERSIANN-CDR,}
-#' \item{"precl" for PREC/L,}
-#' \item{"terraclimate" for TerraClimate,}
-#' \item{"trmm-3b43" for TRMM 3B43 v7,}
-#' \item{"udel" for UDEL v501.}
-#' }
-#' @param csv_out (optional) a character string with the path were the csv file will be stored.
-#' @param database_path a character string with the path where the "database" folder is located.
-#' @return No return value, called to subset via cdo
+#' @import data.table
+#' @importFrom R.utils getAbsolutePath
+#' @param data_file a character string with the path to the data file.
+#' @return No return value, called to generate and store csv time series.
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- make_ts("gpcp", tempdir())
-#' w <- raster::brick("dummie.nc")
-#' z <- make_ts(w, tempdir())
+#' make_ts("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+#' make_ts("dummie.nc")
 #' }
 
-make_ts <- function(name, csv_out = NULL, database_path = "./data/database"){
-  if (!Reduce("&", is.element(name, c("all", "20cr", "chirps", "cmap", "cmorph", "cpc", "cru-ts", "em-earth", "era20c", "era5", "ghcn", "gldas-clsm", "gldas-noah", "gldas-vic", "gpcc", "gpcp", "gpm-imerg", "mswep", "ncep-doe", "ncep-ncar", "persiann", "precl", "terraclimate", "trmm-3b43", "udel")))){
-    if (is(name, "RasterBrick") | is(name, "RasterLayer") | is(name, "RasterStack")){
-      nc_in <- name@file@name
-      if (!is.null(csv_out)){
-        nc_out <- csv_out
-      } else {
-        nc_out <- sub(".nc.*", "", nc_in)
-        nc_out <- paste0(nc_out, "_ts.csv")
-      }
-      cdo_str <- paste0("cdo -L -z zip_4 -outputtab,date,value -fldmean", " ", nc_in, " > ", nc_out)
-      system(cdo_str)
-      sed_str <- paste0("sed -i '' '1d' ", nc_out)
-      system(sed_str)
-      sed_str <- paste0("sed -i '' '1 s/.*/date,value/' ", nc_out)
-      system(sed_str)
-      sed_str <- paste0("sed -i '' '$d' ", nc_out)
-      system(sed_str)
-      system(sed_str)
-      sed_str <- paste0("sed -i '' 's/^[ \t]*//;s/[ \t]*$//' ", nc_out)
-      system(sed_str)
-      sed_str <- paste0("sed -i '' 's/  */ /g' ", nc_out)
-      system(sed_str)
-      sed_str <- paste0("sed -i '' 's/ /,/g' ", nc_out)
-      system(sed_str)
-      return(invisible())
-    } else {
-      stop("Error: Data set not available. Select from 20cr, chirps, cmap, cmorph, cpc, cru-ts, em-earth, era20c, era5, ghcn, gldas-clsm, gldas-noah, gldas-vic, gpcc, gpcp, gpm-imerg, mswep, ncep-doe, ncep-ncar, persiann, precl, terraclimate, trmm-3b43, udel")
-    }
-  }
-  if (!grepl("*/data/database", database_path)){
-    stop("Error: database_path should point to the location of '<project_folder>/data/database'")
-  }
-  nc_in <- grep(name, list.files(database_path, full.names = TRUE), value = TRUE)
-  if (!is.null(csv_out)){
-    nc_out <- csv_out
+make_ts <- function(data_file){
+  nc_in <- getAbsolutePath(data_file)
+  checker <- name_check(data_file)
+  if (checker$length == 8) {
+    nc_out <- paste(checker$name, collapse = "_")
+    nc_out <- paste0(nc_out, "_ts.csv")
+    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
+    nc_out <- paste0(nc_mid, nc_out)
   } else {
+    warning("This is not pRecipe data")
     nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- gsub("database", "processed", nc_out)
     nc_out <- paste0(nc_out, "_ts.csv")
   }
-  cdo_str <- paste0("cdo -L -z zip_4 -outputtab,date,value -fldmean", " ", nc_in, " > ", nc_out)
-  system(cdo_str)
-  sed_str <- paste0("sed -i '' '1d' ", nc_out)
-  system(sed_str)
-  sed_str <- paste0("sed -i '' '1 s/.*/date,value/' ", nc_out)
-  system(sed_str)
-  sed_str <- paste0("sed -i '' '$d' ", nc_out)
-  system(sed_str)
-  system(sed_str)
-  sed_str <- paste0("sed -i '' 's/^[ \t]*//;s/[ \t]*$//' ", nc_out)
-  system(sed_str)
-  sed_str <- paste0("sed -i '' 's/  */ /g' ", nc_out)
-  system(sed_str)
-  sed_str <- paste0("sed -i '' 's/ /,/g' ", nc_out)
-  system(sed_str)
+  check_out <- exists_check(nc_out)
+  if (check_out$exists) stop(check_out$sms)
+  if (Sys.info()['sysname'] == "Windows") {
+    csv_table <- weighted_average(nc_in)
+    fwrite(csv_table, nc_out)
+  } else {
+    cdo_str <- paste0("cdo -L -z zip_4 -outputtab,nohead,date,value -fldmean ", nc_in, " >> ", nc_out)
+    system(cdo_str)
+    cdo_csv(nc_out)
+  }
   return(invisible())
 }

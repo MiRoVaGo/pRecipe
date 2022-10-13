@@ -4,10 +4,10 @@
 \alias{download_gldas_noah}
 \title{GLDAS_NOAH data downloader}
 \usage{
-download_gldas_noah(folder_path = "./data/raw/")
+download_gldas_noah(folder_path = ".")
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "raw" folder is located.}
+\item{folder_path}{a character string with the path where the data will be downloaded.}
 }
 \value{
 No return value, called to download the data set.

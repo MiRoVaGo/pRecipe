@@ -1,75 +1,99 @@
 #' Subset a precipitation data product in time and space
 #'
-#' The function \code{subset_spacetime} subsets (time and space) the requested data set and stores it in <project_folder>/data/processed. If the input data set is a Raster object the output will be stored in the same location of the input file.
+#' The function \code{subset_spacetime} subsets (time and space) the requested data set and stores it in the same location of the input file.
 #'
-#' @importFrom methods is
-#' @param name a Raster object or a character string with the name(s) of the desired data set. Suitable options are:
-#' \itemize{
-#' \item{"20cr" for 20CR v3,}
-#' \item{"chirps" for CHIRPS v2.0,}
-#' \item{"cmap" for CMAP standard version,}
-#' \item{"cmorph" for CMORPH,}
-#' \item{"cpc" for CPC-Global,}
-#' \item{"cru-ts" for CRU_TS v4.06,}
-#' \item{"em-earth" for EM-EARTH,}
-#' \item{"era20c" for ERA-20C,}
-#' \item{"era5" for ERA5,}
-#' \item{"ghcn" for GHCN-M v2,}
-#' \item{"gldas-clsm" for GLDAS CLSM,}
-#' \item{"gldas-noah" for GLDAS NOAH,}
-#' \item{"gldas-vic" for GLDAS VIC,}
-#' \item{"gpcc" for GPCC v2020,}
-#' \item{"gpcp" for GPCP v2.3,}
-#' \item{"gpm_imerg" for GPM IMERGM Final v06,}
-#' \item{"mswep" for MSWEP v2.8,}
-#' \item{"ncep-doe" for NCEP/DOE,}
-#' \item{"ncep-ncar" for NCEP/NCAR,}
-#' \item{"persiann" for PERSIANN-CDR,}
-#' \item{"precl" for PREC/L,}
-#' \item{"terraclimate" for TerraClimate,}
-#' \item{"trmm-3b43" for TRMM 3B43 v7,}
-#' \item{"udel" for UDEL v501.}
-#' }
-#' @param database_path a character string with the path where the "database" folder is located.
-#' @param start_year numeric.
-#' @param end_year numeric.
+#' @importFrom methods as is
+#' @importFrom raster brick crop extent getZ setZ subset
+#' @importFrom R.utils getAbsolutePath
+#' @param data_file a character string with the path to the data file.
+#' @param years numeric vector. Time range in the form: (start_year, end_year)
 #' @param bbox numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).
-#' @return No return value, called to subset via cdo
+#' @return No return value, called to subset and store store the new data file.
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- subset_spacetime("gpcp", 2000, 2010, c(12.24, 18.85, 48.56, 51.12), 
-#' tempdir())
-#' w <- raste::brick("dummie.nc")
-#' z <- subset_spacetime(w, 2000, 2010, c(12.24, 18.85, 48.56, 51.12), 
-#' tempdir())
+#' subset_spacetime("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
+#' c(2000, 2010), c(12.24, 18.85, 48.56, 51.12))
+#' subset_spacetime("dummie.nc", c(2000, 2010), 
+#' c(12.24, 18.85, 48.56, 51.12))
 #' }
 
-subset_spacetime <- function(name, start_year, end_year, bbox, database_path = "./data/database"){
-  if (!Reduce("&", is.element(name, c("all", "20cr", "chirps", "cmap", "cmorph", "cpc", "cru-ts", "em-earth", "era20c", "era5", "ghcn", "gldas-clsm", "gldas-noah", "gldas-vic", "gpcc", "gpcp", "gpm-imerg", "mswep", "ncep-doe", "ncep-ncar", "persiann", "precl", "terraclimate", "trmm-3b43", "udel")))){
-    if (is(name, "RasterBrick") | is(name, "RasterLayer") | is(name, "RasterStack")){
-      nc_in <- name@file@name
-      nc_out <- sub(".nc.*", "", nc_in)
-      nc_out <- paste0(nc_out, "_subset.nc")
-      years <- paste(c(start_year, end_year), collapse = "/")
-      lonlatbox <- paste(bbox, collapse = ",")
-      cdo_str <- paste0("cdo -L -z zip_4 -sellonlatbox,", lonlatbox, " -selyear,", years, " ", nc_in, " ", nc_out)
-      system(cdo_str)
-      return(invisible())
-    } else {
-      stop("Error: Data set not available. Select from 20cr, chirps, cmap, cmorph, cpc, cru-ts, em-earth, era20c, era5, ghcn, gldas-clsm, gldas-noah, gldas-vic, gpcc, gpcp, gpm-imerg, mswep, ncep-doe, ncep-ncar, persiann, precl, terraclimate, trmm-3b43, udel")
+subset_spacetime <- function(data_file, years, bbox){
+  nc_in <- getAbsolutePath(data_file)
+  checker <- name_check(data_file)
+  if (checker$length == 8) {
+    checker$name[4] <- "subset"
+    checker$name[5] <- years[1]
+    checker$name[6] <- years[2]
+    nc_out <- paste(checker$name, collapse = "_")
+    nc_out <- paste0(nc_out, ".nc")
+    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
+    nc_out <- paste0(nc_mid, nc_out)
+  } else {
+    warning("This is not pRecipe data")
+    nc_out <- sub(".nc.*", "", nc_in)
+    nc_out <- paste0(nc_out, "_subset.nc")
+  }
+  check_out <- exists_check(nc_out)
+  if (check_out$exists) stop(check_out$sms)
+  if (Sys.info()['sysname'] == "Windows") {
+    dummie_brick <- brick(nc_in)
+    start_year <- paste0(years[1], "-01-01")
+    end_year <- paste0(years[2], "-12-31")
+    lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
+                    'SpatialPolygons')
+    dummie_subset <- crop(dummie_brick, lonlatbox)
+    dummie_dates <- getZ(dummie_subset)
+    if (is.character(dummie_dates) | is.numeric(dummie_dates)) {
+      if (is.numeric(dummie_dates)) {
+        dummie_dates <- as.character(dummie_dates)
+      } 
+      if (length(dummie_dates[dummie_dates == "00"]) >= 1) {
+        dummie_dates <- sub("^00$", "", dummie_dates)
+        dummie_dates <- dummie_dates[dummie_dates != ""]
+        dummie_dates <- as.Date(dummie_dates)
+      } else if (!Reduce("|",grepl("-01", dummie_dates))) {
+        dummie_dates <- as.numeric(dummie_dates)
+        if (grepl("persiann", nc_out)) {
+          dummie_origin <- "1983-01-01 00:00:00"
+        } else if (grepl("gldas-", nc_out)) {
+          dummie_origin <- "1948-01-01 00:00:00"
+        } else {
+          dummie_origin <- "1970-01-01 00:00:00"
+        }
+        dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
+      } else {
+        dummie_dates <- as.Date(dummie_dates)
+      }
     }
+    range_years <- which(dummie_dates >= start_year & 
+                           (dummie_dates <= end_year))
+    dummie_subset <- subset(dummie_subset, range_years)
+    if (is(dummie_subset, "RasterStack")) {
+      dummie_subset <- brick(dummie_subset)
+      dummie_names <- names(dummie_subset)
+      if (!Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
+                             dummie_names))) {
+        if (grepl("persiann", nc_out)) {
+          dummie_names <- sub("^.", "", dummie_names)
+          dummie_names <- as.numeric(dummie_names)
+          dummie_Z <- as.Date(dummie_names, origin = "1983-01-01 00:00:00")
+        } else if (grepl("gldas-clsm", nc_out)) {
+          dummie_names <- sub("^.", "", dummie_names)
+          dummie_names <- as.numeric(dummie_names)
+          dummie_Z <- as.Date(dummie_names, origin = "1948-01-01 00:00:00")
+        }
+      } else {
+        dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
+      }
+      dummie_subset <- setZ(dummie_subset, dummie_Z)
+    }
+    save_nc(dummie_subset, nc_out)
+  } else {
+    range_years <- paste(years, collapse = "/")
+    lonlatbox <- paste(bbox, collapse = ",")
+    cdo_str <- paste0("cdo -L -z zip_4 -sellonlatbox,", lonlatbox, " -selyear,", range_years, " ", nc_in, " ", nc_out)
+    system(cdo_str)
   }
-  if (!grepl("*/data/database", database_path)){
-    stop("Error: database_path should point to the location of '<project_folder>/data/database'")
-  }
-  nc_in <- grep(name, list.files(database_path, full.names = TRUE), value = TRUE)
-  nc_out <- sub(".tp.*", "", nc_in)
-  nc_out <- gsub("database", "processed", nc_out)
-  nc_out <- paste(nc_out, "tp_mm_subset", start_year, end_year, "025_monthly.nc", sep = "_")
-  years <- paste(c(start_year, end_year), collapse = "/")
-  lonlatbox <- paste(bbox, collapse = ",")
-  cdo_str <- paste0("cdo -L -z zip_4 -sellonlatbox,", lonlatbox, " -selyear,", years, " ", nc_in, " ", nc_out)
-  system(cdo_str)
-  return(invisible())
+  fix_name_out(nc_out)
 }

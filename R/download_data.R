@@ -2,9 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @importFrom methods is
-#' @param project_folder a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created.
-#' @param name a character string with the name(s) of the desired data set. Suitable options are:
+#' @param data_name a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
@@ -32,6 +30,7 @@
 #' \item{"trmm-3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
+#' @param destination a character string with the path where the database will be downloaded.
 #' @return No return value, called to download the required data sets.
 #' @export
 #' @examples
@@ -39,16 +38,12 @@
 #' download_data("gldas-vic", tempdir())
 #' }
 
-download_data <- function(name = "all", project_folder = "."){
-  if (!Reduce("&", is.element(name, c("all", "20cr", "chirps", "cmap", "cmorph", "cpc", "cru-ts", "em-earth", "era20c", "era5", "ghcn", "gldas-clsm", "gldas-noah", "gldas-vic", "gpcc", "gpcp", "gpm-imerg", "mswep", "ncep-doe", "ncep-ncar", "persiann", "precl", "terraclimate", "trmm-3b43", "udel")))){
-    stop("Error: Data set not available. Select from 20cr, chirps, cmap, cmorph, cpc, cru-ts, em-earth, era20c, era5, ghcn, gldas-clsm, gldas-noah, gldas-vic, gpcc, gpcp, gpm-imerg, mswep, ncep-doe, ncep-ncar, persiann, precl, terraclimate, trmm-3b43, udel")
-  }
-  create_folders(project_folder)
-  destination <- paste0(project_folder,"/data/database/")
+download_data <- function(data_name = "all", destination = "."){
+  dataset_check(data_name)
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  lapply(name, function(dataset) switch(dataset,
+  lapply(data_name, function(dataset) switch(dataset,
                                         "all"  = download_all(destination),
                                         "20cr" = download_20cr(destination),
                                         "chirps" = download_chirps(destination),

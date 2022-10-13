@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^data$
 ^CODEOWNERS$
 ^CONTRIBUTING\.md$
 ^README\.md$
@@ -10,3 +9,5 @@
 ^CRAN-SUBMISSION$
 ^doc$
 ^Meta$
+^data/database$
+^data/processed$

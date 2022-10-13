@@ -4,10 +4,10 @@
 \alias{download_all}
 \title{All data downloader}
 \usage{
-download_all(folder_path = "./data/database/")
+download_all(folder_path = ".")
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "database" folder is located.}
+\item{folder_path}{a character string with the path where the data will be downloaded.}
 }
 \value{
 No return value, called to download the data set.

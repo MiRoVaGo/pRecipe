@@ -4,10 +4,10 @@
 \alias{download_ncep_doe}
 \title{NCEP_DOE data downloader}
 \usage{
-download_ncep_doe(folder_path = "./data/raw/")
+download_ncep_doe(folder_path = ".")
 }
 \arguments{
-\item{folder_path}{a character string with the path where the "raw" folder is located.}
+\item{folder_path}{a character string with the path where the data will be downloaded.}
 }
 \value{
 No return value, called to download the data set.

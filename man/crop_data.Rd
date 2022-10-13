@@ -4,26 +4,22 @@
 \alias{crop_data}
 \title{Crop precipitation data sets}
 \usage{
-crop_data(nc_path, shp_path, save_nc = FALSE)
+crop_data(data_file, shp_path)
 }
 \arguments{
-\item{nc_path}{a character string with the path to the ".nc" file or a raster object}
+\item{data_file}{a character string with the path to the data file.}
 
 \item{shp_path}{a character string with the path to the ".shp" file.}
-
-\item{save_nc}{logical. If TRUE will write a ".nc" file with the cropped data and there will be no return value.}
 }
 \value{
-a raster brick with cropped data
+No return value, called to crop and store store the new data file.
 }
 \description{
-The function \code{crop_data} crops the data sets using a shapefile mask.
+The function \code{crop_data} crops the data sets using a shapefile mask and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-x <- crop_data("gpm_imerg.nc", "cze.shp")
-crop_data("gpm_imerg.nc", "cze.shp", TRUE)
-w <- raster::brick("dummie.nc")
-z <- crop_data(w, "cze.shp")
+crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp")
+crop_data("dummie.nc", "cze.shp")
 }
 }

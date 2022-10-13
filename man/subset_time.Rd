@@ -4,53 +4,23 @@
 \alias{subset_time}
 \title{Subset a precipitation data product in time}
 \usage{
-subset_time(name, start_year, end_year, database_path = "./data/database")
+subset_time(data_file, years)
 }
 \arguments{
-\item{name}{a Raster object or a character string with the name(s) of the desired data set. Suitable options are:
-\itemize{
-\item{"20cr" for 20CR v3,}
-\item{"chirps" for CHIRPS v2.0,}
-\item{"cmap" for CMAP standard version,}
-\item{"cmorph" for CMORPH,}
-\item{"cpc" for CPC-Global,}
-\item{"cru-ts" for CRU_TS v4.06,}
-\item{"em-earth" for EM-EARTH,}
-\item{"era20c" for ERA-20C,}
-\item{"era5" for ERA5,}
-\item{"ghcn" for GHCN-M v2,}
-\item{"gldas-clsm" for GLDAS CLSM,}
-\item{"gldas-noah" for GLDAS NOAH,}
-\item{"gldas-vic" for GLDAS VIC,}
-\item{"gpcc" for GPCC v2020,}
-\item{"gpcp" for GPCP v2.3,}
-\item{"gpm_imerg" for GPM IMERGM Final v06,}
-\item{"mswep" for MSWEP v2.8,}
-\item{"ncep-doe" for NCEP/DOE,}
-\item{"ncep-ncar" for NCEP/NCAR,}
-\item{"persiann" for PERSIANN-CDR,}
-\item{"precl" for PREC/L,}
-\item{"terraclimate" for TerraClimate,}
-\item{"trmm-3b43" for TRMM 3B43 v7,}
-\item{"udel" for UDEL v501.}
-}}
+\item{data_file}{a character string with the path to the data file.}
 
-\item{start_year}{numeric.}
-
-\item{end_year}{numeric.}
-
-\item{database_path}{a character string with the path where the "database" folder is located.}
+\item{years}{numeric vector. Time range in the form: (start_year, end_year)}
 }
 \value{
-No return value, called to subset via cdo
+No return value, called to subset and store store the new data file.
 }
 \description{
-The function \code{subset_time} subsets (time) the requested data set and stores it in <project_folder>/data/processed. If the input data set is a Raster object the output will be stored in the same location of the input file.
+The function \code{subset_time} subsets (time) the requested data set and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-x <- subset_time("gpcp", 2000, 2010, tempdir())
-w <- raste::brick("dummie.nc")
-z <- subset_time(w, 2000, 2010, tempdir())
+subset_time("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
+c(2000, 2010))
+subset_time("dummie.nc", c(2000, 2010))
 }
 }

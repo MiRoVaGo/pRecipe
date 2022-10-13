@@ -4,10 +4,10 @@
 \alias{download_data}
 \title{Download various precipitation data products}
 \usage{
-download_data(name = "all", project_folder = ".")
+download_data(data_name = "all", destination = ".")
 }
 \arguments{
-\item{name}{a character string with the name(s) of the desired data set. Suitable options are:
+\item{data_name}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
@@ -36,7 +36,7 @@ download_data(name = "all", project_folder = ".")
 \item{"udel" for UDEL v501.}
 }}
 
-\item{project_folder}{a character string with the path where pRecipe will be hosted. Inside it the required subfolders will be created.}
+\item{destination}{a character string with the path where the database will be downloaded.}
 }
 \value{
 No return value, called to download the required data sets.

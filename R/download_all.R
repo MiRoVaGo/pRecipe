@@ -2,13 +2,11 @@
 #'
 #' Function for downloading GPCP NC file.
 #'
-#' @importFrom methods is
-#' @param folder_path a character string with the path where the "database" folder is located.
+#' @param folder_path a character string with the path where the data will be downloaded.
 #' @return No return value, called to download the data set.
 #' @keywords internal
 
-download_all <- function(folder_path = "./data/database/"){
-  if (!is.character(folder_path)) stop ("folder_path should be a character string.")
+download_all <- function(folder_path = "."){
   download_20cr(folder_path)
   download_chirps(folder_path)
   download_cmap(folder_path)

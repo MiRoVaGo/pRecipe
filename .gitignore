@@ -2,10 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-._pRecipe.Rproj
-data/
-inst/
-inst/doc
-plots/
-/doc/
-/Meta/
+data/database
+data/processed

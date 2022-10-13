@@ -4,51 +4,20 @@
 \alias{make_ts}
 \title{Generate time series}
 \usage{
-make_ts(name, csv_out = NULL, database_path = "./data/database")
+make_ts(data_file)
 }
 \arguments{
-\item{name}{a Raster object or a character string with the name(s) of the desired data set. Suitable options are:
-\itemize{
-\item{"20cr" for 20CR v3,}
-\item{"chirps" for CHIRPS v2.0,}
-\item{"cmap" for CMAP standard version,}
-\item{"cmorph" for CMORPH,}
-\item{"cpc" for CPC-Global,}
-\item{"cru-ts" for CRU_TS v4.06,}
-\item{"em-earth" for EM-EARTH,}
-\item{"era20c" for ERA-20C,}
-\item{"era5" for ERA5,}
-\item{"ghcn" for GHCN-M v2,}
-\item{"gldas-clsm" for GLDAS CLSM,}
-\item{"gldas-noah" for GLDAS NOAH,}
-\item{"gldas-vic" for GLDAS VIC,}
-\item{"gpcc" for GPCC v2020,}
-\item{"gpcp" for GPCP v2.3,}
-\item{"gpm_imerg" for GPM IMERGM Final v06,}
-\item{"mswep" for MSWEP v2.8,}
-\item{"ncep-doe" for NCEP/DOE,}
-\item{"ncep-ncar" for NCEP/NCAR,}
-\item{"persiann" for PERSIANN-CDR,}
-\item{"precl" for PREC/L,}
-\item{"terraclimate" for TerraClimate,}
-\item{"trmm-3b43" for TRMM 3B43 v7,}
-\item{"udel" for UDEL v501.}
-}}
-
-\item{csv_out}{(optional) a character string with the path were the csv file will be stored.}
-
-\item{database_path}{a character string with the path where the "database" folder is located.}
+\item{data_file}{a character string with the path to the data file.}
 }
 \value{
-No return value, called to subset via cdo
+No return value, called to generate and store csv time series.
 }
 \description{
-The function \code{make_ts} generates a csv time series. If the input data set is a Raster object the output will be stored in the same location of the input file.
+The function \code{make_ts} generates a csv time series and stored in the same location of the input file.
 }
 \examples{
 \dontrun{
-x <- make_ts("gpcp", tempdir())
-w <- raster::brick("dummie.nc")
-z <- make_ts(w, tempdir())
+make_ts("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+make_ts("dummie.nc")
 }
 }
