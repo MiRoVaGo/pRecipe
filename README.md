@@ -8,9 +8,18 @@
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/pRecipe)](https://CRAN.R-project.org/package=pRecipe)
 <!-- badges: end -->
 
+## Precipitation R Recipes
 An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
 
-# Who will use the package? 
+## Install
+
+```r
+install.packages("pRecipe")
+
+library(pRecipe)
+```
+
+# Who will use the package?
 
 * Researchers
 * Climatologists

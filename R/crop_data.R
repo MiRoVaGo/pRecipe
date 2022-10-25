@@ -30,6 +30,7 @@ crop_data <- function(data_file, shp_path){
     nc_out <- sub(".nc.*", "", nc_in)
     nc_out <- paste0(nc_out, "_cropped.nc")
   }
+  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
   dummie_brick <- brick(nc_in)

@@ -36,6 +36,7 @@ fix_name_out <- function(nc_out){
     dummie_name <- paste0(dummie_name, ".nc")
     nc_mid <- sub("(.*/)(.*)", "\\1", nc_out)
     dummie_name <- paste0(nc_mid, dummie_name)
+    dummie_name <- sub(".nc.nc.*", ".nc", dummie_name)
     if (!file.exists(dummie_name)) {
       file.rename(nc_out, dummie_name)
     } else {

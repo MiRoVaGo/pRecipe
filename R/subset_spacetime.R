@@ -34,6 +34,7 @@ subset_spacetime <- function(data_file, years, bbox){
     nc_out <- sub(".nc.*", "", nc_in)
     nc_out <- paste0(nc_out, "_subset.nc")
   }
+  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
   if (Sys.info()['sysname'] == "Windows") {

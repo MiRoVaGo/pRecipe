@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`pRecipe` was conceived back in 2019 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czech Republic. Designed with reproducible science **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales.
+`pRecipe` was conceived back in 2019 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czech Republic. Designed with reproducible science in mind, **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales.
 
 <br>
 ~_The Global Water Cycle Budget_ | @vargas_godoy_global_2021
@@ -64,7 +64,7 @@ The `pRecipe` data collection was homogenized to these specifications:
 * `<resolution>` = 0.25$^\circ$
 * `<time step>` = monthly
 
-E.g., GPCP v2.3 [@adler_version-2_2003] would be:
+E.g., GPCP v2.3 [@adler_global_2018] would be:
 
 `gpcp_tp_mm_global_197901_202205_025_monthly.nc`
 
@@ -87,7 +87,7 @@ Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data |
 CHIRPS v2.0 | 0.05$^\circ$ | Monthly | 1981-01 to 2022-07 | [Download](https://www.chc.ucsb.edu/data/chirps) | @funk_climate_2015
 CMAP | 2.5$^\circ$ | Monthly | 1979-01 to 2022-07 | [Download](https://psl.noaa.gov/data/gridded/data.cmap.html) | @xie_global_1997
 CMORPH | 0.25$^\circ$ | Daily | 1998-01 to 2021-12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
-GPCP v2.3 | 0.5$^\circ$ | Monthly | 1979-01 to 2022-05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_version-2_2003
+GPCP v2.3 | 0.5$^\circ$ | Monthly | 1979-01 to 2022-05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_global_2018
 GPM IMERGM v06 | 0.1$^\circ$ | Monthly | 2000-06 to 2020-12 | [Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06) | @huffman_gpm_2019
 MSWEP v2.8 | 0.1$^\circ$ | Monthly | 1979-02 to 2022-06 | [Download](http://www.gloh2o.org/mswep/) | @beck_mswep_2019
 PERSIANN-CDR | 0.25$^\circ$ | Monthly | 1983-01 to 2022-06 | [Download](https://chrsdata.eng.uci.edu/) | @ashouri_persiann-cdr_2015
@@ -123,19 +123,22 @@ In this introductory recipe we will first download the ERA5 data set. We will th
 ```{r, eval=FALSE}
 install.packages('pRecipe')
 library(pRecipe)
+#Load additional packages
+library(data.table)
+library(raster)
 ```
 
 ## Download
 
-Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has two arguments *name* and *destination*.
+Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has two arguments *data_name* and *destination*.
 
-* *name* is set to "all" by default, but you can specify the names of your data sets of interest only.
+* *data_name* is set to "all" by default, but you can specify the names of your data sets of interest only.
 * *destination* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder] instead.
 
 Let's download the ERA5 data set and inspect its content with `show_info`:
 
 ```{r, eval=FALSE}
-download_data(name = "era5", destination = ".")
+download_data(data_name = "era5", destination = ".")
 show_info("era5_tp_mm_global_195901_202112_025_monthly.nc")
 ```
 
