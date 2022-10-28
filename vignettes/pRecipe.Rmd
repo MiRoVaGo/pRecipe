@@ -72,8 +72,8 @@ E.g., GPCP v2.3 [@adler_global_2018] would be:
 
 Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
 -------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-CRU TS v4.06 | 0.5$^\circ$ | Monthly | 1901-01 to 2021-12 | [Download](https://crudata.uea.ac.uk/cru/data/hrg/) | @harris_version_2020
 CPC-Global | 0.5$^\circ$ | Daily | 1979-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html) | @xie_cpc_2010
+CRU TS v4.06 | 0.5$^\circ$ | Monthly | 1901-01 to 2021-12 | [Download](https://crudata.uea.ac.uk/cru/data/hrg/) | @harris_version_2020
 EM-EARTH | 0.1$^\circ$ | Daily | 1950-01 to 2019-12 | [Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad) | @tang_em-earth_2022
 GHCN v2 | 5$^\circ$ | Monthly | 1900-01 to 2015-05 | [Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html) | @peterson_overview_1997
 GPCC v2020 | 0.25$^\circ$ | Monthly | 1891-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.gpcc.html) | @schneider_gpcc_2011
