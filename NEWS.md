@@ -1,3 +1,8 @@
+# pRecipe 0.4.2
+
+* Fixed a naming bug that generated ".nc.nc" file extensions
+* Updated download links to the latest database
+
 # pRecipe 0.4.0
 
 * pRecipe now is windows friendly
