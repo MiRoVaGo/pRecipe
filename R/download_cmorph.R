@@ -11,7 +11,7 @@ download_cmorph <- function(folder_path = "."){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  zenodo_base <- "https://zenodo.org/record/7094293/files/"
+  zenodo_base <- "https://zenodo.org/record/7299014/files/"
   zenodo_end <- "?download=1"
   file_name <- "cmorph_tp_mm_global60s60n_199801_202112_025_monthly.nc"
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
