@@ -1,3 +1,9 @@
+# pRecipe 1.0.0
+
+* pRecipe no longer depends on CDO
+* Added function to generate Taylor diagrams
+* Updated documentation accordingly
+
 # pRecipe 0.4.2
 
 * Fixed a naming bug that generated ".nc.nc" file extensions
