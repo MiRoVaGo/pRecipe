@@ -13,5 +13,5 @@ plot_line(dummie)
 ggplot object
 }
 \description{
-Function for plotting (line) monthly time-series of area averaged precipitation.
+Function for plotting (line) time-series of area averaged precipitation.
 }

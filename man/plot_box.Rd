@@ -13,5 +13,5 @@ plot_box(dummie)
 ggplot object
 }
 \description{
-Function for plotting (boxplot) monthly time-series of area averaged precipitation.
+Function for plotting (boxplot) time-series of area averaged precipitation.
 }

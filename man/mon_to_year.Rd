@@ -4,10 +4,19 @@
 \alias{mon_to_year}
 \title{Rescale a precipitation data product in time}
 \usage{
-mon_to_year(data_file)
+mon_to_year(data_file, stat = "sum")
 }
 \arguments{
 \item{data_file}{a character string with the path to the data file.}
+
+\item{stat}{a character string with the desired aggregation function. Suitable options are:
+\itemize{
+\item "max"
+\item "mean"
+\item "median"
+\item "min"
+\item "sum" (default)
+}}
 }
 \value{
 No return value, called to aggregate and store store the new data file.

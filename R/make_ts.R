@@ -30,13 +30,10 @@ make_ts <- function(data_file){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (Sys.info()['sysname'] == "Windows") {
-    csv_table <- weighted_average(nc_in)
-    fwrite(csv_table, nc_out)
-  } else {
-    cdo_str <- paste0("cdo -L -z zip_4 -outputtab,nohead,date,value -fldmean ", nc_in, " >> ", nc_out)
-    system(cdo_str)
-    cdo_csv(nc_out)
-  }
+  dummie_cols <- aux_ts(checker$name[1])
+  csv_table <- weighted_average(nc_in)
+  csv_table$name <- dummie_cols[1]
+  csv_table$type <- dummie_cols[2]
+  fwrite(csv_table, nc_out)
   return(invisible())
 }

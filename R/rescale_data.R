@@ -38,15 +38,7 @@ rescale_data <- function(data_file, new_res){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (Sys.info()['sysname'] == "Windows") {
-    dummie_aggregated <- aggregate_brick(nc_in, new_res)
-    save_nc(dummie_aggregated, nc_out)
-  } else {
-    dummie_raster <- raster(nc_in)
-    new_res <- new_res/res(dummie_raster)[1]
-    new_res <- paste(new_res, new_res, sep = ",")
-    cdo_str <- paste0("cdo -L -z zip_4 -gridboxmean,", new_res, " ", nc_in, " ", nc_out)
-    system(cdo_str)
-  }
+  dummie_aggregated <- aggregate_brick(nc_in, new_res)
+  save_nc(dummie_aggregated, nc_out)
   return(invisible())
 }

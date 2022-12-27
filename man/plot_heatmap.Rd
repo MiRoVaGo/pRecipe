@@ -13,5 +13,5 @@ plot_heatmap(dummie)
 ggplot object
 }
 \description{
-Function for plotting (heatmap) monthly time-series of area averaged precipitation.
+Function for plotting (heatmap) time-series of area averaged precipitation.
 }

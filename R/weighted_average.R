@@ -23,6 +23,6 @@ weighted_average <- function(dummie_nc){
   })
   stopCluster(cluster)
   dummie_list <- unlist(dummie_list)
-  dummie_table <- data.frame("date" = dummie_dates, "value" = dummie_list)
+  dummie_table <- data.table("date" = dummie_dates, "value" = dummie_list)
   return(dummie_table)
 }

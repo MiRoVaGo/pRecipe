@@ -1,6 +1,6 @@
 Package: pRecipe
 Title: Precipitation R Recipes
-Version: 0.4.2
+Version: 1.0.0
 Authors@R:
   c(person(given = "Mijael Rodrigo", family = "Vargas Godoy",
            email = "mirovago@gmail.com", role = c("aut", "cre"),
@@ -14,7 +14,7 @@ Description: An open-access tool/framework to download, validate, visualize,
   for consistent and reproducible analysis regarding precipitation.
 Depends: R (>= 4.0.0)
 Imports: grDevices, methods, parallel, stats, utils, data.table, ggplot2, 
-  ggpubr, ncdf4, raster, R.utils, sf
+  ggpubr, ncdf4, openair, raster, R.utils, scales, sf
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -22,9 +22,8 @@ URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 6, https://proj.org/download.html), 
   GDAL (>= 3, https://gdal.org/download.html),
-  NetCDF(>= 4, https://www.unidata.ucar.edu/software/netcdf/),
-  and CDO (>= 2, https://code.mpimet.mpg.de/projects/cdo).
-RoxygenNote: 7.2.1
+  NetCDF(>= 4, https://www.unidata.ucar.edu/software/netcdf/).
+RoxygenNote: 7.2.3
 Suggests:
     rmarkdown,
     knitr,

@@ -1,6 +1,6 @@
 #' Precipitation density
 #'
-#' Function for plotting (density) monthly time-series of area averaged precipitation.
+#' Function for plotting (density) time-series of area averaged precipitation.
 #'
 #' @import data.table ggplot2
 #' @importFrom methods as

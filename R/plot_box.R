@@ -1,6 +1,6 @@
 #' Precipitation box plot
 #'
-#' Function for plotting (boxplot) monthly time-series of area averaged precipitation.
+#' Function for plotting (boxplot) time-series of area averaged precipitation.
 #'
 #' @import data.table ggplot2
 #' @importFrom methods as

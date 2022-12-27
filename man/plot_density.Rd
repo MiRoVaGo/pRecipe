@@ -13,5 +13,5 @@ plot_density(dummie)
 ggplot object
 }
 \description{
-Function for plotting (density) monthly time-series of area averaged precipitation.
+Function for plotting (density) time-series of area averaged precipitation.
 }

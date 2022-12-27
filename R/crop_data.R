@@ -3,8 +3,8 @@
 #' The function \code{crop_data} crops the data sets using a shapefile mask and stores it in the same location of the input file.
 #'
 #' @importFrom raster brick mask
-#' @importFrom sf read_sf
 #' @importFrom R.utils getAbsolutePath
+#' @importFrom sf read_sf
 #' @param data_file a character string with the path to the data file.
 #' @param shp_path a character string with the path to the ".shp" file.
 #' @return No return value, called to crop and store store the new data file.

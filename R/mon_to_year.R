@@ -6,6 +6,14 @@
 #' @importFrom raster brick setZ subset zApply
 #' @importFrom R.utils getAbsolutePath
 #' @param data_file a character string with the path to the data file.
+#' @param stat a character string with the desired aggregation function. Suitable options are:
+#' \itemize{
+#' \item "max"
+#' \item "mean"
+#' \item "median"
+#' \item "min"
+#' \item "sum" (default)
+#' }
 #' @return No return value, called to aggregate and store store the new data file.
 #' @export
 #' @examples
@@ -14,7 +22,7 @@
 #' mon_to_year("dummie.nc")
 #' }
 
-mon_to_year <- function(data_file){
+mon_to_year <- function(data_file, stat = "sum"){
   nc_in <- getAbsolutePath(data_file)
   checker <- name_check(data_file)
   if (checker$length == 8) {
@@ -48,45 +56,32 @@ mon_to_year <- function(data_file){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (Sys.info()['sysname'] == "Windows") {
-    dummie_brick <- brick(nc_in)
-    if (checker$length == 8) {
-      if ((as.numeric(start_month) != 1) & (as.numeric(end_month) != 12)){
-        start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
-        end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
-      } else if ((as.numeric(start_month) != 1) & (as.numeric(end_month) == 12)){
-        start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
-        end_year <- paste0(end_year, "-12-01")
-      } else if ((as.numeric(start_month) == 1) & (as.numeric(end_month) != 12)){
-        start_year <- paste0(start_year, "-01-01")
-        end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
-      } else {
-        start_year <- paste0(start_year, "-01-01")
-        end_year <- paste0(end_year, "-12-01")
-      }
-      dummie_yearly <- zApply(dummie_brick, by = year, fun = sum, na.rm = TRUE)
-      dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
-                                               as.Date(end_year), by = "years"))
-      range_years <- which(getZ(dummie_yearly) >= start_year & 
-                             (getZ(dummie_yearly) <= end_year))
-      dummie_yearly <- subset(dummie_yearly, range_years)
-      dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
-                                               as.Date(end_year), by = "years"))
-    } else {
-      dummie_yearly <- zApply(dummie_brick, by = year, fun = sum, na.rm = TRUE)
-    }
-    save_nc(dummie_yearly, nc_out)
-  } else {
+  dummie_brick <- brick(nc_in)
+  if (checker$length == 8) {
     if ((as.numeric(start_month) != 1) & (as.numeric(end_month) != 12)){
-      cdo_str <- paste0("cdo --no_warnings -L -z zip_4 -setmon,1 -setday,1 -yearsum -delete,year=", start_year, ",", end_year, " ", nc_in, " ", nc_out)
+      start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
+      end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
     } else if ((as.numeric(start_month) != 1) & (as.numeric(end_month) == 12)){
-      cdo_str <- paste0("cdo --no_warnings -L -z zip_4 -setmon,1 -setday,1 -yearsum -delete,year=", start_year, " ", nc_in, " ", nc_out)
+      start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
+      end_year <- paste0(end_year, "-12-01")
     } else if ((as.numeric(start_month) == 1) & (as.numeric(end_month) != 12)){
-      cdo_str <- paste0("cdo --no_warnings -L -z zip_4 -setmon,1 -setday,1 -yearsum -delete,year=", end_year, " ", nc_in, " ", nc_out)
+      start_year <- paste0(start_year, "-01-01")
+      end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
     } else {
-      cdo_str <- paste0("cdo --no_warnings -L -z zip_4 -setmon,1 -setday,1 -yearsum ", nc_in, " ", nc_out)
+      start_year <- paste0(start_year, "-01-01")
+      end_year <- paste0(end_year, "-12-01")
     }
-    system(cdo_str)
+    dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
+    dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
+                                             as.Date(end_year), by = "years"))
+    range_years <- which(getZ(dummie_yearly) >= start_year & 
+                           (getZ(dummie_yearly) <= end_year))
+    dummie_yearly <- subset(dummie_yearly, range_years)
+    dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
+                                             as.Date(end_year), by = "years"))
+  } else {
+    dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
   }
+  save_nc(dummie_yearly, nc_out)
   return(invisible())
 }

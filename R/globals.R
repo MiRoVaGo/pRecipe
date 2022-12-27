@@ -1,1 +1,1 @@
-utils::globalVariables(c("value", "x", "y"))
+utils::globalVariables(c("name", "obs", "seasons", "value", "x", "y"))

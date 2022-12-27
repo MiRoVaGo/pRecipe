@@ -1,6 +1,6 @@
 #' Precipitation heatmap
 #'
-#' Function for plotting (heatmap) monthly time-series of area averaged precipitation.
+#' Function for plotting (heatmap) time-series of area averaged precipitation.
 #'
 #' @import data.table ggplot2
 #' @importFrom methods as

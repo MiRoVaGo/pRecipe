@@ -37,64 +37,57 @@ subset_spacetime <- function(data_file, years, bbox){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (Sys.info()['sysname'] == "Windows") {
-    dummie_brick <- brick(nc_in)
-    start_year <- paste0(years[1], "-01-01")
-    end_year <- paste0(years[2], "-12-31")
-    lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
-                    'SpatialPolygons')
-    dummie_subset <- crop(dummie_brick, lonlatbox)
-    dummie_dates <- getZ(dummie_subset)
-    if (is.character(dummie_dates) | is.numeric(dummie_dates)) {
-      if (is.numeric(dummie_dates)) {
-        dummie_dates <- as.character(dummie_dates)
-      } 
-      if (length(dummie_dates[dummie_dates == "00"]) >= 1) {
-        dummie_dates <- sub("^00$", "", dummie_dates)
-        dummie_dates <- dummie_dates[dummie_dates != ""]
-        dummie_dates <- as.Date(dummie_dates)
-      } else if (!Reduce("|",grepl("-01", dummie_dates))) {
-        dummie_dates <- as.numeric(dummie_dates)
-        if (grepl("persiann", nc_out)) {
-          dummie_origin <- "1983-01-01 00:00:00"
-        } else if (grepl("gldas-", nc_out)) {
-          dummie_origin <- "1948-01-01 00:00:00"
-        } else {
-          dummie_origin <- "1970-01-01 00:00:00"
-        }
-        dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
+  dummie_brick <- brick(nc_in)
+  start_year <- paste0(years[1], "-01-01")
+  end_year <- paste0(years[2], "-12-31")
+  lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
+                  'SpatialPolygons')
+  dummie_subset <- crop(dummie_brick, lonlatbox)
+  dummie_dates <- getZ(dummie_subset)
+  if (is.character(dummie_dates) | is.numeric(dummie_dates)) {
+    if (is.numeric(dummie_dates)) {
+      dummie_dates <- as.character(dummie_dates)
+    } 
+    if (length(dummie_dates[dummie_dates == "00"]) >= 1) {
+      dummie_dates <- sub("^00$", "", dummie_dates)
+      dummie_dates <- dummie_dates[dummie_dates != ""]
+      dummie_dates <- as.Date(dummie_dates)
+    } else if (!Reduce("|",grepl("-01", dummie_dates))) {
+      dummie_dates <- as.numeric(dummie_dates)
+      if (grepl("persiann", nc_out)) {
+        dummie_origin <- "1983-01-01 00:00:00"
+      } else if (grepl("gldas-", nc_out)) {
+        dummie_origin <- "1948-01-01 00:00:00"
       } else {
-        dummie_dates <- as.Date(dummie_dates)
+        dummie_origin <- "1970-01-01 00:00:00"
       }
+      dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
+    } else {
+      dummie_dates <- as.Date(dummie_dates)
     }
-    range_years <- which(dummie_dates >= start_year & 
-                           (dummie_dates <= end_year))
-    dummie_subset <- subset(dummie_subset, range_years)
-    if (is(dummie_subset, "RasterStack")) {
-      dummie_subset <- brick(dummie_subset)
-      dummie_names <- names(dummie_subset)
-      if (!Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
-                             dummie_names))) {
-        if (grepl("persiann", nc_out)) {
-          dummie_names <- sub("^.", "", dummie_names)
-          dummie_names <- as.numeric(dummie_names)
-          dummie_Z <- as.Date(dummie_names, origin = "1983-01-01 00:00:00")
-        } else if (grepl("gldas-clsm", nc_out)) {
-          dummie_names <- sub("^.", "", dummie_names)
-          dummie_names <- as.numeric(dummie_names)
-          dummie_Z <- as.Date(dummie_names, origin = "1948-01-01 00:00:00")
-        }
-      } else {
-        dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
-      }
-      dummie_subset <- setZ(dummie_subset, dummie_Z)
-    }
-    save_nc(dummie_subset, nc_out)
-  } else {
-    range_years <- paste(years, collapse = "/")
-    lonlatbox <- paste(bbox, collapse = ",")
-    cdo_str <- paste0("cdo -L -z zip_4 -sellonlatbox,", lonlatbox, " -selyear,", range_years, " ", nc_in, " ", nc_out)
-    system(cdo_str)
   }
+  range_years <- which(dummie_dates >= start_year & 
+                         (dummie_dates <= end_year))
+  dummie_subset <- subset(dummie_subset, range_years)
+  if (is(dummie_subset, "RasterStack")) {
+    dummie_subset <- brick(dummie_subset)
+    dummie_names <- names(dummie_subset)
+    if (!Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
+                           dummie_names))) {
+      if (grepl("persiann", nc_out)) {
+        dummie_names <- sub("^.", "", dummie_names)
+        dummie_names <- as.numeric(dummie_names)
+        dummie_Z <- as.Date(dummie_names, origin = "1983-01-01 00:00:00")
+      } else if (grepl("gldas-clsm", nc_out)) {
+        dummie_names <- sub("^.", "", dummie_names)
+        dummie_names <- as.numeric(dummie_names)
+        dummie_Z <- as.Date(dummie_names, origin = "1948-01-01 00:00:00")
+      }
+    } else {
+      dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
+    }
+    dummie_subset <- setZ(dummie_subset, dummie_Z)
+  }
+  save_nc(dummie_subset, nc_out)
   fix_name_out(nc_out)
 }

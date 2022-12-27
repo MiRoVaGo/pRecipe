@@ -33,16 +33,10 @@ subset_space <- function(data_file, bbox){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (Sys.info()['sysname'] == "Windows") {
-    dummie_brick <- brick(nc_in)
-    lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
-                    'SpatialPolygons')
-    dummie_subset <- crop(dummie_brick, lonlatbox)
-    save_nc(dummie_subset, nc_out)
-  } else {
-    lonlatbox <- paste(bbox, collapse = ",")
-    cdo_str <- paste0("cdo -L -z zip_4 -sellonlatbox,", lonlatbox, " ", nc_in, " ", nc_out)
-    system(cdo_str)
-  }
+  dummie_brick <- brick(nc_in)
+  lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
+                  'SpatialPolygons')
+  dummie_subset <- crop(dummie_brick, lonlatbox)
+  save_nc(dummie_subset, nc_out)
   return(invisible())
 }
