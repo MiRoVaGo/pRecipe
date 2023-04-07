@@ -13,6 +13,12 @@ GPCC
 GPCP
 GPM
 GZ
+FLDAS
+JRA
+MERRA
+fldas
+jra
+merra
 RasterBrick
 hydrological
 lon

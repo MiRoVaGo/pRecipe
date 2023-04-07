@@ -16,6 +16,8 @@ plot_taylor(data, ref, groups = "type", ...)
 \item "type" (default)
 \item "seasons" (only works properly with monthly data)
 }}
+
+\item{...}{extra arguments for plot aesthetics}
 }
 \value{
 plot object

@@ -10,6 +10,8 @@ subset_time(data, years, autosave = FALSE)
 \item{data}{a character string with the path to the data file. Or a RasterBrick.}
 
 \item{years}{numeric vector. Time range in the form: (start_year, end_year)}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
 A subsetted RasterBrick.
