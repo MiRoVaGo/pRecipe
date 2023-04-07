@@ -4,15 +4,17 @@
 \alias{rescale_data}
 \title{Subset a precipitation data product in space}
 \usage{
-rescale_data(data_file, new_res)
+rescale_data(data, new_res, autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{data}{a character string with the path to the data file. Or a RasterBrick.}
 
 \item{new_res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
-No return value, called to aggregate and store the data file.
+An aggregated RasterBrick.
 }
 \description{
 The function \code{rescale_data} aggregates the requested data sets into desired resolution and stores it in the same location of the input file.

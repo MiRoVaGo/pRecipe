@@ -4,13 +4,15 @@
 \alias{make_ts}
 \title{Generate time series}
 \usage{
-make_ts(data_file)
+make_ts(data, autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{data}{a character string with the path to the data file. Or a RasterBrick}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
-No return value, called to generate and store csv time series.
+A data.table
 }
 \description{
 The function \code{make_ts} generates a csv time series and stored in the same location of the input file.

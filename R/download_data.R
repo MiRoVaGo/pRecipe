@@ -30,7 +30,14 @@
 #' \item{"trmm-3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param destination a character string with the path where the database will be downloaded.
+#' @param path a character string with the path where the database will be downloaded.
+#' @param domain a character string with the desired domain data set. Suitable options are:
+#' \itemize{
+#' \item{"raw" for default available spatial coverage,}
+#' \item{"global" for data sets with global (land and ocean) coverage,}
+#' \item{"land" for data sets with land only coverage,}
+#' \item{"ocean", for data sets with ocean only coverage.}
+#' }
 #' @return No return value, called to download the required data sets.
 #' @export
 #' @examples
@@ -38,37 +45,37 @@
 #' download_data("gldas-vic", tempdir())
 #' }
 
-download_data <- function(data_name = "all", destination = "."){
+download_data <- function(data_name = "all", path = ".", domain = "raw"){
   dataset_check(data_name)
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
   lapply(data_name, function(dataset) switch(dataset,
-                                        "all"  = download_all(destination),
-                                        "20cr" = download_20cr(destination),
-                                        "chirps" = download_chirps(destination),
-                                        "cmap" = download_cmap(destination),
-                                        "cmorph" = download_cmorph(destination),
-                                        "cpc" = download_cpc(destination),
-                                        "cru-ts" = download_cru_ts(destination),
-                                        "em-earth" = download_em_earth(destination),
-                                        "era20c" = download_era20c(destination),
-                                        "era5" = download_era5(destination),
-                                        "ghcn" = download_ghcn(destination),
-                                        "gldas-clsm" = download_gldas_clsm(destination),
-                                        "gldas-noah" = download_gldas_noah(destination),
-                                        "gldas-vic" = download_gldas_vic(destination),
-                                        "gpcc" = download_gpcc(destination),
-                                        "gpcp" = download_gpcp(destination),
-                                        "gpm-imerg" = download_gpm_imerg(destination),
-                                        "mswep" = download_mswep(destination),
-                                        "ncep-doe" = download_ncep_doe(destination),
-                                        "ncep-ncar" = download_ncep_ncar(destination),
-                                        "persiann" = download_persiann(destination),
-                                        "precl" = download_precl(destination),
-                                        "terraclimate" = download_terraclimate(destination),
-                                        "trmm-3b43" = download_trmm_3b43(destination),
-                                        "udel" = download_udel(destination)
+                                        "all"  = download_all(path, domain),
+                                        "20cr" = download_20cr(path, domain),
+                                        "chirps" = download_chirps(path, domain),
+                                        "cmap" = download_cmap(path, domain),
+                                        "cmorph" = download_cmorph(path, domain),
+                                        "cpc" = download_cpc(path, domain),
+                                        "cru-ts" = download_cru_ts(path, domain),
+                                        "em-earth" = download_em_earth(path, domain),
+                                        "era20c" = download_era20c(path, domain),
+                                        "era5" = download_era5(path, domain),
+                                        "ghcn" = download_ghcn(path, domain),
+                                        "gldas-clsm" = download_gldas_clsm(path, domain),
+                                        "gldas-noah" = download_gldas_noah(path, domain),
+                                        "gldas-vic" = download_gldas_vic(path, domain),
+                                        "gpcc" = download_gpcc(path, domain),
+                                        "gpcp" = download_gpcp(path, domain),
+                                        "gpm-imerg" = download_gpm_imerg(path, domain),
+                                        "mswep" = download_mswep(path, domain),
+                                        "ncep-doe" = download_ncep_doe(path, domain),
+                                        "ncep-ncar" = download_ncep_ncar(path, domain),
+                                        "persiann" = download_persiann(path, domain),
+                                        "precl" = download_precl(path, domain),
+                                        "terraclimate" = download_terraclimate(path, domain),
+                                        "trmm-3b43" = download_trmm_3b43(path, domain),
+                                        "udel" = download_udel(path, domain)
   ))
   return(invisible())
 }

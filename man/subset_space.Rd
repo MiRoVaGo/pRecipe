@@ -4,15 +4,17 @@
 \alias{subset_space}
 \title{Subset a precipitation data product in space}
 \usage{
-subset_space(data_file, bbox)
+subset_space(data, bbox, autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{data}{a character string with the path to the data file. Or a RasterBrick.}
 
 \item{bbox}{numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
-No return value, called to subset and store store the new data file.
+A subsetted RasterBrick.
 }
 \description{
 The function \code{subset_space} subsets (space) the requested data set and stores it in the same location of the input file.
@@ -20,7 +22,7 @@ The function \code{subset_space} subsets (space) the requested data set and stor
 \examples{
 \dontrun{
 subset_space("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
-c(12.24, 18.85, 48.56, 51.12))
-subset_space("dummie.nc", c(12.24, 18.85, 48.56, 51.12))
+c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
+subset_space("dummie.nc", c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
 }
 }

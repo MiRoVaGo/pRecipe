@@ -4,7 +4,7 @@
 \alias{download_data}
 \title{Download various precipitation data products}
 \usage{
-download_data(data_name = "all", destination = ".")
+download_data(data_name = "all", path = ".", domain = "raw")
 }
 \arguments{
 \item{data_name}{a character string with the name(s) of the desired data set. Suitable options are:
@@ -36,7 +36,15 @@ download_data(data_name = "all", destination = ".")
 \item{"udel" for UDEL v501.}
 }}
 
-\item{destination}{a character string with the path where the database will be downloaded.}
+\item{path}{a character string with the path where the database will be downloaded.}
+
+\item{domain}{a character string with the desired domain data set. Suitable options are:
+\itemize{
+\item{"raw" for default available spatial coverage,}
+\item{"global" for data sets with global (land and ocean) coverage,}
+\item{"land" for data sets with land only coverage,}
+\item{"ocean", for data sets with ocean only coverage.}
+}}
 }
 \value{
 No return value, called to download the required data sets.

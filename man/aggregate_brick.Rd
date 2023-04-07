@@ -4,10 +4,10 @@
 \alias{aggregate_brick}
 \title{Parallel aggregate}
 \usage{
-aggregate_brick(dummie_nc, new_res)
+aggregate_brick(x, new_res)
 }
 \arguments{
-\item{dummie_nc}{a character string}
+\item{x}{a character string}
 
 \item{new_res}{numeric}
 }

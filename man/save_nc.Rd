@@ -17,4 +17,8 @@ No return value, called to save a file
 \description{
 Function to save data compatible with pRecipe in .nc file
 }
-\keyword{internal}
+\examples{
+\dontrun{
+save_nc(dummie_brick, "gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+}
+}

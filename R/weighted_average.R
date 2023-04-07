@@ -4,12 +4,16 @@
 #'
 #' @import data.table parallel
 #' @importFrom raster area as.list brick cellStats getZ
-#' @param dummie_nc a character string
+#' @param x a character string
 #' @return data.table variable
 #' @keywords internal
 
-weighted_average <- function(dummie_nc){
-  dummie_brick <- brick(dummie_nc)
+weighted_average <- function(x){
+  if (is.character(x)){
+    dummie_brick <- brick(x)
+  } else {
+    dummie_brick <- x
+  }
   dummie_dates <- getZ(dummie_brick)
   dummie_brick <- as.list(dummie_brick)
   no_cores <- detectCores() - 1

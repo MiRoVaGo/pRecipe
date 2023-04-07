@@ -4,10 +4,10 @@
 \alias{weighted_average}
 \title{Weighted average}
 \usage{
-weighted_average(dummie_nc)
+weighted_average(x)
 }
 \arguments{
-\item{dummie_nc}{a character string}
+\item{x}{a character string}
 }
 \value{
 data.table variable

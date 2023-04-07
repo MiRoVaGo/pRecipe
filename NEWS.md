@@ -1,3 +1,12 @@
+# pRecipe 2.3.0
+
+* saving is now optional
+* save_nc is exported now
+* added fldas, jra55, and merra2 data
+* land/ocean cropped data has been aded to the database
+* plot_line now facets by data set type
+* updated documentation accordingly
+
 # pRecipe 1.0.0
 
 * pRecipe no longer depends on CDO

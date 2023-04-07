@@ -56,6 +56,12 @@ aux_ts <- function(dummie_name){
       dummie <- c("TRMM 3B43 v7", "Satellite-based")
     } else if (dummie_name == "udel"){
       dummie <- c("UDel v5.01", "Gauge-based")
+    } else if (dummie_name == "jra55"){
+      dummie <- c("JRA-55", "Reanalysis")
+    } else if (dummie_name == "merra2"){
+      dummie <- c("MERRA-2", "Reanalysis")
+    } else if (dummie_name == "fldas"){
+      dummie <- c("FLDAS", "Model forcing")
     } else {
       dummie <- c(NA, NA)
     }

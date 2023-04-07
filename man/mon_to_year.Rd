@@ -4,10 +4,10 @@
 \alias{mon_to_year}
 \title{Rescale a precipitation data product in time}
 \usage{
-mon_to_year(data_file, stat = "sum")
+mon_to_year(x, stat = "sum", autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{x}{a character string with the path to the data file. Or RasterBrick object}
 
 \item{stat}{a character string with the desired aggregation function. Suitable options are:
 \itemize{
@@ -17,16 +17,18 @@ mon_to_year(data_file, stat = "sum")
 \item "min"
 \item "sum" (default)
 }}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
-No return value, called to aggregate and store store the new data file.
+A RasterBrick.
 }
 \description{
 The function \code{mon_to_year} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
-mon_to_year("dummie.nc")
+mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
+mon_to_year("dummie.nc", autosave = TRUE)
 }
 }

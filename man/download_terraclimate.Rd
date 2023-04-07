@@ -4,10 +4,18 @@
 \alias{download_terraclimate}
 \title{TERRACLIMATE data downloader}
 \usage{
-download_terraclimate(folder_path = ".")
+download_terraclimate(folder_path = ".", domain = "raw")
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data will be downloaded.}
+
+\item{domain}{a character string with the desired domain data set. Suitable options are:
+\itemize{
+\item{"raw" for default available spatial coverage,}
+\item{"global" for data sets with global (land and ocean) coverage,}
+\item{"land" for data sets with land only coverage,}
+\item{"ocean", for data sets with ocean only coverage.}
+}}
 }
 \value{
 No return value, called to download the data set.

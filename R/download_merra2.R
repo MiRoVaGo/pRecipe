@@ -1,6 +1,6 @@
-#' NCEP_DOE data downloader
+#' MERRA-2 data downloader
 #'
-#' Function for downloading NCEP/DOE.
+#' Function for downloading MERRA-2.
 #'
 #' @importFrom utils download.file
 #' @param folder_path a character string with the path where the data will be downloaded.
@@ -14,14 +14,14 @@
 #' @return No return value, called to download the data set.
 #' @keywords internal
 
-download_ncep_doe <- function(folder_path = ".", domain = "raw"){
+download_merra2 <- function(folder_path = ".", domain = "raw"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
   if (domain == "raw"){domain <- "global"}
   zenodo_base <- "https://zenodo.org/record/7794022/files/"
   zenodo_end <- "?download=1"
-  file_name <- paste0("ncep-doe_tp_mm_", domain, "_197901_202302_025_monthly.nc")
+  file_name <- paste0("merra2_tp_mm_", domain, "_198001_202301_025_monthly.nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

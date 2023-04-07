@@ -1,24 +1,26 @@
 #' Crop precipitation data sets
 #'
-#' The function \code{crop_data} crops the data sets using a shapefile mask and stores it in the same location of the input file.
+#' The function \code{crop_data} crops the data sets using a shapefile mask.
 #'
 #' @importFrom raster brick mask
 #' @importFrom R.utils getAbsolutePath
 #' @importFrom sf read_sf
-#' @param data_file a character string with the path to the data file.
+#' @param x a character string with the path to the data file. Or a RasterBrick.
 #' @param shp_path a character string with the path to the ".shp" file.
-#' @return No return value, called to crop and store store the new data file.
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' @return A cropped RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
-#' crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp")
-#' crop_data("dummie.nc", "cze.shp")
+#' crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp",
+#' autosave = TRUE)
+#' crop_data("dummie.nc", "cze.shp", autosave = TRUE)
 #' }
 
-crop_data <- function(data_file, shp_path){
+crop_data <- function(x, shp_path, autosave = FALSE){
   shp_mask <- read_sf(shp_path)
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+  nc_in <- getAbsolutePath(x)
+  checker <- name_check(x)
   if (checker$length == 8) {
     checker$name[4] <- "cropped"
     nc_out <- paste(checker$name, collapse = "_")
@@ -33,8 +35,16 @@ crop_data <- function(data_file, shp_path){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_brick <- brick(nc_in)
-  dummie_crop <- mask(dummie_brick, shp_mask)
-  save_nc(dummie_crop, nc_out)
-  return(invisible())
+  if (is.character(x)){
+    dummie_brick <- brick(nc_in)
+    dummie_crop <- mask(dummie_brick, shp_mask)
+  } else {
+    dummie_crop <- mask(x, shp_mask)
+  }
+  if (autosave){
+    save_nc(dummie_crop, nc_out)
+    return(invisible())
+  } else {
+    return(dummie_crop)
+  }
 }

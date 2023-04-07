@@ -8,11 +8,17 @@
 #' @param dummie_nc a Raster object.
 #' @param nc_out a character string.
 #' @return No return value, called to save a file
-#' @keywords internal
+#' @export
+#' @examples
+#' \dontrun{
+#' save_nc(dummie_brick, "gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+#' }
 
 save_nc <- function(dummie_nc, nc_out){
   lon <- xFromCol(dummie_nc)
+  lon <- round(lon, 4)
   lat <- yFromRow(dummie_nc)
+  lat <- round(lat, 4)
   time <- getZ(dummie_nc)
   if (is.character(time) | is.numeric(time)) {
     if (is.numeric(time)) {
@@ -24,13 +30,7 @@ save_nc <- function(dummie_nc, nc_out){
       time <- as.Date(time)
     } else if (!Reduce("|",grepl("-01", time))) {
       time <- as.numeric(time)
-      if (grepl("persiann", nc_out)) {
-        dummie_origin <- "1983-01-01 00:00:00"
-      } else if (grepl("gldas-", nc_out)) {
-        dummie_origin <- "1948-01-01 00:00:00"
-      } else {
-        dummie_origin <- "1970-01-01 00:00:00"
-      }
+      dummie_origin <- "1970-01-01 00:00:00"
       time <- as.Date(time, origin = dummie_origin)
     } else {
       time <- as.Date(time)

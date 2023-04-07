@@ -5,20 +5,20 @@
 #' @importFrom methods as is
 #' @importFrom raster brick getZ setZ subset
 #' @importFrom R.utils getAbsolutePath
-#' @param data_file a character string with the path to the data file.
+#' @param data a character string with the path to the data file. Or a RasterBrick.
 #' @param years numeric vector. Time range in the form: (start_year, end_year)
-#' @return No return value, called to subset and store store the new data file.
+#' @return A subsetted RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
 #' subset_time("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
-#' c(2000, 2010))
-#' subset_time("dummie.nc", c(2000, 2010))
+#' c(2000, 2010), autosave = TRUE)
+#' subset_time("dummie.nc", c(2000, 2010), autosave = TRUE)
 #' }
 
-subset_time <- function(data_file, years){
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+subset_time <- function(data, years, autosave = FALSE){
+  nc_in <- getAbsolutePath(data)
+  checker <- name_check(data)
   if (checker$length == 8) {
     checker$name[5] <- paste0(years[1], "-01-01")
     checker$name[6] <- paste0(years[2], "-12-01")
@@ -34,7 +34,11 @@ subset_time <- function(data_file, years){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_brick <- brick(nc_in)
+  if (is.character(data)){
+    dummie_brick <- brick(nc_in)
+  } else {
+    dummie_brick <- data
+  }
   start_year <- paste0(years[1], "-01-01")
   end_year <- paste0(years[2], "-12-31")
   dummie_dates <- getZ(dummie_brick)
@@ -82,6 +86,11 @@ subset_time <- function(data_file, years){
     }
     dummie_subset <- setZ(dummie_subset, dummie_Z)
   }
-  save_nc(dummie_subset, nc_out)
-  fix_name_out(nc_out)
+  if (autosave){
+    save_nc(dummie_subset, nc_out)
+    fix_name_out(nc_out)
+    return(invisible())
+  } else {
+    return(dummie_subset)
+  }
 }

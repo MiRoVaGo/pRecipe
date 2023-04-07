@@ -5,22 +5,23 @@
 #' @importFrom methods as is
 #' @importFrom raster brick crop extent getZ setZ subset
 #' @importFrom R.utils getAbsolutePath
-#' @param data_file a character string with the path to the data file.
+#' @param data a character string with the path to the data file. Or a RasterBrick
 #' @param years numeric vector. Time range in the form: (start_year, end_year)
 #' @param bbox numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).
-#' @return No return value, called to subset and store store the new data file.
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' @return A subsetted RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
 #' subset_spacetime("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
-#' c(2000, 2010), c(12.24, 18.85, 48.56, 51.12))
+#' c(2000, 2010), c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
 #' subset_spacetime("dummie.nc", c(2000, 2010), 
-#' c(12.24, 18.85, 48.56, 51.12))
+#' c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
 #' }
 
-subset_spacetime <- function(data_file, years, bbox){
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+subset_spacetime <- function(data, years, bbox, autosave = FALSE){
+  nc_in <- getAbsolutePath(data)
+  checker <- name_check(data)
   if (checker$length == 8) {
     checker$name[4] <- "subset"
     checker$name[5] <- years[1]
@@ -37,7 +38,11 @@ subset_spacetime <- function(data_file, years, bbox){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_brick <- brick(nc_in)
+  if (is.character(data)){
+    dummie_brick <- brick(nc_in)
+  } else {
+    dummie_brick <- data
+  }
   start_year <- paste0(years[1], "-01-01")
   end_year <- paste0(years[2], "-12-31")
   lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
@@ -88,6 +93,11 @@ subset_spacetime <- function(data_file, years, bbox){
     }
     dummie_subset <- setZ(dummie_subset, dummie_Z)
   }
-  save_nc(dummie_subset, nc_out)
-  fix_name_out(nc_out)
+  if (autosave){
+    save_nc(dummie_subset, nc_out)
+    fix_name_out(nc_out)
+    return(invisible())
+  } else {
+    return(dummie_subset)
+  }
 }

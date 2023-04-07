@@ -11,22 +11,8 @@ fix_name_out <- function(nc_out){
   dummie_name <- name_check(nc_out)
   dummie_date <- show_info(nc_out)
   dummie_date <- dummie_date[8]
-  if (grepl("persiann", nc_out)) {
-    dummie_date <- unlist(strsplit(dummie_date, " ", fixed = TRUE))
-    dummie_date <- sub(",", "", dummie_date)
-    dummie_date <- suppressWarnings(as.numeric(dummie_date))
-    dummie_date <- dummie_date[!is.na(dummie_date)]
-    dummie_date <- as.Date(dummie_date, origin = "1983-01-01 00:00:00")
-  } else if (grepl("gldas-clsm", nc_out)) {
-    dummie_date <- unlist(strsplit(dummie_date, " ", fixed = TRUE))
-    dummie_date <- sub(",", "", dummie_date)
-    dummie_date <- suppressWarnings(as.numeric(dummie_date))
-    dummie_date <- dummie_date[!is.na(dummie_date)]
-    dummie_date <- as.Date(dummie_date, origin = "1948-01-01 00:00:00")
-  } else {
-    dummie_date <- unlist(strsplit(dummie_date, " ", fixed = TRUE))
-    dummie_date <- grep("-", dummie_date, value = TRUE)
-  }
+  dummie_date <- unlist(strsplit(dummie_date, " ", fixed = TRUE))
+  dummie_date <- grep("-", dummie_date, value = TRUE)
   dummie_date <- substr(dummie_date, 1, 7)
   dummie_date <- sub("-", "", dummie_date)
   if (dummie_name$length == 8) {

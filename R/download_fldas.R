@@ -1,6 +1,6 @@
-#' NCEP_DOE data downloader
+#' FLDAS data downloader
 #'
-#' Function for downloading NCEP/DOE.
+#' Function for downloading FLDAS.
 #'
 #' @importFrom utils download.file
 #' @param folder_path a character string with the path where the data will be downloaded.
@@ -14,14 +14,18 @@
 #' @return No return value, called to download the data set.
 #' @keywords internal
 
-download_ncep_doe <- function(folder_path = ".", domain = "raw"){
+download_fldas <- function(folder_path = ".", domain = "raw"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  if (domain == "raw"){domain <- "global"}
+  if (domain == "raw" | domain == "land"){
+    domain <- "land"
+  } else {
+    warning(paste0('The ', domain, ' domain is not available'))
+  }
   zenodo_base <- "https://zenodo.org/record/7794022/files/"
   zenodo_end <- "?download=1"
-  file_name <- paste0("ncep-doe_tp_mm_", domain, "_197901_202302_025_monthly.nc")
+  file_name <- paste0("fldas_tp_mm_", domain, "_198201_2022112_025_monthly.nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

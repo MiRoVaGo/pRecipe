@@ -5,20 +5,21 @@
 #' @importFrom methods as
 #' @importFrom raster brick crop extent
 #' @importFrom R.utils getAbsolutePath
-#' @param data_file a character string with the path to the data file.
+#' @param data a character string with the path to the data file. Or a RasterBrick.
 #' @param bbox numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).
-#' @return No return value, called to subset and store store the new data file.
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' @return A subsetted RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
 #' subset_space("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
-#' c(12.24, 18.85, 48.56, 51.12))
-#' subset_space("dummie.nc", c(12.24, 18.85, 48.56, 51.12))
+#' c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
+#' subset_space("dummie.nc", c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
 #' }
 
-subset_space <- function(data_file, bbox){
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+subset_space <- function(data, bbox, autosave = FALSE){
+  nc_in <- getAbsolutePath(data)
+  checker <- name_check(data)
   if (checker$length == 8) {
     checker$name[4] <- "subset"
     nc_out <- paste(checker$name, collapse = "_")
@@ -33,10 +34,18 @@ subset_space <- function(data_file, bbox){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_brick <- brick(nc_in)
+  if (is.character(data)){
+    dummie_brick <- brick(nc_in)
+  } else {
+    dummie_brick <- data
+  }
   lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
                   'SpatialPolygons')
   dummie_subset <- crop(dummie_brick, lonlatbox)
-  save_nc(dummie_subset, nc_out)
-  return(invisible())
+  if (autosave){
+    save_nc(dummie_subset, nc_out)
+    return(invisible())
+  } else {
+    return(dummie_subset)
+  }
 }

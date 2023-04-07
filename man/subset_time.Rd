@@ -4,15 +4,15 @@
 \alias{subset_time}
 \title{Subset a precipitation data product in time}
 \usage{
-subset_time(data_file, years)
+subset_time(data, years, autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{data}{a character string with the path to the data file. Or a RasterBrick.}
 
 \item{years}{numeric vector. Time range in the form: (start_year, end_year)}
 }
 \value{
-No return value, called to subset and store store the new data file.
+A subsetted RasterBrick.
 }
 \description{
 The function \code{subset_time} subsets (time) the requested data set and stores it in the same location of the input file.
@@ -20,7 +20,7 @@ The function \code{subset_time} subsets (time) the requested data set and stores
 \examples{
 \dontrun{
 subset_time("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
-c(2000, 2010))
-subset_time("dummie.nc", c(2000, 2010))
+c(2000, 2010), autosave = TRUE)
+subset_time("dummie.nc", c(2000, 2010), autosave = TRUE)
 }
 }

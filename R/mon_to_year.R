@@ -5,7 +5,7 @@
 #' @importFrom methods as 
 #' @importFrom raster brick setZ subset zApply
 #' @importFrom R.utils getAbsolutePath
-#' @param data_file a character string with the path to the data file.
+#' @param x a character string with the path to the data file. Or RasterBrick object
 #' @param stat a character string with the desired aggregation function. Suitable options are:
 #' \itemize{
 #' \item "max"
@@ -14,17 +14,18 @@
 #' \item "min"
 #' \item "sum" (default)
 #' }
-#' @return No return value, called to aggregate and store store the new data file.
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' @return A RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
-#' mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
-#' mon_to_year("dummie.nc")
+#' mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
+#' mon_to_year("dummie.nc", autosave = TRUE)
 #' }
 
-mon_to_year <- function(data_file, stat = "sum"){
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+mon_to_year <- function(x, stat = "sum", autosave = FALSE){
+  nc_in <- getAbsolutePath(x)
+  checker <- name_check(x)
   if (checker$length == 8) {
     checker$name[8] <- "yearly"
     start_year <- substr(checker$name[5], 1, 4)
@@ -56,7 +57,11 @@ mon_to_year <- function(data_file, stat = "sum"){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_brick <- brick(nc_in)
+  if (is.character(x)){
+    dummie_brick <- brick(nc_in)
+  } else {
+    dummie_brick <- x
+  }
   if (checker$length == 8) {
     if ((as.numeric(start_month) != 1) & (as.numeric(end_month) != 12)){
       start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
@@ -82,6 +87,10 @@ mon_to_year <- function(data_file, stat = "sum"){
   } else {
     dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
   }
-  save_nc(dummie_yearly, nc_out)
-  return(invisible())
+  if (autosave){
+    save_nc(dummie_yearly, nc_out)
+    return(invisible())
+  } else {
+    return(dummie_yearly)
+  }
 }

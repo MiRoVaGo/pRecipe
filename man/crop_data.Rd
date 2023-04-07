@@ -4,22 +4,25 @@
 \alias{crop_data}
 \title{Crop precipitation data sets}
 \usage{
-crop_data(data_file, shp_path)
+crop_data(x, shp_path, autosave = FALSE)
 }
 \arguments{
-\item{data_file}{a character string with the path to the data file.}
+\item{x}{a character string with the path to the data file. Or a RasterBrick.}
 
 \item{shp_path}{a character string with the path to the ".shp" file.}
+
+\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
 \value{
-No return value, called to crop and store store the new data file.
+A cropped RasterBrick.
 }
 \description{
-The function \code{crop_data} crops the data sets using a shapefile mask and stores it in the same location of the input file.
+The function \code{crop_data} crops the data sets using a shapefile mask.
 }
 \examples{
 \dontrun{
-crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp")
-crop_data("dummie.nc", "cze.shp")
+crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp",
+autosave = TRUE)
+crop_data("dummie.nc", "cze.shp", autosave = TRUE)
 }
 }

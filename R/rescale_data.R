@@ -4,9 +4,10 @@
 #'
 #' @importFrom raster raster res
 #' @importFrom R.utils getAbsolutePath
-#' @param data_file a character string with the path to the data file.
+#' @param data a character string with the path to the data file. Or a RasterBrick.
 #' @param new_res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).
-#' @return No return value, called to aggregate and store the data file.
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' @return An aggregated RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
@@ -14,12 +15,12 @@
 #' z <- rescale_data("dummie.nc", 1)
 #' }
 
-rescale_data <- function(data_file, new_res){
+rescale_data <- function(data, new_res, autosave = FALSE){
   if (new_res%%0.25 != 0) {
     stop("Error: New resolution must be a multiple of 0.25")
   }
-  nc_in <- getAbsolutePath(data_file)
-  checker <- name_check(data_file)
+  nc_in <- getAbsolutePath(data)
+  checker <- name_check(data)
   if (checker$length == 8) {
     if (new_res < 1) {
       checker$name[7] <- sub("\\.", "", new_res)
@@ -38,7 +39,15 @@ rescale_data <- function(data_file, new_res){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  dummie_aggregated <- aggregate_brick(nc_in, new_res)
-  save_nc(dummie_aggregated, nc_out)
-  return(invisible())
+  if (is.character(data)){
+    dummie_aggregated <- aggregate_brick(nc_in, new_res)
+  } else {
+    dummie_aggregated <- aggregate_brick(data, new_res)
+  }
+  if (autosave){
+    save_nc(dummie_aggregated, nc_out)
+    return(invisible())
+  } else {
+    return(dummie_aggregated)
+  }
 }

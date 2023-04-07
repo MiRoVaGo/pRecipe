@@ -4,10 +4,10 @@
 \alias{plot_map}
 \title{Precipitation map plot}
 \usage{
-plot_map(dummie)
+plot_map(x)
 }
 \arguments{
-\item{dummie}{a .nc file with precipitation}
+\item{x}{a .nc file with precipitation}
 }
 \value{
 ggplot object
