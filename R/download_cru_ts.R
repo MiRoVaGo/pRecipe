@@ -11,10 +11,15 @@
 #' \item{"land" for data sets with land only coverage,}
 #' \item{"ocean", for data sets with ocean only coverage.}
 #' }
+#' @param time_res a character string with the desired time resolution. Suitable options are:
+#' \itemize{
+#' \item{"monthly",}
+#' \item{"yearly".}
+#' }
 #' @return No return value, called to download the data set.
 #' @keywords internal
 
-download_cru_ts <- function(folder_path = ".", domain = "raw"){
+download_cru_ts <- function(folder_path = ".", domain = "raw", time_res = "monthly"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
@@ -25,7 +30,7 @@ download_cru_ts <- function(folder_path = ".", domain = "raw"){
   }
   zenodo_base <- "https://zenodo.org/record/7808922/files/"
   zenodo_end <- "?download=1"
-  file_name <- paste0("cru-ts_tp_mm_", domain, "_190101_202112_025_monthly.nc")
+  file_name <- paste0("cru-ts_tp_mm_", domain, "_190101_202112_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

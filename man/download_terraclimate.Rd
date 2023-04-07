@@ -4,7 +4,7 @@
 \alias{download_terraclimate}
 \title{TERRACLIMATE data downloader}
 \usage{
-download_terraclimate(folder_path = ".", domain = "raw")
+download_terraclimate(folder_path = ".", domain = "raw", time_res = "monthly")
 }
 \arguments{
 \item{folder_path}{a character string with the path where the data will be downloaded.}
@@ -15,6 +15,12 @@ download_terraclimate(folder_path = ".", domain = "raw")
 \item{"global" for data sets with global (land and ocean) coverage,}
 \item{"land" for data sets with land only coverage,}
 \item{"ocean", for data sets with ocean only coverage.}
+}}
+
+\item{time_res}{a character string with the desired time resolution. Suitable options are:
+\itemize{
+\item{"monthly",}
+\item{"yearly".}
 }}
 }
 \value{
