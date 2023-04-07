@@ -7,7 +7,7 @@
 aggregate_brick(x, new_res)
 }
 \arguments{
-\item{x}{a character string}
+\item{x}{a character string. Or a RasterBrick}
 
 \item{new_res}{numeric}
 }

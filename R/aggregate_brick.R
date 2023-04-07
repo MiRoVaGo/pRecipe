@@ -3,9 +3,9 @@
 #' Function to aggregate a raster brick
 #'
 #' @import  parallel
-#' @importFrom methods as
+#' @importFrom methods as is
 #' @importFrom raster aggregate as.list brick setZ
-#' @param x a character string
+#' @param x a character string. Or a RasterBrick
 #' @param new_res numeric
 #' @return raster brick
 #' @keywords internal
