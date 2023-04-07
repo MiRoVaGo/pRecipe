@@ -5,6 +5,7 @@
 #' @import data.table
 #' @importFrom methods as is
 #' @importFrom raster brick calc nlayers setZ subset zApply
+#' @importFrom utils tail
 #' @param x a character string with the path to the data file. Or a RasterBrick.
 #' @param annual a character string with the desired aggregation function. Suitable options are:
 #' \itemize{

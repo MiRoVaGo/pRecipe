@@ -12,6 +12,7 @@
 #' \item "type" (default)
 #' \item "seasons" (only works properly with monthly data)
 #' }
+#' @param ... extra arguments for plot aesthetics
 #' @return plot object
 #' @export
 

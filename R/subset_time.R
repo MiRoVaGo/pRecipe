@@ -7,6 +7,7 @@
 #' @importFrom R.utils getAbsolutePath
 #' @param data a character string with the path to the data file. Or a RasterBrick.
 #' @param years numeric vector. Time range in the form: (start_year, end_year)
+#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
 #' @return A subsetted RasterBrick.
 #' @export
 #' @examples
