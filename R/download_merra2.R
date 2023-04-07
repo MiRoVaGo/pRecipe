@@ -19,7 +19,7 @@ download_merra2 <- function(folder_path = ".", domain = "raw"){
   options(timeout = 6000)
   on.exit(options(old_options))
   if (domain == "raw"){domain <- "global"}
-  zenodo_base <- "https://zenodo.org/record/7794022/files/"
+  zenodo_base <- "https://zenodo.org/record/7808922/files/"
   zenodo_end <- "?download=1"
   file_name <- paste0("merra2_tp_mm_", domain, "_198001_202301_025_monthly.nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)

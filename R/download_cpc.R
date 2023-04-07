@@ -23,7 +23,7 @@ download_cpc <- function(folder_path = ".", domain = "raw"){
   } else {
     warning(paste0('The ', domain, ' domain is not available'))
   }
-  zenodo_base <- "https://zenodo.org/record/7794022/files/"
+  zenodo_base <- "https://zenodo.org/record/7808922/files/"
   zenodo_end <- "?download=1"
   file_name <- paste0("cpc_tp_mm_", domain, "_197901_202208_025_monthly.nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
