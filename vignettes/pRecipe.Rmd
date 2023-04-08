@@ -80,7 +80,7 @@ CRU TS v4.06 | 0.5$^\circ$ | Land | Monthly | 1901/01-2021/12 | [Download](https
 EM-EARTH | 0.1$^\circ$ | Land | Daily | 1950/01-2019/12 | [Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad) | @tang_em-earth_2022
 GHCN v2 | 5$^\circ$ | Land | Monthly | 1900/01-2015/05 | [Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html) | @peterson_overview_1997
 GPCC v2020 | 0.25$^\circ$ | Land | Monthly | 1891/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.gpcc.html) | @schneider_gpcc_2011
-PRECL/L | 0.5$^\circ$ | Land | Monthly | 1948/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.precl.html) | @chen_global_2002
+PREC/L | 0.5$^\circ$ | Land | Monthly | 1948/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.precl.html) | @chen_global_2002
 UDel v5.01 | 0.5$^\circ$ | Land | Monthly | 1901/01-2017/12 | [Download](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) | @willmott_terrestrial_2001
 
 ### Satellite-Based Products
