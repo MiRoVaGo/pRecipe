@@ -31,6 +31,10 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
+library(pRecipe)
+data("era5_global_ts")
+data("era5_ce_ts")
+data("era5_cze_ts")
 ```
 
 `pRecipe` was conceived back in 2019 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czech Republic. Designed with reproducible science in mind, **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales.
@@ -69,47 +73,50 @@ E.g., GPCP v2.3 [@adler_global_2018] would be:
 
 ### Gauge-Based Products
 
-Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
--------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-CPC-Global | 0.5$^\circ$ | Daily | 1979-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html) | @xie_cpc_2010
-CRU TS v4.06 | 0.5$^\circ$ | Monthly | 1901-01 to 2021-12 | [Download](https://crudata.uea.ac.uk/cru/data/hrg/) | @harris_version_2020
-EM-EARTH | 0.1$^\circ$ | Daily | 1950-01 to 2019-12 | [Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad) | @tang_em-earth_2022
-GHCN v2 | 5$^\circ$ | Monthly | 1900-01 to 2015-05 | [Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html) | @peterson_overview_1997
-GPCC v2020 | 0.25$^\circ$ | Monthly | 1891-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.gpcc.html) | @schneider_gpcc_2011
-PRECL/L | 0.5$^\circ$ | Monthly | 1948-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.precl.html) | @chen_global_2002
-UDel v5.01 | 0.5$^\circ$ | Monthly | 1901-01 to 2017-12 | [Download](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) | @willmott_terrestrial_2001
+Data Set | Spatial Resolution | Spatial Coverage | Temporal Resolution | Record Length | Get Data | Reference
+--------------|:-:|:-:|:-:|:------------:|:-:|---------------:
+CPC-Global | 0.5$^\circ$ | Land | Daily | 1979/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html) | @xie_cpc_2010
+CRU TS v4.06 | 0.5$^\circ$ | Land | Monthly | 1901/01-2021/12 | [Download](https://crudata.uea.ac.uk/cru/data/hrg/) | @harris_version_2020
+EM-EARTH | 0.1$^\circ$ | Land | Daily | 1950/01-2019/12 | [Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad) | @tang_em-earth_2022
+GHCN v2 | 5$^\circ$ | Land | Monthly | 1900/01-2015/05 | [Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html) | @peterson_overview_1997
+GPCC v2020 | 0.25$^\circ$ | Land | Monthly | 1891/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.gpcc.html) | @schneider_gpcc_2011
+PRECL/L | 0.5$^\circ$ | Land | Monthly | 1948/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.precl.html) | @chen_global_2002
+UDel v5.01 | 0.5$^\circ$ | Land | Monthly | 1901/01-2017/12 | [Download](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) | @willmott_terrestrial_2001
 
 ### Satellite-Based Products
 
-Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
--------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-CHIRPS v2.0 | 0.05$^\circ$ | Monthly | 1981-01 to 2022-07 | [Download](https://www.chc.ucsb.edu/data/chirps) | @funk_climate_2015
-CMAP | 2.5$^\circ$ | Monthly | 1979-01 to 2022-07 | [Download](https://psl.noaa.gov/data/gridded/data.cmap.html) | @xie_global_1997
-CMORPH | 0.25$^\circ$ | Daily | 1998-01 to 2021-12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
-GPCP v2.3 | 0.5$^\circ$ | Monthly | 1979-01 to 2022-05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_global_2018
-GPM IMERGM v06 | 0.1$^\circ$ | Monthly | 2000-06 to 2020-12 | [Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06) | @huffman_gpm_2019
-MSWEP v2.8 | 0.1$^\circ$ | Monthly | 1979-02 to 2022-06 | [Download](http://www.gloh2o.org/mswep/) | @beck_mswep_2019
-PERSIANN-CDR | 0.25$^\circ$ | Monthly | 1983-01 to 2022-06 | [Download](https://chrsdata.eng.uci.edu/) | @ashouri_persiann-cdr_2015
-TRMM 3B43 v7 | 0.25$^\circ$ | Monthly | 1998-01 to 2019-12 | [Download](https://doi.org/10.5067/TRMM/TMPA/MONTH/7) | @huffman_trmm_2010
+Data Set | Spatial Resolution | Spatial Coverage | Temporal Resolution | Record Length | Get Data | Reference
+--------------|:-:|:-:|:-:|:------------:|:-:|---------------:
+CHIRPS v2.0 | 0.05$^\circ$ | 50$^\circ$S-N Land | Monthly | 1981/01-2022/07 | [Download](https://www.chc.ucsb.edu/data/chirps) | @funk_climate_2015
+CMAP | 2.5$^\circ$ | Global | Monthly | 1979/01-2022/07 | [Download](https://psl.noaa.gov/data/gridded/data.cmap.html) | @xie_global_1997
+CMORPH | 0.25$^\circ$ | 60$^\circ$S-N Global | Daily | 1998/01-2021/12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
+GPCP v2.3 | 0.5$^\circ$ | Global | Monthly | 1979/01-2022/05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_global_2018
+GPM IMERGM v06 | 0.1$^\circ$ | Global | Monthly | 2000/06-2020/12 | [Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06) | @huffman_gpm_2019
+MSWEP v2.8 | 0.1$^\circ$ | Global | Monthly | 1979/02-2022/06 | [Download](http://www.gloh2o.org/mswep/) | @beck_mswep_2019
+PERSIANN-CDR | 0.25$^\circ$ | 60$^\circ$S-N Global | Monthly | 1983/01-2022/06 | [Download](https://chrsdata.eng.uci.edu/) | @ashouri_persiann-cdr_2015
+TRMM 3B43 v7 | 0.25$^\circ$ | 50$^\circ$S-N Global | Monthly | 1998/01-2019/12 | [Download](https://doi.org/10.5067/TRMM/TMPA/MONTH/7) | @huffman_trmm_2010
 
 ### Reanalysis Products
 
-Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
--------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-20CR v3 | 1$^\circ$ | Monthly | 1836-01 to 2015-12 | [Download](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html) | @slivinski_towards_2019
-ERA-20C | 1.125$^\circ$ | Monthly | 1900-01 to 2010-12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era-20c) | @poli_era-20c_2016
-ERA5 | 0.25$^\circ$ | Monthly | 1959-01 to 2021-12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5) | @hersbach_era5_2020
-NCEP/NCAR R1 | 1.875$^\circ$ | Monthly | 1948-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html) | @kalnay_ncepncar_1996
-NCEP/DOE R2 | 1.875$^\circ$ | Monthly | 1979-01 to 2022-08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis2.html) | @kanamitsu_ncepdoe_2002
+Data Set | Spatial Resolution | Spatial Coverage | Temporal Resolution | Record Length | Get Data | Reference
+--------------|:-:|:-:|:-:|:------------:|:-:|---------------:
+20CR v3 | 1$^\circ$ | Global | Monthly | 1836/01-2015/12 | [Download](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html) | @slivinski_towards_2019
+ERA-20C | 1.125$^\circ$ | Global | Monthly | 1900/01-2010/12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era-20c) | @poli_era-20c_2016
+ERA5 | 0.25$^\circ$ | Global | Monthly | 1959/01-2021/12 | [Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5) | @hersbach_era5_2020
+JRA-55 | 1.25$^\circ$ | Global | Monthly | 1958/01-2021/12 | [Download](https://rda.ucar.edu/datasets/ds628.1/dataaccess/) | @kobayashi_jra-55_2015
+MERRA-2 | 0.5$^\circ$ x 0.625$^\circ$ | Global | Monthly | 1980/01-2023/01 | [Download](https://disc.gsfc.nasa.gov/datasets?page=1&project=MERRA-2) | @gelaro_modern-era_2017
+NCEP/NCAR R1 | 1.875$^\circ$ | Global | Monthly | 1948/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html) | @kalnay_ncepncar_1996
+NCEP/DOE R2 | 1.875$^\circ$ | Global | Monthly | 1979/01-2022/08 | [Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis2.html) | @kanamitsu_ncepdoe_2002
 
 ### Hydrological Model Forcing
 
-Data Set | Spatial Resolution | Temporal Resolution | Record Length | Get Data | Reference
--------------- | :-------: | :-------: | :------------: | :--------: | ---------------:
-GLDAS CLSM v2.0 | 0.25$^\circ$ | Daily | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
-GLDAS NOAH v2.0 | 0.25$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
-GLDAS VIC v2.0 | 1$^\circ$ | Monthly | 1948-01 to 2014-12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
-TerraClimate | 4$km$ | Monthly | 1958-01 to 2021-12 | [Download](https://www.climatologylab.org/terraclimate.html) | @abatzoglou_terraclimate_2018
+Data Set | Spatial Resolution | Spatial Coverage | Temporal Resolution | Record Length | Get Data | Reference
+--------------|:-:|:-:|:-:|:------------:|:-:|---------------:
+FLDAS | 0.1$^\circ$ | Land | Monthly | 1982/01-2021/12 | [Download](https://ldas.gsfc.nasa.gov/fldas/fldas-data-download) | @mcnally_land_2017
+GLDAS CLSM v2.0 | 0.25$^\circ$ | Land | Daily | 1948/01-2014/12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS NOAH v2.0 | 0.25$^\circ$ | Land | Monthly | 1948/01-2014/12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+GLDAS VIC v2.0 | 1$^\circ$ | Land | Monthly | 1948/01-2014/12 | [Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data) | @rodell_global_2004
+TerraClimate | 4$km$ | Land | Monthly | 1958/01-2021/12 | [Download](https://www.climatologylab.org/terraclimate.html) | @abatzoglou_terraclimate_2018
 
 # Recipe
 
@@ -166,17 +173,18 @@ Once we have downloaded our database, we can start processing the data with:
 
 ### Subset
 
-To subset our data to a desired region and period of interest, we use the `subset_spacetime` function, which has three arguments *data_file*, *years*, and *bbox*.
+To subset our data to a desired region and period of interest, we use the `subset_spacetime` function, which has four arguments *data_file*, *years*, *bbox*, and *autosave*.
 
 * *data_file* is the path to the data set of interest. The output file will be stored in the same location of the input file.
 * *years* is the period of interest in the form (start_year, end_year)
 * *bbox* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
+* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
 
 Let's subset the ERA5 data set over Central Europe (2,28,42,58) for the 1981-2020 period, and inspect its content with `show_info`:
 
 ```{r, eval=FALSE}
 subset_spacetime("era5_tp_mm_global_195901_202112_025_monthly.nc", 
-                 years = c(1981, 2020), bbox = c(2,28,42,58))
+                 years = c(1981, 2020), bbox = c(2,28,42,58), autosave = TRUE)
 show_info("era5_tp_mm_subset_198101_202012_025_monthly.nc")
 ```
 
@@ -194,17 +202,18 @@ show_info("era5_tp_mm_subset_198101_202012_025_monthly.nc")
 
 ### Crop
 
-To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has two arguments *data_file*, and *shp_path*.
+To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has three arguments *data_file*, *shp_path*, *autosave*.
 
 * *data_file* is the path to a ".nc" data set file.
 * *shp_path* is the path to a ".shp" file that we want to use to crop our data.
+* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
 
 
 Let's crop our ERA5 subset to cover only the Czech Republic with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_CZE_shp.zip), and inspect its content with `show_info`:
 
 ```{r, eval=FALSE}
 crop_data(data_file = "era5_tp_mm_subset_198101_202012_025_monthly.nc", 
-          shp_path = "CZE_adm0.shp")
+          shp_path = "CZE_adm0.shp", autosave = TRUE)
 show_info("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
 ```
 
@@ -222,15 +231,15 @@ show_info("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
 
 ### Generate Time series
 
-To make a time series out of our data, we use the `make_ts` function, which has one argument *data_file*.
+To make a time series out of our data, we use the `make_ts` function, which has two argument *data_file* and *autosave*.
 
 * *data_file* is the path to a ".nc" data set file.
+* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
 
 Let's generate the time series for our three different ERA5 data sets (Global, Central Europe, and Czech Republic), and inspect its first 12 rows:
 
 ```{r, eval=FALSE}
-make_ts("era5_tp_mm_global_195901_202112_025_monthly.nc")
-era5_global_ts <- fread("era5_tp_mm_global_195901_202112_025_monthly_ts.csv")
+era5_global_ts <- make_ts("era5_tp_mm_global_195901_202112_025_monthly.nc")
 head(era5_global_ts, 12)
 ```
 
@@ -252,8 +261,7 @@ head(era5_global_ts, 12)
 ```
 
 ```{r, eval=FALSE}
-make_ts("era5_tp_mm_subset_198101_202012_025_monthly.nc")
-era5_ce_ts <- fread("era5_tp_mm_subset_198101_202012_025_monthly_ts.csv")
+era5_ce_ts <- make_ts("era5_tp_mm_subset_198101_202012_025_monthly.nc")
 head(era5_ce_ts, 12)
 ```
 
@@ -275,8 +283,7 @@ head(era5_ce_ts, 12)
 ```
 
 ```{r, eval=FALSE}
-make_ts("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
-era5_cze_ts <- fread("era5_tp_mm_cropped_198101_202012_025_monthly_ts.csv")
+era5_cze_ts <-make_ts("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
 head(era5_cze_ts, 12)
 ```
 
@@ -301,6 +308,7 @@ head(era5_cze_ts, 12)
 
 Either after we have processed our data as required or right after downloaded, we have six different options to visualize our data:
 
+* `plot_taylor` to see a Taylor Diagram (requires a referential data set).
 * `plot_map` to see the Cartesian lon-lat map of the first raster layer.
 * `plot_line` to see the average time series.
 * `plot_heatmap` to see a heatmap of all monthly values.
@@ -340,13 +348,6 @@ plot_map(czechia[[1]])
 To draw a time series generated by `make_ts`, we use any of the options below, which takes only a `make_ts` ".csv" generated file.
 
 #### Line
-
-```{r, include=FALSE}
-library(pRecipe)
-data("era5_global_ts")
-data("era5_ce_ts")
-data("era5_cze_ts")
-```
 
 ```{r}
 plot_line(era5_global_ts)
