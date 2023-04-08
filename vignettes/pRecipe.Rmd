@@ -133,15 +133,17 @@ library(pRecipe)
 
 ## Download
 
-Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has two arguments *data_name* and *destination*.
+Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has four arguments *data_name*, *destination*, *domain*, and *time_res*.
 
 * *data_name* is set to "all" by default, but you can specify the names of your data sets of interest only.
 * *destination* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder] instead.
+* *domain* is set to "raw" by default, but you can specify the domain of your interest only (e.g., "ocean" for ocean only data sets).
+* *time_res* is set to "monthly" by default, but if you prefer you can also download annual data with "yearly".
 
 Let's download the ERA5 data set and inspect its content with `show_info`:
 
 ```{r, eval=FALSE}
-download_data(data_name = "era5", destination = ".")
+download_data(data_name = "era5")
 show_info("era5_tp_mm_global_195901_202112_025_monthly.nc")
 ```
 
@@ -175,7 +177,7 @@ To subset our data to a desired region and period of interest, we use the `subse
 * *data_file* is the path to the data set of interest. The output file will be stored in the same location of the input file.
 * *years* is the period of interest in the form (start_year, end_year)
 * *bbox* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
-* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
+* *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
 
 Let's subset the ERA5 data set over Central Europe (2,28,42,58) for the 1981-2020 period, and inspect its content with `show_info`:
 
@@ -203,7 +205,7 @@ To further crop our data to a desired polygon other than a rectangle, we use the
 
 * *data_file* is the path to a ".nc" data set file.
 * *shp_path* is the path to a ".shp" file that we want to use to crop our data.
-* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
+* *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
 
 
 Let's crop our ERA5 subset to cover only the Czech Republic with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_CZE_shp.zip), and inspect its content with `show_info`:
@@ -231,7 +233,7 @@ show_info("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
 To make a time series out of our data, we use the `make_ts` function, which has two argument *data_file* and *autosave*.
 
 * *data_file* is the path to a ".nc" data set file.
-* *autosave* logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file.
+* *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
 
 Let's generate the time series for our three different ERA5 data sets (Global, Central Europe, and Czech Republic), and inspect its first 12 rows:
 
