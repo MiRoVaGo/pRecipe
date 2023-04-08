@@ -129,9 +129,6 @@ In this introductory recipe we will first download the ERA5 data set. We will th
 ```{r, eval=FALSE}
 install.packages('pRecipe')
 library(pRecipe)
-#Load additional packages
-library(data.table)
-library(raster)
 ```
 
 ## Download
@@ -323,21 +320,21 @@ Let's plot our three different ERA5 data sets (Global, Central Europe, and Czech
 To see a map of any data set raw or processed, we use `plot_map` which takes only one layer of the RasterBrick as input.
 
 ```{r, eval=FALSE}
-global <- brick("era5_tp_mm_global_195901_202112_025_monthly.nc")
+global <- raster::brick("era5_tp_mm_global_195901_202112_025_monthly.nc")
 plot_map(global[[1]])
 ```
 
 ![](plots/map.png){width=90%}
 
 ```{r, eval=FALSE}
-central_europe <- brick("era5_tp_mm_subset_198101_202012_025_monthly.nc")
+central_europe <- raster::brick("era5_tp_mm_subset_198101_202012_025_monthly.nc")
 plot_map(central_europe[[1]])
 ```
 
 ![](plots/map_ceu.png){width=90%}
 
 ```{r, eval=FALSE}
-czechia <- brick("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
+czechia <- raster::brick("era5_tp_mm_cropped_198101_202012_025_monthly.nc")
 plot_map(czechia[[1]])
 ```
 
