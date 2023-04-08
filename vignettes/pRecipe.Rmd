@@ -92,7 +92,7 @@ CMAP | 2.5$^\circ$ | Global | Monthly | 1979/01-2022/07 | [Download](https://psl
 CMORPH | 0.25$^\circ$ | 60$^\circ$S-N Global | Daily | 1998/01-2021/12 | [Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/) | @joyce_cmorph_2004
 GPCP v2.3 | 0.5$^\circ$ | Global | Monthly | 1979/01-2022/05 | [Download](https://psl.noaa.gov/data/gridded/data.gpcp.html) | @adler_global_2018
 GPM IMERGM v06 | 0.1$^\circ$ | Global | Monthly | 2000/06-2020/12 | [Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06) | @huffman_gpm_2019
-MSWEP v2.8 | 0.1$^\circ$ | Global | Monthly | 1979/02-2022/06 | [Download](http://www.gloh2o.org/mswep/) | @beck_mswep_2019
+MSWEP v2.8 | 0.1$^\circ$ | Global | Monthly | 1979/02-2022/06 | [Download](https://www.gloh2o.org/mswep/) | @beck_mswep_2019
 PERSIANN-CDR | 0.25$^\circ$ | 60$^\circ$S-N Global | Monthly | 1983/01-2022/06 | [Download](https://chrsdata.eng.uci.edu/) | @ashouri_persiann-cdr_2015
 TRMM 3B43 v7 | 0.25$^\circ$ | 50$^\circ$S-N Global | Monthly | 1998/01-2019/12 | [Download](https://doi.org/10.5067/TRMM/TMPA/MONTH/7) | @huffman_trmm_2010
 
