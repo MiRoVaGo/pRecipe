@@ -77,18 +77,8 @@ subset_spacetime <- function(data, years, bbox, autosave = FALSE){
   if (is(dummie_subset, "RasterStack")) {
     dummie_subset <- brick(dummie_subset)
     dummie_names <- names(dummie_subset)
-    if (!Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
+    if (Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
                            dummie_names))) {
-      if (grepl("persiann", nc_out)) {
-        dummie_names <- sub("^.", "", dummie_names)
-        dummie_names <- as.numeric(dummie_names)
-        dummie_Z <- as.Date(dummie_names, origin = "1983-01-01 00:00:00")
-      } else if (grepl("gldas-clsm", nc_out)) {
-        dummie_names <- sub("^.", "", dummie_names)
-        dummie_names <- as.numeric(dummie_names)
-        dummie_Z <- as.Date(dummie_names, origin = "1948-01-01 00:00:00")
-      }
-    } else {
       dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
     }
     dummie_subset <- setZ(dummie_subset, dummie_Z)
