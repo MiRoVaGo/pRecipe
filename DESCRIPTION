@@ -1,6 +1,6 @@
 Package: pRecipe
 Title: Precipitation R Recipes
-Version: 2.3.2
+Version: 2.4.0
 Authors@R:
   c(person(given = "Mijael Rodrigo", family = "Vargas Godoy",
            email = "mirovago@gmail.com", role = c("aut", "cre"),
@@ -28,6 +28,8 @@ Suggests:
     rmarkdown,
     knitr,
     spelling,
+    kableExtra,
+    tibble,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US

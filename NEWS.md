@@ -1,3 +1,11 @@
+#pRecipe 2.4.0
+
+* yearly data has been  added to the database
+* added pod, far, csi, and nse functions
+* updated the vignette
+* updated citation info
+* updated documentation accordingly
+
 # pRecipe 2.3.0
 
 * saving is now optional

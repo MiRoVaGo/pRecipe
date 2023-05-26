@@ -4,12 +4,17 @@ CMAP
 CMORPH
 autosave
 CPC
+csi
+nse
+subdaily
+th
 CRU
 Earthdata
 GES
 GHCN
 GLDAS
 Godoy
+Sutcliffe
 GPCC
 GPCP
 GPM

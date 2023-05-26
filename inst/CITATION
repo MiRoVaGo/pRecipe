@@ -10,3 +10,14 @@ bibentry(
   note     = note,
   url      = "https://CRAN.R-project.org/package=pRecipe "
 )
+
+bibentry(
+  bibtype   = "Article",
+  title     = "pRecipe: A global precipitation climatology toolbox and database",
+  author    = c(person(given = c("Mijael", "Rodrigo"), family = c("Vargas", "Godoy")),
+                person(given = "Yannis", family = "Markonis")),
+  journal   = "Environmental Modelling & Software",
+  pages     = "105711",
+  year      = "2023",
+  publisher = "Elsevier"
+)
