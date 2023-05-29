@@ -59,13 +59,7 @@ subset_spacetime <- function(data, years, bbox, autosave = FALSE){
       dummie_dates <- as.Date(dummie_dates)
     } else if (!Reduce("|",grepl("-01", dummie_dates))) {
       dummie_dates <- as.numeric(dummie_dates)
-      if (grepl("persiann", nc_out)) {
-        dummie_origin <- "1983-01-01 00:00:00"
-      } else if (grepl("gldas-", nc_out)) {
-        dummie_origin <- "1948-01-01 00:00:00"
-      } else {
-        dummie_origin <- "1970-01-01 00:00:00"
-      }
+      dummie_origin <- "1970-01-01 00:00:00"
       dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
     } else {
       dummie_dates <- as.Date(dummie_dates)
