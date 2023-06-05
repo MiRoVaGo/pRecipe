@@ -4,10 +4,12 @@
 \alias{plot_map}
 \title{Precipitation map plot}
 \usage{
-plot_map(x)
+plot_map(x, unit = "mm")
 }
 \arguments{
 \item{x}{a .nc file with precipitation}
+
+\item{unit}{a character string with the variable's unit of measurement to be used for the axis title}
 }
 \value{
 ggplot object
