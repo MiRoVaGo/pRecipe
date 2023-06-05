@@ -8,10 +8,11 @@
 #' @importFrom raster as.data.frame
 #' @importFrom stats quantile
 #' @param x a .nc file with precipitation
+#' @param unit a character string with the variable's unit of measurement to be used for the axis title
 #' @return ggplot object
 #' @export
 
-plot_map <- function(x){
+plot_map <- function(x, unit = 'mm'){
   if (!is(x, 'data.table')){
     if (!is(x, "RasterLayer")){
       stop("Error: please plot one Raster layer at the time")
@@ -36,7 +37,8 @@ plot_map <- function(x){
     coord_cartesian(xlim = c(min(x$x), max(x$x)), 
                     ylim = c(min(x$y), max(x$y)),
                     expand = map_expand) +
-    labs(x = NULL, y = NULL, fill = "[mm]", title = format(as.Date(x$Z[1]), "%B %Y")) +
+    labs(x = NULL, y = NULL, fill = paste0('[', unit, ']'),
+         title = format(as.Date(x$Z[1]), "%B %Y")) +
     scale_fill_distiller(palette = "YlGnBu",
                          direction = 1,
                          na.value = "#081D58",
