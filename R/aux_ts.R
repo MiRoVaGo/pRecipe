@@ -26,6 +26,8 @@ aux_ts <- function(dummie_name){
       dummie <- c("ERA-20C", "Reanalysis")
     } else if (dummie_name == "era5"){
       dummie <- c("ERA5", "Reanalysis")
+    } else if (dumie_name == "era5_land"){
+      dummie <- c("ERA5-Land", "Reanalysis")
     } else if (dummie_name == "ghcn"){
       dummie <- c("GHCN v2", "Gauge-based")
     } else if (dummie_name == "gldas-clsm"){
@@ -34,6 +36,8 @@ aux_ts <- function(dummie_name){
       dummie <- c("GLDAS NOAH v2.0", "Model forcing")
     } else if (dummie_name == "gldas-vic"){
       dummie <- c("GLDAS VIC v2.0", "Model forcing")
+    } else if(dummie_name == "gleam"){
+      dummie <- c("GLEAM v3.7a", "Satellite-based")
     } else if (dummie_name == "gpcc"){
       dummie <- c("GPCC v2020", "Gauge-based")
     } else if (dummie_name == "gpcp"){
