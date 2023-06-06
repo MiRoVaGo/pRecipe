@@ -67,7 +67,7 @@ aux_ts <- function(dummie_name){
     } else if (dummie_name == "fldas"){
       dummie <- c("FLDAS", "Model forcing")
     } else {
-      dummie <- c(NULL, NULL)
+      dummie <- NULL
     }
   return(dummie)
 }
