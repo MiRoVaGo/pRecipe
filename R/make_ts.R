@@ -21,6 +21,7 @@
 #' \item{"gldas-clsm" for GLDAS CLSM,}
 #' \item{"gldas-noah" for GLDAS NOAH,}
 #' \item{"gldas-vic" for GLDAS VIC,}
+#' \item{"gleam" for GLEAM v3.7a,}
 #' \item{"gpcc" for GPCC v2020,}
 #' \item{"gpcp" for GPCP v2.3,}
 #' \item{"gpm_imerg" for GPM IMERGM Final v06,}
