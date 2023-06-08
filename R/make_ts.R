@@ -62,7 +62,7 @@ make_ts <- function(data, name = NULL, autosave = FALSE){
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if(is.null(info)){
+  if(is.null(name)){
     dummie_cols <- aux_ts(checker$name[1])
   } else {
     dummie_cols <- aux_ts(name)
