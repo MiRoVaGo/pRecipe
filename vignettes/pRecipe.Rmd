@@ -240,7 +240,7 @@ To further crop our data to a desired polygon other than a rectangle, we use the
 Let's crop our GPM-IMERG subset to cover only Czechia with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_CZE_shp.zip), and inspect its content with `show_info`:
 
 ```{r crop, eval = FALSE}
-gpm_cz <- crop_data(x = gpm_subset, shp_path = "CZE_adm0.shp")
+gpm_cz <- crop_data(x = gpm_subset, shp_path = "gadm41_CZE_0.shp")
 show_info(gpm_cz)
 ```
 
@@ -259,15 +259,16 @@ show_info(gpm_cz)
 
 ### Generate Time series
 
-To make a time series out of our data, we use the `make_ts` function, which has two argument *data* and *autosave*.
+To make a time series out of our data, we use the `make_ts` function, which has three arguments *data*, *name*, and *autosave*.
 
 * *data* is the path to a ".nc" data set file or a RasterBrick object.
+* *name* is the short name of a data set. E.g., 'gpm-imerg'.
 * *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
 
 Let's generate the time series for our three different GPM-IMERGM data sets (Global, Central Europe, and Czechia), and inspect its first 12 rows:
 
 ```{r global_ts, eval=FALSE}
-gpm_global_ts <- make_ts(gpm_global)
+gpm_global_ts <- make_ts(gpm_global, 'gpm-imerg')
 head(gpm_global_ts, 12)
 ```
 
@@ -288,7 +289,7 @@ head(gpm_global_ts, 12)
 ```
 
 ```{r subset_ts, eval=FALSE}
-gpm_subset_ts <- make_ts(gpm_subset)
+gpm_subset_ts <- make_ts(gpm_subset, 'gpm-imerg')
 head(gpm_subset_ts, 12)
 ```
 
@@ -309,7 +310,7 @@ head(gpm_subset_ts, 12)
 ```
 
 ```{r cz_ts, eval=FALSE}
-gpm_cz_ts <- make_ts(gpm_cz)
+gpm_cz_ts <- make_ts(gpm_cz, 'gpm-imerg')
 head(gpm_cz_ts, 12)
 ```
 
@@ -328,8 +329,6 @@ head(gpm_cz_ts, 12)
 11: 2001-11-01  72.33474 GPM IMERGM v06 Satellite-based
 12: 2001-12-01  91.77480 GPM IMERGM v06 Satellite-based
 ```
-
-**NOTE:** When working with files from memory (i.e., without saving .nc files) the `make_ts` functions may not generate the name and type columns appropriately.
 
 ## Visualize
 
