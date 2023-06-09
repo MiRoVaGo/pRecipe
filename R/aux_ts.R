@@ -26,7 +26,7 @@ aux_ts <- function(dummie_name){
       dummie <- c("ERA-20C", "Reanalysis")
     } else if (dummie_name == "era5"){
       dummie <- c("ERA5", "Reanalysis")
-    } else if (dumie_name == "era5_land"){
+    } else if (dummie_name == "era5_land"){
       dummie <- c("ERA5-Land", "Reanalysis")
     } else if (dummie_name == "ghcn"){
       dummie <- c("GHCN v2", "Gauge-based")

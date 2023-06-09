@@ -59,9 +59,6 @@ make_ts <- function(data, name = NULL, autosave = FALSE){
     nc_out <- sub(".nc$", "", nc_in)
     nc_out <- paste0(nc_out, "_ts.csv")
   }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
   if(is.null(name)){
     dummie_cols <- aux_ts(checker$name[1])
   } else {
@@ -75,6 +72,9 @@ make_ts <- function(data, name = NULL, autosave = FALSE){
   csv_table$name <- dummie_cols[1]
   csv_table$type <- dummie_cols[2]
   if (autosave){
+    nc_out <- sub(".nc.nc.*", ".nc", nc_out)
+    check_out <- exists_check(nc_out)
+    if (check_out$exists) stop(check_out$sms)
     fwrite(csv_table, nc_out)
     return(invisible())
   } else {
