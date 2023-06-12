@@ -4,6 +4,7 @@
 #'
 #' @import data.table parallel
 #' @importFrom raster area as.list brick cellStats getZ
+#' @importFrom methods as
 #' @param x a character string
 #' @return data.table variable
 #' @keywords internal
@@ -15,6 +16,9 @@ weighted_average <- function(x){
     dummie_brick <- x
   }
   dummie_dates <- getZ(dummie_brick)
+  if (!inherits(dummie_dates, 'Date')){
+    dummie_dates <- as.Date(dummie_dates)
+  }
   dummie_brick <- as.list(dummie_brick)
   no_cores <- detectCores() - 1
   if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
