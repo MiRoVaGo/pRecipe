@@ -10,7 +10,12 @@
 #' @export
 
 plot_line <- function(x, var = 'Precipitation', unit = 'mm'){
-  p00 <- ggplot(x, aes(x = date, y = value, color = name)) + 
+  if (is.null(x$name)){
+    p00 <- ggplot(x, aes(x = date, y = value, color = '#377eb8'))
+  } else {
+    p00 <- ggplot(x, aes(x = date, y = value, color = name))
+  }
+  p01 <- p00 +
     geom_line() +
     theme_bw() +
     labs(x = NULL, y = paste0('[', unit, ']'), title = var) +
@@ -19,5 +24,5 @@ plot_line <- function(x, var = 'Precipitation', unit = 'mm'){
     theme(plot.title = element_text(size=24),
           axis.text = element_text(size = 20),
           axis.title = element_text(size = 24))
-  return(p00)
+  return(p01)
 }
