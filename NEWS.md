@@ -1,3 +1,9 @@
+#pRecipe 2.5.0
+* added `%>%` operator
+* increased versatility of all plot functions (for evapoRe compatibility)
+* fixed bugs for make_ts() not generating a Date column
+* updated documentation accordingly
+
 #pRecipe 2.4.0
 
 * yearly data has been  added to the database
