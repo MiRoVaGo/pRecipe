@@ -66,7 +66,6 @@ The `pRecipe` data collection was homogenized to these specifications:
 * `<variable>` = total precipitation (tp)
 * `<units>` = millimeters (mm)
 * `<resolution>` = 0.25°
-* `<time step>` = monthly
 
 E.g., GPCP v2.3 [@adler_global_2018] would be:
 
@@ -246,7 +245,7 @@ show_info(gpm_cz)
 
 ```
 [1] "class      : RasterBrick "
-[2] "dimensions : 64, 104, 6656, 480  (nrow, ncol, ncell, nlayers)"
+[2] "dimensions : 64, 104, 6656, 120  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
 [5] "crs        : +proj=longlat +datum=WGS84 "
