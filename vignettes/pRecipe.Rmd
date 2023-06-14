@@ -161,10 +161,10 @@ library(pRecipe)
 
 ## Download
 
-Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has four arguments *data_name*, *destination*, *domain*, and *time_res*.
+Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has four arguments *data_name*, *path*, *domain*, and *time_res*.
 
 * *data_name* is set to "all" by default, but you can specify the names of your data sets of interest only.
-* *destination* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder] instead.
+* *path* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder] instead.
 * *domain* is set to "raw" by default, but you can specify the domain of your interest only. E.g., "ocean" for ocean only data sets (For availability please check the [Data] section). 
 * *time_res* is set to "monthly" by default, but if you prefer you can also download annual data with "yearly".
 
@@ -208,7 +208,7 @@ To subset our data to a desired region and period of interest, we use the `subse
 * *bbox* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
 * *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
 
-Let's subset the GPM-IMERGM data set over Central Europe (2,28,42,58) for the 1981-2020 period, and inspect its content with `show_info`:
+Let's subset the GPM-IMERGM data set over Central Europe (2,28,42,58) for the 2001-2010 period, and inspect its content with `show_info`:
 
 ```{r subset, eval = FALSE}
 gpm_subset <- subset_spacetime(gpm_global, years = c(2001, 2010), bbox = c(2,28,42,58))
@@ -332,7 +332,7 @@ head(gpm_cz_ts, 12)
 
 ## Visualize
 
-Either after we have processed our data as required or right after downloaded, we have six different options to visualize our data:
+Either after we have processed our data as required or right after downloaded, we have different options to visualize our data:
 
 * `plot_taylor` to see a Taylor Diagram (requires a referential data set).
 * `plot_map` to see the Cartesian lon-lat map of the first raster layer.
