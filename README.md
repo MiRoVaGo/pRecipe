@@ -14,8 +14,8 @@ An open-access tool/framework to download, validate, visualize, and analyze mult
 ## Install
 
 ```r
-install.packages("pRecipe")
-
+install.packages("pRecipe") #For the latest CRAN release
+devtools::install_github('MiRoVaGo/pRecipe') #For the latests dev version
 library(pRecipe)
 ```
 
@@ -32,7 +32,7 @@ library(pRecipe)
 
 # Main functionalities: 
 
-* Provides a suite of 24 different data sets.
+* Provides a suite of 27 different data sets.
 * Allows for spatiotemporal aggregation and subsetting.
 * Offers exploratory data analysis tools (plots, summary statistics).
 
@@ -48,4 +48,4 @@ pull request to merge it into dev.
 
 ## Scripting:
 
-For scripting we follow the general group [guidelines](https://github.com/MiRoVaGo/pRecipe/blob/dev/CONTRIBUTING.md)
+For scripting we follow the general group [guidelines](https://github.com/MiRoVaGo/pRecipe/blob/master/CONTRIBUTING.md)
