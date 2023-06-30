@@ -1,25 +1,25 @@
 #' Subset a precipitation data product in time
 #'
-#' The function \code{subset_time} subsets (time) the requested data set and stores it in the same location of the input file.
+#' The function \code{selyear} subsets in time the requested data set and stores it in the same location of the input file.
 #'
 #' @importFrom methods as is
 #' @importFrom raster brick getZ setZ subset
 #' @importFrom R.utils getAbsolutePath
-#' @param data a character string with the path to the data file. Or a RasterBrick.
+#' @param x a character string with the path to the data file. Or a RasterBrick.
 #' @param years numeric vector. Time range in the form: (start_year, end_year)
 #' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
 #' @return A subsetted RasterBrick.
 #' @export
 #' @examples
 #' \dontrun{
-#' subset_time("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
+#' selyear("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
 #' c(2000, 2010), autosave = TRUE)
-#' subset_time("dummie.nc", c(2000, 2010), autosave = TRUE)
+#' selyear("dummie.nc", c(2000, 2010), autosave = TRUE)
 #' }
 
-subset_time <- function(data, years, autosave = FALSE){
-  nc_in <- getAbsolutePath(data)
-  checker <- name_check(data)
+selyear <- function(x, years, autosave = FALSE){
+  nc_in <- getAbsolutePath(x)
+  checker <- name_check(x)
   if (checker$length == 8) {
     checker$name[5] <- paste0(years[1], "-01-01")
     checker$name[6] <- paste0(years[2], "-12-01")
@@ -28,17 +28,16 @@ subset_time <- function(data, years, autosave = FALSE){
     nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
     nc_out <- paste0(nc_mid, nc_out)
   } else {
-    warning("This is not pRecipe data")
     nc_out <- sub(".nc.*", "", nc_in)
     nc_out <- paste0(nc_out, "_subset.nc")
   }
   nc_out <- sub(".nc.nc.*", ".nc", nc_out)
   check_out <- exists_check(nc_out)
   if (check_out$exists) stop(check_out$sms)
-  if (is.character(data)){
+  if (is.character(x)){
     dummie_brick <- brick(nc_in)
   } else {
-    dummie_brick <- data
+    dummie_brick <- x
   }
   start_year <- paste0(years[1], "-01-01")
   end_year <- paste0(years[2], "-12-31")

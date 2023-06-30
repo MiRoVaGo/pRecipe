@@ -50,7 +50,6 @@ mon_to_year <- function(x, stat = "sum", autosave = FALSE){
     nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
     nc_out <- paste0(nc_mid, nc_out)
   } else {
-    warning("This is not pRecipe data")
     nc_out <- sub(".nc.*", "", nc_in)
     nc_out <- paste0(nc_out, "_yearly.nc")
   }

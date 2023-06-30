@@ -13,8 +13,9 @@ Description: An open-access tool/framework to download, validate, visualize,
   scales. Ultimately providing the hydrology science community with the tools
   for consistent and reproducible analysis regarding precipitation.
 Depends: R (>= 4.0.0)
-Imports: grDevices, methods, parallel, stats, utils, data.table, ggplot2,
-  ggpubr, magrittr, ncdf4, openair, raster, R.utils, scales, sf
+Imports: grDevices, methods, parallel, stats, utils, data.table, doParallel,
+  foreach, ggplot2, ggpubr, lubridate, magrittr, ncdf4, openair, raster,
+  R.utils, scales, sf
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -24,7 +25,7 @@ SystemRequirements: PROJ (>= 6, https://proj.org/download.html),
   GDAL (>= 3, https://gdal.org/download.html),
   NetCDF(>= 4, https://www.unidata.ucar.edu/software/netcdf/).
 RoxygenNote: 7.2.3
-Suggests: rmarkdown, knitr, spelling, kableExtra, tibble, testthat (>= 3.0.0)
+Suggests: kableExtra, knitr, rmarkdown, spelling, testthat (>= 3.0.0), tibble 
 Config/testthat/edition: 3
 Language: en-US
 VignetteBuilder: knitr

@@ -4,10 +4,10 @@
 \alias{show_info}
 \title{Show data content}
 \usage{
-show_info(nc_path)
+show_info(x)
 }
 \arguments{
-\item{nc_path}{a character with the path to the desired file}
+\item{x}{a character with the path to the desired file}
 }
 \value{
 character vector with screen print out

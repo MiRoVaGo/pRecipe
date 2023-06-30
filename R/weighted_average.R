@@ -2,7 +2,7 @@
 #'
 #' Function to compute the weighted average of an .nc file
 #'
-#' @import data.table parallel
+#' @import data.table doParallel foreach parallel
 #' @importFrom raster area as.list brick cellStats getZ
 #' @importFrom methods as
 #' @param x a character string
