@@ -3,28 +3,29 @@
 #' The function \code{infoNC} displays the specification of the desired file.
 #'
 #' @importFrom raster brick
-#' @importFrom methods setMethod
+#' @importFrom methods setGeneric setMethod
 #' @importFrom utils capture.output
+#' @param x Raster* Object; character
 #' @export
 
-infoNC <- function(x) UseMethod("infoNC")
+setGeneric("infoNC", function(x) standardGeneric("infoNC"))
 
 #' @rdname infoNC
-#' @method infoNC character
+#' @method infoNC Raster
 
-setMethod('infoNC', 'character',
+setMethod("infoNC", "Raster",
           function(x) {
-            x <- brick(x)
             dummie <- capture.output(x)
             dummie <- dummie[-length(dummie)]
             return(dummie)
           })
 
 #' @rdname infoNC
-#' @method infoNC Raster
+#' @method infoNC character
 
-setMethod('infoNC', 'Raster',
+setMethod("infoNC", "character",
           function(x) {
+            x <- brick(x)
             dummie <- capture.output(x)
             dummie <- dummie[-length(dummie)]
             return(dummie)

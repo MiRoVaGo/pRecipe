@@ -2,15 +2,18 @@
 % Please edit documentation in R/infoNC.R
 \name{infoNC}
 \alias{infoNC}
-\alias{infoNC,character-method}
 \alias{infoNC,Raster-method}
+\alias{infoNC,character-method}
 \title{Show data content}
 \usage{
 infoNC(x)
 
-\S4method{infoNC}{character}(x)
-
 \S4method{infoNC}{Raster}(x)
+
+\S4method{infoNC}{character}(x)
+}
+\arguments{
+\item{x}{Raster* Object; character}
 }
 \description{
 The function \code{infoNC} displays the specification of the desired file.
