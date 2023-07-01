@@ -14,7 +14,7 @@
 #' save_nc(dummie_brick, "gpcp_tp_mm_global_197901_202205_025_monthly.nc")
 #' }
 
-save_nc <- function(dummie_nc, nc_out){
+saveNC <- function(dummie_nc, nc_out){
   lon <- xFromCol(dummie_nc)
   lon <- round(lon, 4)
   lat <- yFromRow(dummie_nc)

@@ -1,6 +1,6 @@
 #' Generate time series
 #'
-#' The function \code{make_ts} generates a csv time series and stored in the same location of the input file.
+#' The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
 #'
 #' @import data.table
 #' @importFrom R.utils getAbsolutePath
@@ -41,11 +41,11 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' make_ts("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
-#' make_ts("dummie.nc")
+#' fldmean("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
+#' fldmean("dummie.nc")
 #' }
 
-make_ts <- function(data, name = NULL, autosave = FALSE){
+fldmean <- function(data, name = NULL, autosave = FALSE){
   nc_in <- getAbsolutePath(data)
   checker <- name_check(data)
   if (checker$length == 8) {

@@ -9,7 +9,7 @@
 
 fix_name_out <- function(nc_out){
   dummie_name <- name_check(nc_out)
-  dummie_date <- show_info(nc_out)
+  dummie_date <- infoNC(nc_out)
   dummie_date <- dummie_date[8]
   dummie_date <- unlist(strsplit(dummie_date, " ", fixed = TRUE))
   dummie_date <- grep("-", dummie_date, value = TRUE)

@@ -42,7 +42,7 @@ sellonlatbox <- function(x, bbox, autosave = FALSE){
                   'SpatialPolygons')
   dummie_subset <- crop(dummie_brick, lonlatbox)
   if (autosave){
-    save_nc(dummie_subset, nc_out)
+    saveNC(dummie_subset, nc_out)
     return(invisible())
   } else {
     return(dummie_subset)

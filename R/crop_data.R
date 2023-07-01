@@ -41,7 +41,7 @@ crop_data <- function(x, shp_path, autosave = FALSE){
     dummie_crop <- mask(x, shp_mask)
   }
   if (autosave){
-    save_nc(dummie_crop, nc_out)
+    saveNC(dummie_crop, nc_out)
     return(invisible())
   } else {
     return(dummie_crop)

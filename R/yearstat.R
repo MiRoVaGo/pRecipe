@@ -1,6 +1,6 @@
 #' Rescale a precipitation data product in time
 #'
-#' The function \code{mon_to_year} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
+#' The function \code{yearstat} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
 #'
 #' @importFrom methods as 
 #' @importFrom raster brick setZ subset zApply
@@ -19,11 +19,11 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' mon_to_year("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
-#' mon_to_year("dummie.nc", autosave = TRUE)
+#' yearstat("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
+#' yearstat("dummie.nc", autosave = TRUE)
 #' }
 
-mon_to_year <- function(x, stat = "sum", autosave = FALSE){
+yearstat <- function(x, stat = "sum", autosave = FALSE){
   nc_in <- getAbsolutePath(x)
   checker <- name_check(x)
   if (checker$length == 8) {
@@ -87,7 +87,7 @@ mon_to_year <- function(x, stat = "sum", autosave = FALSE){
     dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
   }
   if (autosave){
-    save_nc(dummie_yearly, nc_out)
+    saveNC(dummie_yearly, nc_out)
     return(invisible())
   } else {
     return(dummie_yearly)

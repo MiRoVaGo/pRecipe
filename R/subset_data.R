@@ -77,7 +77,7 @@ subset_data <- function(x, years, bbox, autosave = FALSE){
     dummie_subset <- setZ(dummie_subset, dummie_Z)
   }
   if (autosave){
-    save_nc(dummie_subset, nc_out)
+    saveNC(dummie_subset, nc_out)
     fix_name_out(nc_out)
     return(invisible())
   } else {
