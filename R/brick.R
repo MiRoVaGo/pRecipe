@@ -1,3 +1,9 @@
-#' @importFrom raster brick
+#' brick
+#' 
+#' See \code{raster::\link[raster]{brick}} for details.
+#'
+#' @name brick
+#' @keywords internal
 #' @export
-raster::brick
+#' @importFrom raster brick
+NULL
