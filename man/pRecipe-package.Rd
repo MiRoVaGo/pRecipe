@@ -5,8 +5,13 @@
 \alias{pRecipe-package}
 \title{pRecipe: Precipitation R Recipes}
 \description{
-An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
+pRecipe is an R package that facilitates the download, exploration, visualization, and analysis of multi-source precipitation data.
+}
+\references{
+Vargas Godoy, M. R., & Markonis, Y. (2023). pRecipe: A global precipitation climatology toolbox and database. Environmental Modelling & Software, 165, 105711. \doi{10.1016/j.envsoft.2023.105711}
 }
 \author{
-Mijael Rodrigo Vargas Godoy \email{vargas_godoy@fzp.czu.cz} and Yannis Markonis \email{markonis@fzp.czu.cz}
+\strong{Coded by:} Mijael Rodrigo Vargas Godoy \email{vargas_godoy@fzp.czu.cz}
+
+\strong{Conceptual design by:} Mijael Rodrigo Vargas Godoy \email{vargas_godoy@fzp.czu.cz} and Yannis Markonis \email{markonis@fzp.czu.cz}
 }

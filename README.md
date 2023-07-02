@@ -1,51 +1,44 @@
 # pRecipe <img src='man/figures/logo.png' align="right" height="139" />
 
 <!-- badges: start -->
-[![pRecipe](https://img.shields.io/badge/pRecipe-ready%20to%20use-brightgreen)](https://github.com/MiRoVaGo/pRecipe)
 [![R badge](https://img.shields.io/badge/build%20with-%E2%99%A5%20and%20R-blue)](https://github.com/MiRoVaGo/pRecipe)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/pRecipe)](https://cran.r-project.org/package=pRecipe)
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/pRecipe)](https://cran.r-project.org/package=pRecipe)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/pRecipe)](https://CRAN.R-project.org/package=pRecipe)
+[![license](https://img.shields.io/badge/license-GPL3-lightgrey.svg)](https://choosealicense.com/)
 <!-- badges: end -->
 
-## Precipitation R Recipes
-An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation.
+## What is `pRecipe`?
 
-## Install
+An open-access tool/framework to download, validate, visualize, and analyze multi-source precipitation data across various spatio-temporal scales. Ultimately providing the hydrology science community with the tools for consistent and reproducible analysis regarding precipitation (Vargas Godoy and Markonis, 2023).
+
+## Features
+
+* Homogenized database currently encompassing 27 different precipitation data products.
+* Exploratory data analysis.
+* Spatiotemporal analysis.
+* Time series analysis.
+* Simple and aesthetic data visualization.
+
+## Installation
 
 ```r
-install.packages("pRecipe") #For the latest CRAN release
-devtools::install_github('MiRoVaGo/pRecipe') #For the latests dev version
+# Get the latest version of pRecipe
+
+if (!require('devtools')) {install.packages('devtools'); library(devtools)}
+
+install_github('MiRoVaGo/pRecipe')
+
+# Alternatively, the latest CRAN release
+
+install.packages("pRecipe")
+
+#
+
 library(pRecipe)
+?`pRecipe-package`
 ```
 
-# Who will use the package?
+## References
 
-* Researchers
-* Climatologists
-* Meteorologists
-* Remote sensing community (e.g., for validation)
-* Hydrologists
-* Broader audience (earth scientists, agricultural scientists, etc.)
-* Professors & Students (teaching)
-* Data analysts from the industry
-
-# Main functionalities: 
-
-* Provides a suite of 27 different data sets.
-* Allows for spatiotemporal aggregation and subsetting.
-* Offers exploratory data analysis tools (plots, summary statistics).
-
-# Contributing
-## Workflow:
-
-If you would like to contribute to `pRecipe` you should create an issue with the
-enhancement label and state your possible addition in order to check if it 
-belongs in the package or if it is not something we are already working on. If 
-we agree your suggestion should be part of `pRecipe` and no one is already 
-working on it, fork the dev branch, work on your fork, and then create a 
-pull request to merge it into dev.
-
-## Scripting:
-
-For scripting we follow the general group [guidelines](https://github.com/MiRoVaGo/pRecipe/blob/master/CONTRIBUTING.md)
+Vargas Godoy, M.R. and Markonis, Y., 2023. pRecipe: A global precipitation climatology toolbox and database. Environmental Modelling & Software, 165, p.105711.

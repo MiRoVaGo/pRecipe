@@ -1,6 +1,6 @@
 Package: pRecipe
 Title: Precipitation R Recipes
-Version: 2.5.1
+Version: 3.0.0
 Authors@R:
   c(person(given = "Mijael Rodrigo", family = "Vargas Godoy",
            email = "mirovago@gmail.com", role = c("aut", "cre"),
@@ -8,10 +8,10 @@ Authors@R:
     person(given = "Yannis", family = "Markonis",
            email = "imarkonis@gmail.com", role = c("aut", "ths"),
            comment = c(ORCID = "0000-0003-0144-8969")))
-Description: An open-access tool/framework to download, validate, visualize,
-  and analyze multi-source precipitation data across various spatio-temporal
-  scales. Ultimately providing the hydrology science community with the tools
-  for consistent and reproducible analysis regarding precipitation.
+Description: An open-access tool/framework to download, validate, visualize, and
+  analyze multi-source precipitation data. More information and an example of implementation can
+  be found in Vargas Godoy and Markonis (2023,
+  <doi:10.1016/j.envsoft.2023.105711>).
 Depends: R (>= 4.0.0)
 Imports: grDevices, methods, parallel, stats, utils, data.table, doParallel,
   foreach, ggplot2, ggpubr, lubridate, magrittr, ncdf4, openair, raster,
