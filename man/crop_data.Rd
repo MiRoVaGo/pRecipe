@@ -2,22 +2,34 @@
 % Please edit documentation in R/crop_data.R
 \name{crop_data}
 \alias{crop_data}
+\alias{crop_data,Raster-method}
+\alias{crop_data,data.table-method}
+\alias{crop_data,character-method}
 \title{Crop precipitation data sets}
 \usage{
-crop_data(x, shp_path, autosave = FALSE)
+crop_data(x, y)
+
+\S4method{crop_data}{Raster}(x, y)
+
+\S4method{crop_data}{data.table}(x, y)
+
+\S4method{crop_data}{character}(x, y)
 }
 \arguments{
-\item{x}{a character string with the path to the data file. Or a RasterBrick.}
+\item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{shp_path}{a character string with the path to the ".shp" file.}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
+\item{y}{filename (character). Path to a *.shp file.}
 }
 \value{
-A cropped RasterBrick.
+Raster* object; data.table
 }
 \description{
 The function \code{crop_data} crops the data sets using a shapefile mask.
+}
+\details{
+If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If x is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{

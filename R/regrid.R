@@ -8,9 +8,9 @@
 #' If x is a filename, it should point to a *.nc file.
 #' 
 #' @import data.table
+#' @import sp
 #' @importFrom methods setGeneric setMethod
 #' @importFrom raster aggregate brick getZ raster res setZ
-#' @importFrom sp coordinates<- gridded<-
 #' @param x Raster* object; data.table (see details); filename (character; see details)
 #' @param res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).
 #' @return Raster* object; data.table

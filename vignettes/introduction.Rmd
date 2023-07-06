@@ -180,7 +180,7 @@ infoNC(gpm_global)
 [2] "dimensions : 720, 1440, 1036800, 247  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)"
-[5] "crs        : +proj=longlat +datum=WGS84 "
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs " 
 [6] "source     : gpm-imerg_tp_mm_global_200006_202012_025_monthly.nc "
 [7] "names      : X2000.06.01, X2000.07.01, X2000.08.01, X2000.09.01, X2000.10.01, X2000.11.01, X2000.12.01, X2001.01.01, X2001.02.01, X2001.03.01, X2001.04.01, X2001.05.01, X2001.06.01, X2001.07.01, X2001.08.01, ... "
 [8] "Date/time  : 2000-06-01, 2020-12-01 (min, max)"
@@ -210,21 +210,21 @@ To subset our data to a desired region and period of interest, we use the `subse
 Let's subset the GPM-IMERGM data set over South America (-96, -30, -56, 24) for the 2001-2015 period, and inspect its content with `show_info`:
 
 ```{r subset, eval = FALSE}
-gpm_subset <- subset_spacetime(gpm_global, box = c(-96, -30, -56, 24), yrs = c(2001, 2015))
+gpm_subset <- subset_data(gpm_global, box = c(-96, -30, -56, 24), yrs = c(2001, 2015))
 infoNC(gpm_subset)
 ```
 
 ```
 [1] "class      : RasterBrick "
-[2] "dimensions : 64, 104, 6656, 120  (nrow, ncol, ncell, nlayers)"
+[2] "dimensions : 320, 264, 84480, 180  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
-[4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
-[5] "crs        : +proj=longlat +datum=WGS84 "
-[6] "source     : memory"
-[7] "names      : X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
-[8] "min values : 1.272205e+01, 4.698483e+00, 5.927317e+00, 2.240815e+00, 1.315575e+01, 1.301118e+00, 3.831070e+00, 4.547474e-13, 2.739577e+01, 1.662540e+00, 2.002276e+01, 1.084265e+00, 4.843051e+00, 3.975639e+00, 5.638179e+00, ... "
-[9] "max values :     443.4645,     158.5196,     374.7221,     229.5028,     163.2903,     251.5495,     330.9900,     336.4113,     456.0420,     454.0903,     452.1386,     236.0807,     277.7888,     255.8143,     195.8183, ... "
-[10] "time       : 2001-01-01, 2010-12-01 (min, max)"
+[4] "extent     : -96, -30, -56, 24  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : r_tmp_2023-07-06_190449.438575_97380_98378.grd "
+[7] "names      :  X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
+[8] "min values : 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, ... "
+[9] "max values :    1094.3127,     884.3267,    1101.6135,     928.9261,    1516.3088,    1148.8152,    1368.1981,    1475.1790,    1669.7684,    1184.4513,    1717.8375,    1192.6195,     906.7349,     856.1358,     846.0883, ... "
+[10] "time       : 2001-01-01, 2015-12-01 (min, max)"  
 ```
 
 ### Crop

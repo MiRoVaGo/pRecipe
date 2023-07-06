@@ -1,14 +1,20 @@
 #' Crop precipitation data sets
 #'
 #' The function \code{crop_data} crops the data sets using a shapefile mask.
+#' 
+#' @details
+#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If x is a filename, it should point to a *.nc file.
 #'
+#' @import data.table
+#' @import sp
+#' @importFrom methods as setGeneric setMethod
 #' @importFrom raster brick crop extent mask
-#' @importFrom R.utils getAbsolutePath
-#' @importFrom sf read_sf
-#' @param x a character string with the path to the data file. Or a RasterBrick.
-#' @param shp_path a character string with the path to the ".shp" file.
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
-#' @return A cropped RasterBrick.
+#' @importFrom sf read_sf st_bbox
+#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param y filename (character). Path to a *.shp file.
+#' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
@@ -17,37 +23,43 @@
 #' crop_data("dummie.nc", "cze.shp", autosave = TRUE)
 #' }
 
-crop_data <- function(x, shp_path, autosave = FALSE){
-  shp_mask <- read_sf(shp_path)
-  nc_in <- getAbsolutePath(x)
-  checker <- name_check(x)
-  if (checker$length == 8) {
-    checker$name[4] <- "cropped"
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- paste0(nc_out, ".nc")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- paste0(nc_out, "_cropped.nc")
-  }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
-  if (is.character(x)){
-    dummie_brick <- brick(nc_in)
-    dummie_extent <- extent(shp_mask) + 1
-    dummie_crop <- crop(dummie_brick, dummie_extent, snap = "out")
-    dummie_mask <- mask(dummie_crop, shp_mask)
-  } else {
-    dummie_extent <- extent(shp_mask) + 1
-    dummie_crop <- crop(dummie_brick, dummie_extent, snap = "out")
-    dummie_mask <- mask(dummie_crop, shp_mask)
-  }
-  if (autosave){
-    saveNC(dummie_mask, nc_out)
-    return(invisible())
-  } else {
-    return(dummie_mask)
-  }
-}
+setGeneric("crop_data", function(x, y) standardGeneric("crop_data"))
+
+#' @rdname crop_data
+#' @method crop_data Raster
+
+setMethod("crop_data", "Raster",
+          function(x, y) {
+            shp <- read_sf(y)
+            dummie <- crop(x, shp, snap = "out")
+            dummie <- mask(dummie, shp)
+            return(dummie)
+          })
+
+#' @rdname crop_data
+#' @method crop_data data.table
+
+setMethod("crop_data", "data.table",
+          function(x, y) {
+            shp <- read_sf(y)
+            lonlatbox <- st_bbox(shp)
+            dummie <- x[(lon >= lonlatbox[1] - 1) & (lon <= lonlatbox[3] + 1) &
+                          (lat >= lonlatbox[2] - 1) & (lat <= lonlatbox[4] + 1)]
+            coordinates(dummie) <- ~ lon + lat
+            proj4string(dummie) <- proj4string(shp)
+            dummie <- dummie[!is.na(over(dummie, as(shp, "SpatialPolygons"))), ]
+            dummie <- as.data.table(dummie)
+            return(dummie)
+          })
+
+#' @rdname crop_data
+#' @method crop_data character
+
+setMethod("crop_data", "character",
+          function(x, y) {
+            shp <- read_sf(y)
+            dummie_brick <- brick(x)
+            dummie <- crop(dummie_brick, shp, snap = "out")
+            dummie <- mask(dummie, shp)
+            return(dummie)
+          })
