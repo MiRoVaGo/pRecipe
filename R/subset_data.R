@@ -9,7 +9,6 @@
 #' 
 #' @import data.table
 #' @importFrom methods setGeneric setMethod
-#' @importFrom raster brick
 #' @param x Raster* object; data.table (see details); filename (character; see details)
 #' @param box numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)
 #' @param yrs numeric. Time range in the form: (start_year, end_year)
