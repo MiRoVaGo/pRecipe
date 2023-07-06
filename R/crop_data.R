@@ -2,7 +2,7 @@
 #'
 #' The function \code{crop_data} crops the data sets using a shapefile mask.
 #'
-#' @importFrom raster brick mask
+#' @importFrom raster brick crop extent mask
 #' @importFrom R.utils getAbsolutePath
 #' @importFrom sf read_sf
 #' @param x a character string with the path to the data file. Or a RasterBrick.
@@ -36,14 +36,18 @@ crop_data <- function(x, shp_path, autosave = FALSE){
   if (check_out$exists) stop(check_out$sms)
   if (is.character(x)){
     dummie_brick <- brick(nc_in)
-    dummie_crop <- mask(dummie_brick, shp_mask)
+    dummie_extent <- extent(shp_mask) + 1
+    dummie_crop <- crop(dummie_brick, dummie_extent, snap = "out")
+    dummie_mask <- mask(dummie_crop, shp_mask)
   } else {
-    dummie_crop <- mask(x, shp_mask)
+    dummie_extent <- extent(shp_mask) + 1
+    dummie_crop <- crop(dummie_brick, dummie_extent, snap = "out")
+    dummie_mask <- mask(dummie_crop, shp_mask)
   }
   if (autosave){
-    saveNC(dummie_crop, nc_out)
+    saveNC(dummie_mask, nc_out)
     return(invisible())
   } else {
-    return(dummie_crop)
+    return(dummie_mask)
   }
 }

@@ -1,86 +1,56 @@
-#' Subset a precipitation data product in time and space
+#' Subset data in space and time
 #'
-#' The function \code{subset_data} subsets (time and space) the requested data set and stores it in the same location of the input file.
+#' The function \code{subset_data} subsets the data in space within a bounding box, and in time within a year range.
 #'
-#' @importFrom methods as is
-#' @importFrom raster brick crop extent getZ setZ subset
-#' @importFrom R.utils getAbsolutePath
-#' @param x a character string with the path to the data file. Or a RasterBrick
-#' @param years numeric vector. Time range in the form: (start_year, end_year)
-#' @param bbox numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
-#' @return A subsetted RasterBrick.
+#' @details
+#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If x is a filename, it should point to a *.nc file.
+#' 
+#' @import data.table
+#' @importFrom methods setGeneric setMethod
+#' @importFrom raster brick
+#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param box numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)
+#' @param yrs numeric. Time range in the form: (start_year, end_year)
+#' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
-#' subset_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
-#' c(2000, 2010), c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
-#' subset_data("dummie.nc", c(2000, 2010), 
-#' c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+#' s <- subset_data(r, c(12.24, 18.85, 48.56, 51.12), c(2000, 2010))
 #' }
 
-subset_data <- function(x, years, bbox, autosave = FALSE){
-  nc_in <- getAbsolutePath(x)
-  checker <- name_check(x)
-  if (checker$length == 8) {
-    checker$name[4] <- "subset"
-    checker$name[5] <- years[1]
-    checker$name[6] <- years[2]
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- paste0(nc_out, ".nc")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- paste0(nc_out, "_subset.nc")
-  }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
-  if (is.character(x)){
-    dummie_brick <- brick(nc_in)
-  } else {
-    dummie_brick <- x
-  }
-  start_year <- paste0(years[1], "-01-01")
-  end_year <- paste0(years[2], "-12-31")
-  lonlatbox <- as(extent(bbox[1], bbox[2], bbox[3], bbox[4]),
-                  'SpatialPolygons')
-  dummie_subset <- crop(dummie_brick, lonlatbox)
-  dummie_dates <- getZ(dummie_subset)
-  if (is.character(dummie_dates) | is.numeric(dummie_dates)) {
-    if (is.numeric(dummie_dates)) {
-      dummie_dates <- as.character(dummie_dates)
-    } 
-    if (length(dummie_dates[dummie_dates == "00"]) >= 1) {
-      dummie_dates <- sub("^00$", "", dummie_dates)
-      dummie_dates <- dummie_dates[dummie_dates != ""]
-      dummie_dates <- as.Date(dummie_dates)
-    } else if (!Reduce("|",grepl("-01", dummie_dates))) {
-      dummie_dates <- as.numeric(dummie_dates)
-      dummie_origin <- "1970-01-01 00:00:00"
-      dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
-    } else {
-      dummie_dates <- as.Date(dummie_dates)
-    }
-  }
-  range_years <- which(dummie_dates >= start_year & 
-                         (dummie_dates <= end_year))
-  dummie_subset <- subset(dummie_subset, range_years)
-  if (is(dummie_subset, "RasterStack")) {
-    dummie_subset <- brick(dummie_subset)
-    dummie_names <- names(dummie_subset)
-    if (Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
-                           dummie_names))) {
-      dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
-    }
-    dummie_subset <- setZ(dummie_subset, dummie_Z)
-  }
-  if (autosave){
-    saveNC(dummie_subset, nc_out)
-    fix_name_out(nc_out)
-    return(invisible())
-  } else {
-    return(dummie_subset)
-  }
-}
+setGeneric("subset_data", function(x, box, yrs) standardGeneric("subset_data"))
+
+#' @rdname subset_data
+#' @method subset_data Raster
+
+setMethod("subset_data", "Raster",
+          function(x, box, yrs) {
+            dummie_sub <- sellonlatbox(x, box)
+            dummie <- selyear(dummie_sub, yrs)
+            return(dummie)
+          })
+
+#' @rdname subset_data
+#' @method subset_data data.table
+
+setMethod("subset_data", "data.table",
+          function(x, box, yrs) {
+            dummie_sub <- sellonlatbox(x, box)
+            dummie <- selyear(dummie_sub, yrs)
+            return(dummie)
+          })
+
+#' @rdname subset_data
+#' @method subset_data character
+
+setMethod("subset_data", "character",
+          function(x, box, yrs) {
+            dummie_sub <- sellonlatbox(x, box)
+            dummie <- selyear(dummie_sub, yrs)
+            return(dummie)
+          })

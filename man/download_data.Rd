@@ -5,14 +5,14 @@
 \title{Download various precipitation data products}
 \usage{
 download_data(
-  data_name = "all",
+  dataset = "all",
   path = ".",
   domain = "raw",
-  time_res = "monthly"
+  timestep = "monthly"
 )
 }
 \arguments{
-\item{data_name}{a character string with the name(s) of the desired data set. Suitable options are:
+\item{dataset}{a character string with the name(s) of the desired data set. Suitable options are:
 \itemize{
 \item{"all" for all of the below listed data sets (default),}
 \item{"20cr" for 20CR v3,}
@@ -54,7 +54,7 @@ download_data(
 \item{"ocean", for data sets with ocean only coverage.}
 }}
 
-\item{time_res}{a character string with the desired time resolution. Suitable options are:
+\item{timestep}{a character string with the desired time resolution. Suitable options are:
 \itemize{
 \item{"monthly",}
 \item{"yearly".}
@@ -68,6 +68,6 @@ The function \code{download_data} downloads the selected data product.
 }
 \examples{
 \donttest{
-download_data("gldas-vic", tempdir(), time_res = "yearly")
+download_data("gldas-vic", tempdir(), timestep = "yearly")
 }
 }

@@ -2,7 +2,7 @@
 #'
 #' The function \code{download_data} downloads the selected data product.
 #'
-#' @param data_name a character string with the name(s) of the desired data set. Suitable options are:
+#' @param dataset a character string with the name(s) of the desired data set. Suitable options are:
 #' \itemize{
 #' \item{"all" for all of the below listed data sets (default),}
 #' \item{"20cr" for 20CR v3,}
@@ -41,7 +41,7 @@
 #' \item{"land" for data sets with land only coverage,}
 #' \item{"ocean", for data sets with ocean only coverage.}
 #' }
-#' @param time_res a character string with the desired time resolution. Suitable options are:
+#' @param timestep a character string with the desired time resolution. Suitable options are:
 #' \itemize{
 #' \item{"monthly",}
 #' \item{"yearly".}
@@ -50,43 +50,43 @@
 #' @export
 #' @examples
 #' \donttest{
-#' download_data("gldas-vic", tempdir(), time_res = "yearly")
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
 #' }
 
-download_data <- function(data_name = "all", path = ".", domain = "raw", time_res = "monthly"){
-  dataset_check(data_name)
+download_data <- function(dataset = "all", path = ".", domain = "raw", timestep = "monthly"){
+  dataset_check(dataset)
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  lapply(data_name, function(dataset) switch(dataset,
-                                        "all"  = download_all(path, domain, time_res),
-                                        "20cr" = download_20cr(path, domain, time_res),
-                                        "chirps" = download_chirps(path, domain, time_res),
-                                        "cmap" = download_cmap(path, domain, time_res),
-                                        "cmorph" = download_cmorph(path, domain, time_res),
-                                        "cpc" = download_cpc(path, domain, time_res),
-                                        "cru-ts" = download_cru_ts(path, domain, time_res),
-                                        "em-earth" = download_em_earth(path, domain, time_res),
-                                        "era20c" = download_era20c(path, domain, time_res),
-                                        "era5" = download_era5(path, domain, time_res),
-                                        "fldas" = download_fldas(path, domain, time_res),
-                                        "ghcn" = download_ghcn(path, domain, time_res),
-                                        "gldas-clsm" = download_gldas_clsm(path, domain, time_res),
-                                        "gldas-noah" = download_gldas_noah(path, domain, time_res),
-                                        "gldas-vic" = download_gldas_vic(path, domain, time_res),
-                                        "gpcc" = download_gpcc(path, domain, time_res),
-                                        "gpcp" = download_gpcp(path, domain, time_res),
-                                        "gpm-imerg" = download_gpm_imerg(path, domain, time_res),
-                                        "jra55" = download_jra55(path, domain, time_res),
-                                        "merra2" = download_merra2(path, domain, time_res),
-                                        "mswep" = download_mswep(path, domain, time_res),
-                                        "ncep-doe" = download_ncep_doe(path, domain, time_res),
-                                        "ncep-ncar" = download_ncep_ncar(path, domain, time_res),
-                                        "persiann" = download_persiann(path, domain, time_res),
-                                        "precl" = download_precl(path, domain, time_res),
-                                        "terraclimate" = download_terraclimate(path, domain, time_res),
-                                        "trmm-3b43" = download_trmm_3b43(path, domain, time_res),
-                                        "udel" = download_udel(path, domain, time_res)
+  lapply(dataset, function(dataset) switch(dataset,
+                                        "all"  = download_all(path, domain, timestep),
+                                        "20cr" = download_20cr(path, domain, timestep),
+                                        "chirps" = download_chirps(path, domain, timestep),
+                                        "cmap" = download_cmap(path, domain, timestep),
+                                        "cmorph" = download_cmorph(path, domain, timestep),
+                                        "cpc" = download_cpc(path, domain, timestep),
+                                        "cru-ts" = download_cru_ts(path, domain, timestep),
+                                        "em-earth" = download_em_earth(path, domain, timestep),
+                                        "era20c" = download_era20c(path, domain, timestep),
+                                        "era5" = download_era5(path, domain, timestep),
+                                        "fldas" = download_fldas(path, domain, timestep),
+                                        "ghcn" = download_ghcn(path, domain, timestep),
+                                        "gldas-clsm" = download_gldas_clsm(path, domain, timestep),
+                                        "gldas-noah" = download_gldas_noah(path, domain, timestep),
+                                        "gldas-vic" = download_gldas_vic(path, domain, timestep),
+                                        "gpcc" = download_gpcc(path, domain, timestep),
+                                        "gpcp" = download_gpcp(path, domain, timestep),
+                                        "gpm-imerg" = download_gpm_imerg(path, domain, timestep),
+                                        "jra55" = download_jra55(path, domain, timestep),
+                                        "merra2" = download_merra2(path, domain, timestep),
+                                        "mswep" = download_mswep(path, domain, timestep),
+                                        "ncep-doe" = download_ncep_doe(path, domain, timestep),
+                                        "ncep-ncar" = download_ncep_ncar(path, domain, timestep),
+                                        "persiann" = download_persiann(path, domain, timestep),
+                                        "precl" = download_precl(path, domain, timestep),
+                                        "terraclimate" = download_terraclimate(path, domain, timestep),
+                                        "trmm-3b43" = download_trmm_3b43(path, domain, timestep),
+                                        "udel" = download_udel(path, domain, timestep)
   ))
   return(invisible())
 }

@@ -7,10 +7,10 @@
 aux_ts(dummie_name)
 }
 \arguments{
-\item{dummie_name}{a character string}
+\item{dummie_name}{character}
 }
 \value{
-character string
+character
 }
 \description{
 Function to generate name and type columns

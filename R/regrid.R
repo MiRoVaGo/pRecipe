@@ -1,13 +1,19 @@
-#' Subset a precipitation data product in space
+#' Spatial aggregation
 #'
-#' The function \code{regrid} aggregates the requested data sets into desired resolution and stores it in the same location of the input file.
+#' The function \code{regrid} aggregates data into a new grid resolution.
 #'
-#' @importFrom raster raster res
-#' @importFrom R.utils getAbsolutePath
-#' @param x a character string with the path to the data file. Or a RasterBrick.
-#' @param new_res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
-#' @return An aggregated RasterBrick.
+#' @details
+#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If x is a filename, it should point to a *.nc file.
+#' 
+#' @import data.table
+#' @importFrom methods setGeneric setMethod
+#' @importFrom raster aggregate brick getZ raster res setZ
+#' @importFrom sp coordinates<- gridded<-
+#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).
+#' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{

@@ -1,80 +1,77 @@
-#' Subset a precipitation data product in time
+#' Select Years
 #'
-#' The function \code{selyear} subsets in time the requested data set and stores it in the same location of the input file.
+#' The function \code{selyear} subsets the data in time within a year range.
 #'
-#' @importFrom methods as is
+#' @details
+#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If x is a filename, it should point to a *.nc file.
+#' 
+#' @import data.table
+#' @importFrom methods is setGeneric setMethod
 #' @importFrom raster brick getZ setZ subset
-#' @importFrom R.utils getAbsolutePath
-#' @param x a character string with the path to the data file. Or a RasterBrick.
-#' @param years numeric vector. Time range in the form: (start_year, end_year)
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
-#' @return A subsetted RasterBrick.
+#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param y numeric. Time range in the form: (start_year, end_year)
+#' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
-#' selyear("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
-#' c(2000, 2010), autosave = TRUE)
-#' selyear("dummie.nc", c(2000, 2010), autosave = TRUE)
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+#' s <- selyear(r, c(2000, 2010))
 #' }
 
-selyear <- function(x, years, autosave = FALSE){
-  nc_in <- getAbsolutePath(x)
-  checker <- name_check(x)
-  if (checker$length == 8) {
-    checker$name[5] <- paste0(years[1], "-01-01")
-    checker$name[6] <- paste0(years[2], "-12-01")
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- paste0(nc_out, ".nc")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- paste0(nc_out, "_subset.nc")
-  }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
-  if (is.character(x)){
-    dummie_brick <- brick(nc_in)
-  } else {
-    dummie_brick <- x
-  }
-  start_year <- paste0(years[1], "-01-01")
-  end_year <- paste0(years[2], "-12-31")
-  dummie_dates <- getZ(dummie_brick)
-  if (is.character(dummie_dates) | is.numeric(dummie_dates)) {
-    if (is.numeric(dummie_dates)) {
-      dummie_dates <- as.character(dummie_dates)
-    }
-    if (length(dummie_dates[dummie_dates == "00"]) >= 1) {
-      dummie_dates <- sub("^00$", "", dummie_dates)
-      dummie_dates <- dummie_dates[dummie_dates != ""]
-      dummie_dates <- as.Date(dummie_dates)
-    } else if (!Reduce("|",grepl("-01", dummie_dates))) {
-      dummie_dates <- as.numeric(dummie_dates)
-      dummie_origin <- "1970-01-01 00:00:00"
-      dummie_dates <- as.Date(dummie_dates, origin = dummie_origin)
-    } else {
-      dummie_dates <- as.Date(dummie_dates)
-    }
-  }
-  range_years <- which(dummie_dates >= start_year & 
-                         (dummie_dates <= end_year))
-  dummie_subset <- subset(dummie_brick, range_years)
-  if (is(dummie_subset, "RasterStack")) {
-    dummie_subset <- brick(dummie_subset)
-    dummie_names <- names(dummie_subset)
-    if (Reduce("|", grepl("^X\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d", 
-                          dummie_names))) {
-      dummie_Z <- as.Date(dummie_names, format = "X%Y.%m.%d")
-    }
-    dummie_subset <- setZ(dummie_subset, dummie_Z)
-  }
-  if (autosave){
-    saveNC(dummie_subset, nc_out)
-    fix_name_out(nc_out)
-    return(invisible())
-  } else {
-    return(dummie_subset)
-  }
-}
+setGeneric("selyear", function(x, y) standardGeneric("selyear"))
+
+#' @rdname selyear
+#' @method selyear Raster
+
+setMethod("selyear", "Raster",
+          function(x, y) {
+            start_year <- paste0(y[1], "-01-01")
+            final_year <- paste0(y[2], "-12-31")
+            old_dates <- getZ(x)
+            old_dates <- aux_date(old_dates)
+            range_years <- which((old_dates >= start_year) &
+                                   (old_dates <= final_year))
+            dummie <- subset(x, range_years)
+            new_dates <- old_dates[range_years]
+            dummie <- setZ(dummie, new_dates)
+            if (is(dummie, "RasterStack")) {
+              dummie <- brick(dummie)
+            }
+            dummie <- setZ(dummie, new_dates)
+            return(dummie)
+          })
+
+#' @rdname selyear
+#' @method selyear data.table
+
+setMethod("selyear", "data.table",
+          function(x, y) {
+            dummie <- x[(year(date) >= y[1]) & (year(date) <= y[2])]
+            return(dummie)
+          })
+
+#' @rdname selyear
+#' @method selyear character
+
+setMethod("selyear", "character",
+          function(x, y) {
+            dummie_brick <- brick(x)
+            start_year <- paste0(y[1], "-01-01")
+            final_year <- paste0(y[2], "-12-31")
+            old_dates <- getZ(dummie_brick)
+            old_dates <- aux_date(old_dates)
+            range_years <- which((old_dates >= start_year) &
+                                   (old_dates <= final_year))
+            dummie <- subset(dummie_brick, range_years)
+            new_dates <- old_dates[range_years]
+            dummie <- setZ(dummie, new_dates)
+            if (is(dummie, "RasterStack")) {
+              dummie <- brick(dummie)
+            }
+            dummie <- setZ(dummie, new_dates)
+            return(dummie)
+          })

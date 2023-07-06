@@ -2,27 +2,40 @@
 % Please edit documentation in R/sellonlatbox.R
 \name{sellonlatbox}
 \alias{sellonlatbox}
-\title{Subset a precipitation data product in space}
+\alias{sellonlatbox,Raster-method}
+\alias{sellonlatbox,data.table-method}
+\alias{sellonlatbox,character-method}
+\title{Select Longitude Latitude Box}
 \usage{
-sellonlatbox(x, bbox, autosave = FALSE)
+sellonlatbox(x, y)
+
+\S4method{sellonlatbox}{Raster}(x, y)
+
+\S4method{sellonlatbox}{data.table}(x, y)
+
+\S4method{sellonlatbox}{character}(x, y)
 }
 \arguments{
-\item{x}{a character string with the path to the data file. Or a RasterBrick.}
+\item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{bbox}{numeric vector. Bounding box in the form: (xmin, xmax, ymin, ymax).}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
+\item{y}{numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)}
 }
 \value{
-A subsetted RasterBrick.
+Raster* object; data.table
 }
 \description{
-The function \code{sellonlatbox} subsets (space) the requested data set and stores it in the same location of the input file.
+The function \code{sellonlatbox} subsets the data in space within a bounding box.
+}
+\details{
+If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If x is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
-sellonlatbox("gpcp_tp_mm_global_197901_202205_025_monthly.nc",
-c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
-sellonlatbox("dummie.nc", c(12.24, 18.85, 48.56, 51.12), autosave = TRUE)
+download_data("gldas-vic", tempdir(), timestep = "yearly")
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+s <- sellonlatbox(r, c(12.24, 18.85, 48.56, 51.12))
 }
 }

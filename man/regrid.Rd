@@ -2,22 +2,25 @@
 % Please edit documentation in R/regrid.R
 \name{regrid}
 \alias{regrid}
-\title{Subset a precipitation data product in space}
+\title{Spatial aggregation}
 \usage{
 regrid(x, new_res, autosave = FALSE)
 }
 \arguments{
-\item{x}{a character string with the path to the data file. Or a RasterBrick.}
+\item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{new_res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
+\item{res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).}
 }
 \value{
-An aggregated RasterBrick.
+Raster* object; data.table
 }
 \description{
-The function \code{regrid} aggregates the requested data sets into desired resolution and stores it in the same location of the input file.
+The function \code{regrid} aggregates data into a new grid resolution.
+}
+\details{
+If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If x is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{

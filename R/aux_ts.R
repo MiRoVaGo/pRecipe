@@ -2,9 +2,8 @@
 #'
 #' Function to generate name and type columns
 #'
-#' @import data.table
-#' @param dummie_name a character string
-#' @return character string
+#' @param dummie_name character
+#' @return character
 #' @keywords internal
 
 aux_ts <- function(dummie_name){

@@ -4,12 +4,12 @@
 \alias{saveNC}
 \title{Save .nc file}
 \usage{
-saveNC(dummie_nc, nc_out)
+saveNC(x, file)
 }
 \arguments{
-\item{dummie_nc}{a Raster object.}
+\item{x}{a Raster object.}
 
-\item{nc_out}{a character string.}
+\item{file}{a character string.}
 }
 \value{
 No return value, called to save a file

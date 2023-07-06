@@ -2,27 +2,40 @@
 % Please edit documentation in R/selyear.R
 \name{selyear}
 \alias{selyear}
-\title{Subset a precipitation data product in time}
+\alias{selyear,Raster-method}
+\alias{selyear,data.table-method}
+\alias{selyear,character-method}
+\title{Select Years}
 \usage{
-selyear(x, years, autosave = FALSE)
+selyear(x, y)
+
+\S4method{selyear}{Raster}(x, y)
+
+\S4method{selyear}{data.table}(x, y)
+
+\S4method{selyear}{character}(x, y)
 }
 \arguments{
-\item{x}{a character string with the path to the data file. Or a RasterBrick.}
+\item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{years}{numeric vector. Time range in the form: (start_year, end_year)}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
+\item{y}{numeric. Time range in the form: (start_year, end_year)}
 }
 \value{
-A subsetted RasterBrick.
+Raster* object; data.table
 }
 \description{
-The function \code{selyear} subsets in time the requested data set and stores it in the same location of the input file.
+The function \code{selyear} subsets the data in time within a year range.
+}
+\details{
+If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If x is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
-selyear("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 
-c(2000, 2010), autosave = TRUE)
-selyear("dummie.nc", c(2000, 2010), autosave = TRUE)
+download_data("gldas-vic", tempdir(), timestep = "yearly")
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+s <- selyear(r, c(2000, 2010))
 }
 }
