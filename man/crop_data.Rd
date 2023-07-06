@@ -18,7 +18,7 @@ crop_data(x, y)
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{y}{filename (character). Path to a *.shp file.}
+\item{y}{filename (character). Path to a *.shp file}
 }
 \value{
 Raster* object; data.table
@@ -33,8 +33,9 @@ If x is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
-crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp",
-autosave = TRUE)
-crop_data("dummie.nc", "cze.shp", autosave = TRUE)
+download_data("gldas-vic", tempdir(), timestep = "yearly")
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+s <- crop_data(r, "cze.shp")
 }
 }

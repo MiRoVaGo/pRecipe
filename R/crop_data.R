@@ -13,14 +13,15 @@
 #' @importFrom raster brick crop extent mask
 #' @importFrom sf read_sf st_bbox
 #' @param x Raster* object; data.table (see details); filename (character; see details)
-#' @param y filename (character). Path to a *.shp file.
+#' @param y filename (character). Path to a *.shp file
 #' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
-#' crop_data("gpcp_tp_mm_global_197901_202205_025_monthly.nc", "cze.shp",
-#' autosave = TRUE)
-#' crop_data("dummie.nc", "cze.shp", autosave = TRUE)
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+#' s <- crop_data(r, "cze.shp")
 #' }
 
 setGeneric("crop_data", function(x, y) standardGeneric("crop_data"))

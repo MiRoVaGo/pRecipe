@@ -7,9 +7,9 @@
 saveNC(x, file)
 }
 \arguments{
-\item{x}{a Raster object.}
+\item{x}{Raster* object}
 
-\item{file}{a character string.}
+\item{file}{character}
 }
 \value{
 No return value, called to save a file

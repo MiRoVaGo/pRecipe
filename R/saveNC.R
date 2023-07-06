@@ -5,8 +5,8 @@
 #' @import ncdf4
 #' @importFrom methods as is
 #' @importFrom raster getValues getZ xFromCol yFromRow
-#' @param x a Raster object.
-#' @param file a character string.
+#' @param x Raster* object
+#' @param file character
 #' @return No return value, called to save a file
 #' @export
 #' @examples

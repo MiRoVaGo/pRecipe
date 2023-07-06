@@ -2,10 +2,12 @@
 #'
 #' The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
 #'
-#' @import data.table
-#' @importFrom R.utils getAbsolutePath
-#' @param data a character string with the path to the data file. Or a RasterBrick
-#' @param name a character string with short data name. Suitable options are:
+#' @details
+#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If x is a filename, it should point to a *.nc file.
+#' 
+#' Available name options:
 #' \itemize{
 #' \item{"20cr" for 20CR v3,}
 #' \item{"chirps" for CHIRPS v2.0,}
@@ -36,7 +38,11 @@
 #' \item{"trmm-3b43" for TRMM 3B43 v7,}
 #' \item{"udel" for UDEL v501.}
 #' }
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
+#' 
+#' @import data.table
+#' @importFrom R.utils getAbsolutePath
+#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param name character (see details)
 #' @return A data.table
 #' @export
 #' @examples

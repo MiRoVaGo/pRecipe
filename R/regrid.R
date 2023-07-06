@@ -10,9 +10,9 @@
 #' @import data.table
 #' @import sp
 #' @importFrom methods setGeneric setMethod
-#' @importFrom raster aggregate brick getZ raster res setZ
+#' @importFrom raster aggregate brick getZ nlayers raster rasterFromXYZ res setZ
 #' @param x Raster* object; data.table (see details); filename (character; see details)
-#' @param res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).
+#' @param res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5)
 #' @return Raster* object; data.table
 #' @export
 #' @examples
@@ -21,38 +21,77 @@
 #' z <- regrid("dummie.nc", 1)
 #' }
 
-regrid <- function(x, new_res, autosave = FALSE){
-  if (new_res%%0.25 != 0) {
-    stop("Error: New resolution must be a multiple of 0.25")
-  }
-  nc_in <- getAbsolutePath(x)
-  checker <- name_check(x)
-  if (checker$length == 8) {
-    if (new_res < 1) {
-      checker$name[7] <- sub("\\.", "", new_res)
-    } else {
-      checker$name[7] <- sub("\\.", "dot", new_res)
-    }
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- paste0(nc_out, ".nc")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- paste0(nc_out, "_aggregated.nc")
-  }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
-  if (is.character(x)){
-    dummie_aggregated <- aggregate_brick(nc_in, new_res)
-  } else {
-    dummie_aggregated <- aggregate_brick(x, new_res)
-  }
-  if (autosave){
-    saveNC(dummie_aggregated, nc_out)
-    return(invisible())
-  } else {
-    return(dummie_aggregated)
-  }
-}
+setGeneric("regrid", function(x, y) standardGeneric("regrid"))
+
+#' @rdname regrid
+#' @method regrid Raster
+
+setMethod("regrid", "Raster",
+          function(x, y) {
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie_dates <- getZ(x) %>% aux_date()
+            dummie_res <- res(x)[1]
+            dummie_factor <- y/dummie_res
+            dummie <- foreach (idx = 1:nlayers(x)) %dopar% {
+              dummie_layer <- x[[idx]]
+              dummie_layer <- aggregate(dummie_layer, fact = dummie_factor,
+                                        fun = mean, na.rm = TRUE)
+              dummie_layer
+            }
+            dummie <- brick(dummie)
+            dummie <- setZ(dummie, dummie_dates)
+            return(dummie)
+          })
+
+#' @rdname regrid
+#' @method regrid data.table
+
+setMethod("regrid", "data.table",
+          function(x, y) {
+            dummie_list <- split(x, by = "date")
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie_res <- min(diff(sort(unique(x$date))))
+            dummie_factor <- y/dummie_res
+            dummie <- foreach (idx = 1:length(dummie_list), .combine = rbind) %dopar% {
+              dummie_table <- dummie_list[[idx]]
+              dummie_date <- unique(dummie_table$date)
+              dummie_layer <- dummie_table[, .(lon, lat, value)]
+              dummie_layer <- rasterFromXYZ(dummie_layer)
+              dummie_layer <- aggregate(dummie_layer, fact = dummie_factor,
+                                         fun = mean, na.rm = TRUE)
+              dummie_layer <- as.data.frame(dummie_layer, xy = TRUE,
+                                            long = TRUE, na.rm = FALSE) %>%
+                as.data.table()
+              dummie_layer$layer <- dummie_date
+              setnames(dummie_layer, c("lon", "lat", "date", "value"))
+              dummie_layer
+            }
+            return(dummie)
+          })
+
+#' @rdname regrid
+#' @method regrid character
+
+setMethod("regrid", "character",
+          function(x, y) {
+            dummie_brick <- brick(x)
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie_dates <- getZ(dummie_brick) %>% aux_date()
+            dummie_res <- res(dummie_brick)[1]
+            dummie_factor <- y/dummie_res
+            dummie <- foreach (idx = 1:nlayers(dummie_brick)) %dopar% {
+              dummie_layer <- dummie_brick[[idx]]
+              dummie_layer <- aggregate(dummie_layer, fact = dummie_factor,
+                                        fun = mean, na.rm = TRUE)
+              dummie_layer
+            }
+            dummie <- brick(dummie)
+            dummie <- setZ(dummie, dummie_dates)
+            return(dummie)
+          })

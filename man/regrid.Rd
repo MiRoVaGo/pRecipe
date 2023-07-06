@@ -2,14 +2,23 @@
 % Please edit documentation in R/regrid.R
 \name{regrid}
 \alias{regrid}
+\alias{regrid,Raster-method}
+\alias{regrid,data.table-method}
+\alias{regrid,character-method}
 \title{Spatial aggregation}
 \usage{
-regrid(x, new_res, autosave = FALSE)
+regrid(x, y)
+
+\S4method{regrid}{Raster}(x, y)
+
+\S4method{regrid}{data.table}(x, y)
+
+\S4method{regrid}{character}(x, y)
 }
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character; see details)}
 
-\item{res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5).}
+\item{res}{numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5)}
 }
 \value{
 Raster* object; data.table

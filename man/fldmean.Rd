@@ -7,9 +7,22 @@
 fldmean(data, name = NULL, autosave = FALSE)
 }
 \arguments{
-\item{data}{a character string with the path to the data file. Or a RasterBrick}
+\item{name}{character (see details)}
 
-\item{name}{a character string with short data name. Suitable options are:
+\item{x}{Raster* object; data.table (see details); filename (character; see details)}
+}
+\value{
+A data.table
+}
+\description{
+The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
+}
+\details{
+If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If x is a filename, it should point to a *.nc file.
+
+Available name options:
 \itemize{
 \item{"20cr" for 20CR v3,}
 \item{"chirps" for CHIRPS v2.0,}
@@ -39,15 +52,7 @@ fldmean(data, name = NULL, autosave = FALSE)
 \item{"terraclimate" for TerraClimate,}
 \item{"trmm-3b43" for TRMM 3B43 v7,}
 \item{"udel" for UDEL v501.}
-}}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
-\value{
-A data.table
-}
-\description{
-The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
 }
 \examples{
 \dontrun{
