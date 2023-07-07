@@ -1,13 +1,13 @@
-#' Generate time series
+#' Field mean
 #'
-#' The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
+#' The function \code{fldmean} computes the spatial weighted average for each timestep.
 #'
 #' @details
 #' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 #' 
 #' If x is a filename, it should point to a *.nc file.
 #' 
-#' Available name options:
+#' If y is provided additional info (data set name and type) will be added and the return value will be of class pRecipe. Available options are:
 #' \itemize{
 #' \item{"20cr" for 20CR v3,}
 #' \item{"chirps" for CHIRPS v2.0,}
@@ -39,50 +39,98 @@
 #' \item{"udel" for UDEL v501.}
 #' }
 #' 
-#' @import data.table
-#' @importFrom R.utils getAbsolutePath
-#' @param x Raster* object; data.table (see details); filename (character; see details)
-#' @param name character (see details)
-#' @return A data.table
+#' @import data.table doParallel foreach parallel sp
+#' @importFrom methods setGeneric setMethod
+#' @importFrom raster area brick cellStats getZ
+#' @param x Raster* object; data.table (see details); filename (character, see details)
+#' @param y character (optional, see details)
+#' @return data.table; pRecipe
 #' @export
 #' @examples
 #' \dontrun{
-#' fldmean("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
-#' fldmean("dummie.nc")
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+#' s <- fldmean(r, "gldas-vic")
 #' }
 
-fldmean <- function(data, name = NULL, autosave = FALSE){
-  nc_in <- getAbsolutePath(data)
-  checker <- name_check(data)
-  if (checker$length == 8) {
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- sub(".nc$", "", nc_out)
-    nc_out <- paste0(nc_out, "_ts.csv")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc$", "", nc_in)
-    nc_out <- paste0(nc_out, "_ts.csv")
-  }
-  if(is.null(name)){
-    dummie_cols <- aux_ts(checker$name[1])
-  } else {
-    dummie_cols <- aux_ts(name)
-  }
-  if (is.character(data)){
-    csv_table <- weighted_average(nc_in)
-  } else {
-    csv_table <- weighted_average(data)
-  }
-  csv_table$name <- dummie_cols[1]
-  csv_table$type <- dummie_cols[2]
-  if (autosave){
-    nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-    check_out <- exists_check(nc_out)
-    if (check_out$exists) stop(check_out$sms)
-    fwrite(csv_table, nc_out)
-    return(invisible())
-  } else {
-    return(csv_table)
-  }
-}
+setGeneric("fldmean", function(x, y = "") standardGeneric("fldmean"))
+
+#' @rdname fldmean
+#' @method fldmean Raster
+
+setMethod("fldmean", "Raster",
+          function(x, y = ""){
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie_dates <- getZ(x) %>% aux_date()
+            dummie <- foreach (idx = 1:nlayers(x), .combine = rbind) %dopar% {
+              dummie_step <- x[[idx]]
+              dummie_area <- area(dummie_step, na.rm = TRUE, weights = TRUE)
+              dummie_step <- dummie_area * dummie_step
+              dummie_step <- cellStats(dummie_step, stat = "sum", na.rm = TRUE)
+              dummie_step <- data.table("date" = dummie_dates[idx],
+                                        "value" = dummie_step)
+              dummie_step
+            }
+            if (y != "") {
+              y <- aux_info(y)
+              dummie <- pRecipe(dummie, id = y)
+            }
+            return(dummie)
+          })
+
+#' @rdname fldmean
+#' @method fldmean data.table
+
+setMethod("fldmean", "data.table",
+          function(x, y = ""){
+            dummie_list <- split(x, by = "date")
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie <- foreach (idx = 1:length(dummie_list), .combine = rbind) %dopar% {
+              dummie_table <- dummie_list[[idx]]
+              dummie_date <- unique(dummie_table$date)
+              dummie_step <- dummie_table[, .(lon, lat, value)]
+              dummie_step <- rasterFromXYZ(dummie_step)
+              dummie_area <- area(dummie_step, na.rm = TRUE, weights = TRUE)
+              dummie_step <- dummie_area * dummie_step
+              dummie_step <- cellStats(dummie_step, stat = "sum", na.rm = TRUE)
+              dummie_step <- data.table("date" = dummie_date,
+                                        "value" = dummie_step)
+              dummie_step
+            }
+            if (y != "") {
+              y <- aux_info(y)
+              dummie <- pRecipe(dummie, id = y)
+            }
+            return(dummie)
+          })
+
+#' @rdname fldmean
+#' @method fldmean character
+
+setMethod("fldmean", "character",
+          function(x, y = ""){
+            no_cores <- detectCores() - 1
+            if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
+            registerDoParallel(cores = no_cores)
+            dummie_brick <- brick(x)
+            dummie_dates <- getZ(dummie_brick) %>% aux_date()
+            dummie <- foreach (idx = 1:nlayers(dummie_brick), .combine = rbind) %dopar% {
+              dummie_step <- dummie_brick[[idx]]
+              dummie_area <- area(dummie_step, na.rm = TRUE, weights = TRUE)
+              dummie_step <- dummie_area * dummie_step
+              dummie_step <- cellStats(dummie_step, stat = "sum", na.rm = TRUE)
+              dummie_step <- data.table("date" = dummie_dates[idx],
+                                        "value" = dummie_step)
+              dummie_step
+            }
+            if (y != "") {
+              y <- aux_info(y)
+              dummie <- pRecipe(dummie, id = y)
+            }
+            return(dummie)
+          })

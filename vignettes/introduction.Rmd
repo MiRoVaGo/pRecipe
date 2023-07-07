@@ -193,7 +193,7 @@ Once we have downloaded our database, we can start processing the data with:
 
 * `crop_data` to crop the data using a shapefile.
 * `fldmean` to generate a time series by taking the area weighted average over each timestep.
-* `regrid` to go from the native resolution (0.25°) to coarser ones (e.g., 0.5°, 1°, 1.5°, ...).
+* `remap` to go from the native resolution (0.25°) to coarser ones (e.g., 0.5°, 1°, 1.5°, ...).
 * `sellonlatbox` to subset the data to the region of interest.
 * `selyear` to to select the years of interest.
 * `subset_data` to subset the data in time and space.

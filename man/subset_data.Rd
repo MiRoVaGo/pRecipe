@@ -16,7 +16,7 @@ subset_data(x, box, yrs)
 \S4method{subset_data}{character}(x, box, yrs)
 }
 \arguments{
-\item{x}{Raster* object; data.table (see details); filename (character; see details)}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
 \item{box}{numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)}
 

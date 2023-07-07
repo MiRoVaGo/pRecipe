@@ -2,27 +2,36 @@
 % Please edit documentation in R/fldmean.R
 \name{fldmean}
 \alias{fldmean}
-\title{Generate time series}
+\alias{fldmean,Raster-method}
+\alias{fldmean,data.table-method}
+\alias{fldmean,character-method}
+\title{Field mean}
 \usage{
-fldmean(data, name = NULL, autosave = FALSE)
+fldmean(x, y = "")
+
+\S4method{fldmean}{Raster}(x, y = "")
+
+\S4method{fldmean}{data.table}(x, y = "")
+
+\S4method{fldmean}{character}(x, y = "")
 }
 \arguments{
-\item{name}{character (see details)}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
-\item{x}{Raster* object; data.table (see details); filename (character; see details)}
+\item{y}{character (optional, see details)}
 }
 \value{
-A data.table
+data.table; pRecipe
 }
 \description{
-The function \code{fldmean} generates a csv time series and stored in the same location of the input file.
+The function \code{fldmean} computes the spatial weighted average for each timestep.
 }
 \details{
 If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
 If x is a filename, it should point to a *.nc file.
 
-Available name options:
+If y is provided additional info (data set name and type) will be added and the return value will be of class pRecipe. Available options are:
 \itemize{
 \item{"20cr" for 20CR v3,}
 \item{"chirps" for CHIRPS v2.0,}
@@ -56,7 +65,9 @@ Available name options:
 }
 \examples{
 \dontrun{
-fldmean("gpcp_tp_mm_global_197901_202205_025_monthly.nc")
-fldmean("dummie.nc")
+download_data("gldas-vic", tempdir(), timestep = "yearly")
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+s <- fldmean(r, "gldas-vic")
 }
 }

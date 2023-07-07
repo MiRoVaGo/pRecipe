@@ -10,7 +10,7 @@
 #' @import data.table
 #' @importFrom methods setGeneric setMethod
 #' @importFrom raster brick crop extent
-#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param x Raster* object; data.table (see details); filename (character, see details)
 #' @param y numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)
 #' @return Raster* object; data.table
 #' @export

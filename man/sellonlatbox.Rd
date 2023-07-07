@@ -16,7 +16,7 @@ sellonlatbox(x, y)
 \S4method{sellonlatbox}{character}(x, y)
 }
 \arguments{
-\item{x}{Raster* object; data.table (see details); filename (character; see details)}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
 \item{y}{numeric. Bounding box in the form: (xmin, xmax, ymin, ymax)}
 }

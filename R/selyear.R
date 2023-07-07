@@ -10,7 +10,7 @@
 #' @import data.table
 #' @importFrom methods is setGeneric setMethod
 #' @importFrom raster brick getZ setZ subset
-#' @param x Raster* object; data.table (see details); filename (character; see details)
+#' @param x Raster* object; data.table (see details); filename (character, see details)
 #' @param y numeric. Time range in the form: (start_year, end_year)
 #' @return Raster* object; data.table
 #' @export
@@ -31,8 +31,7 @@ setMethod("selyear", "Raster",
           function(x, y) {
             start_year <- paste0(y[1], "-01-01")
             final_year <- paste0(y[2], "-12-31")
-            old_dates <- getZ(x)
-            old_dates <- aux_date(old_dates)
+            old_dates <- getZ(x) %>% aux_date()
             range_years <- which((old_dates >= start_year) &
                                    (old_dates <= final_year))
             dummie <- subset(x, range_years)
@@ -62,8 +61,7 @@ setMethod("selyear", "character",
             dummie_brick <- brick(x)
             start_year <- paste0(y[1], "-01-01")
             final_year <- paste0(y[2], "-12-31")
-            old_dates <- getZ(dummie_brick)
-            old_dates <- aux_date(old_dates)
+            old_dates <- getZ(dummie_brick) %>% aux_date()
             range_years <- which((old_dates >= start_year) &
                                    (old_dates <= final_year))
             dummie <- subset(dummie_brick, range_years)

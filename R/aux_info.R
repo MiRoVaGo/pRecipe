@@ -1,12 +1,12 @@
-#' Complement make_ts generated csv file
+#' Complement fldmean
 #'
-#' Function to generate name and type columns
+#' Function to add name and type
 #'
 #' @param dummie_name character
 #' @return character
 #' @keywords internal
 
-aux_ts <- function(dummie_name){
+aux_info <- function(dummie_name){
   if (dummie_name == "20cr"){
     dummie <- c("20CR v3", "Reanalysis")
     } else if (dummie_name == "chirps"){
@@ -65,8 +65,6 @@ aux_ts <- function(dummie_name){
       dummie <- c("MERRA-2", "Reanalysis")
     } else if (dummie_name == "fldas"){
       dummie <- c("FLDAS", "Model forcing")
-    } else {
-      dummie <- NULL
     }
   return(dummie)
 }

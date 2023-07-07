@@ -1,32 +1,33 @@
 #' Spatial aggregation
 #'
-#' The function \code{regrid} aggregates data into a new grid resolution.
+#' The function \code{remap} aggregates data into a new grid resolution.
 #'
 #' @details
 #' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 #' 
 #' If x is a filename, it should point to a *.nc file.
 #' 
-#' @import data.table
-#' @import sp
+#' @import data.table doParallel foreach parallel sp
 #' @importFrom methods setGeneric setMethod
 #' @importFrom raster aggregate brick getZ nlayers raster rasterFromXYZ res setZ
-#' @param x Raster* object; data.table (see details); filename (character; see details)
-#' @param res numeric. Target resolution must be a multiple of 0.25 (e.g., 0.5, 1, 2.5)
+#' @param x Raster* object; data.table (see details); filename (character, see details)
+#' @param y numeric
 #' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- regrid("gpcp_tp_mm_global_197901_202205_025_monthly.nc", 1)
-#' z <- regrid("dummie.nc", 1)
+#' download_data("gldas-vic", tempdir(), timestep = "yearly")
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+#' s <- remap(r, 1)
 #' }
 
-setGeneric("regrid", function(x, y) standardGeneric("regrid"))
+setGeneric("remap", function(x, y) standardGeneric("remap"))
 
-#' @rdname regrid
-#' @method regrid Raster
+#' @rdname remap
+#' @method remap Raster
 
-setMethod("regrid", "Raster",
+setMethod("remap", "Raster",
           function(x, y) {
             no_cores <- detectCores() - 1
             if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
@@ -45,16 +46,16 @@ setMethod("regrid", "Raster",
             return(dummie)
           })
 
-#' @rdname regrid
-#' @method regrid data.table
+#' @rdname remap
+#' @method remap data.table
 
-setMethod("regrid", "data.table",
+setMethod("remap", "data.table",
           function(x, y) {
             dummie_list <- split(x, by = "date")
             no_cores <- detectCores() - 1
             if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
             registerDoParallel(cores = no_cores)
-            dummie_res <- min(diff(sort(unique(x$date))))
+            dummie_res <- min(diff(sort(unique(x$lon))))
             dummie_factor <- y/dummie_res
             dummie <- foreach (idx = 1:length(dummie_list), .combine = rbind) %dopar% {
               dummie_table <- dummie_list[[idx]]
@@ -73,10 +74,10 @@ setMethod("regrid", "data.table",
             return(dummie)
           })
 
-#' @rdname regrid
-#' @method regrid character
+#' @rdname remap
+#' @method remap character
 
-setMethod("regrid", "character",
+setMethod("remap", "character",
           function(x, y) {
             dummie_brick <- brick(x)
             no_cores <- detectCores() - 1
