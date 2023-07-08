@@ -2,18 +2,34 @@
 % Please edit documentation in R/plot_map.R
 \name{plot_map}
 \alias{plot_map}
-\title{Precipitation map plot}
+\alias{plot_map,Raster-method}
+\alias{plot_map,data.table-method}
+\alias{plot_map,character-method}
+\title{Map ggplot}
 \usage{
 plot_map(x, unit = "mm")
+
+\S4method{plot_map}{Raster}(x, unit = "mm")
+
+\S4method{plot_map}{data.table}(x, unit = "mm")
+
+\S4method{plot_map}{character}(x, unit = "mm")
 }
 \arguments{
-\item{x}{a .nc file with precipitation}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
-\item{unit}{a character string with the variable's unit of measurement to be used for the axis title}
+\item{unit}{character}
 }
 \value{
 ggplot object
 }
 \description{
 Function for mapping the first layer of a .nc file
+}
+\details{
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If `x` is a filename, it should point to a *.nc file.
+
+`unit` is a character string describing the unit of measurement to be used for the legend title
 }

@@ -27,9 +27,9 @@ Raster* object; data.table
 The function \code{remap} aggregates data into a new grid resolution.
 }
 \details{
-If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
-If x is a filename, it should point to a *.nc file.
+If `x` is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{

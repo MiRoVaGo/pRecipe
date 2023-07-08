@@ -7,13 +7,13 @@
 \alias{subset_data,character-method}
 \title{Subset data in space and time}
 \usage{
-subset_data(x, box, yrs)
+subset_data(x, box = NULL, yrs = NULL)
 
-\S4method{subset_data}{Raster}(x, box, yrs)
+\S4method{subset_data}{Raster}(x, box = NULL, yrs = NULL)
 
-\S4method{subset_data}{data.table}(x, box, yrs)
+\S4method{subset_data}{data.table}(x, box = NULL, yrs = NULL)
 
-\S4method{subset_data}{character}(x, box, yrs)
+\S4method{subset_data}{character}(x, box = NULL, yrs = NULL)
 }
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character, see details)}
@@ -26,18 +26,22 @@ subset_data(x, box, yrs)
 Raster* object; data.table
 }
 \description{
-The function \code{subset_data} subsets the data in space within a bounding box, and in time within a year range.
+The function \code{subset_data} subsets the data in space within a bounding box, and/or in time within a year range.
 }
 \details{
-If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
-If x is a filename, it should point to a *.nc file.
+If `x` is a filename, it should point to a *.nc file.
+
+If subsetting only in space or time then the arguments must be passed by name. I.e., \code{subset_data(x, box = ...)} (space) or \code{subset_data(x, yrs = ...)} (time)
 }
 \examples{
 \dontrun{
 download_data("gldas-vic", tempdir(), timestep = "yearly")
 r <- raster::brick(paste0(tempdir(),
 "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
-s <- subset_data(r, c(12.24, 18.85, 48.56, 51.12), c(2000, 2010))
+sd <- subset_data(r, c(12.24, 18.85, 48.56, 51.12), c(2000, 2010))
+ss <- subset_data(r, box = c(12.24, 18.85, 48.56, 51.12))
+st <- subset_data(r, yrs = c(2000, 2010))
 }
 }

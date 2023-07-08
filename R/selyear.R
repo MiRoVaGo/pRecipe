@@ -3,9 +3,9 @@
 #' The function \code{selyear} subsets the data in time within a year range.
 #'
 #' @details
-#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 #' 
-#' If x is a filename, it should point to a *.nc file.
+#' If `x` is a filename, it should point to a *.nc file.
 #' 
 #' @import data.table
 #' @importFrom methods is setGeneric setMethod
@@ -13,7 +13,7 @@
 #' @param x Raster* object; data.table (see details); filename (character, see details)
 #' @param y numeric. Time range in the form: (start_year, end_year)
 #' @return Raster* object; data.table
-#' @export
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' download_data("gldas-vic", tempdir(), timestep = "yearly")

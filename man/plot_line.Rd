@@ -14,7 +14,7 @@ plot_line(x, var = "Precipitation", unit = "mm")
 \item{unit}{a character string with the variable's unit of measurement to be used for the axis title}
 }
 \value{
-ggplot object
+gg object
 }
 \description{
 Function for plotting (line) time-series of area averaged precipitation.

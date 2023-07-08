@@ -176,14 +176,14 @@ infoNC(gpm_global)
 ```
 
 ```
-[1] "class      : RasterBrick "                                         
-[2] "dimensions : 720, 1440, 1036800, 247  (nrow, ncol, ncell, nlayers)"
+[1] "class      : RasterBrick "
+[2] "dimensions : 720, 1440, 1036800, 256  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)"
-[5] "crs        : +proj=longlat +datum=WGS84 +no_defs " 
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
 [6] "source     : gpm-imerg_tp_mm_global_200006_202012_025_monthly.nc "
 [7] "names      : X2000.06.01, X2000.07.01, X2000.08.01, X2000.09.01, X2000.10.01, X2000.11.01, X2000.12.01, X2001.01.01, X2001.02.01, X2001.03.01, X2001.04.01, X2001.05.01, X2001.06.01, X2001.07.01, X2001.08.01, ... "
-[8] "Date/time  : 2000-06-01, 2020-12-01 (min, max)"
+[8] "Date/time  : 2000-06-01, 2021-09-01 (min, max)"
 [9] "varname    : tp " 
 ```
 
@@ -194,20 +194,18 @@ Once we have downloaded our database, we can start processing the data with:
 * `crop_data` to crop the data using a shapefile.
 * `fldmean` to generate a time series by taking the area weighted average over each timestep.
 * `remap` to go from the native resolution (0.25°) to coarser ones (e.g., 0.5°, 1°, 1.5°, ...).
-* `sellonlatbox` to subset the data to the region of interest.
-* `selyear` to to select the years of interest.
-* `subset_data` to subset the data in time and space.
+* `subset_data` to subset the data in time and/or space.
 * `yearstat` to aggregate the data from monthly into annual.
 
 ### Subset
 
 To subset our data to a desired region and period of interest, we use the `subset_data` function, which has three arguments *x*, *box*, and *yrs*.
 
-* *x* is the path to the data set of interest or a RasterBrick object.
+* *x* Raster* object or a data.table or a filename (character).
 * *box* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
 * *yrs* is the period of interest with years in the form (start_year, end_year).
 
-Let's subset the GPM-IMERGM data set over South America (-96, -30, -56, 24) for the 2001-2015 period, and inspect its content with `show_info`:
+Let's subset the GPM-IMERGM data set over South America (-96, -30, -56, 24) for the 2001-2015 period, and inspect its content with `infoNC`:
 
 ```{r subset, eval = FALSE}
 gpm_subset <- subset_data(gpm_global, box = c(-96, -30, -56, 24), yrs = c(2001, 2015))
@@ -219,129 +217,128 @@ infoNC(gpm_subset)
 [2] "dimensions : 320, 264, 84480, 180  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
 [4] "extent     : -96, -30, -56, 24  (xmin, xmax, ymin, ymax)"
-[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
-[6] "source     : r_tmp_2023-07-06_190449.438575_97380_98378.grd "
+[5] "crs        : memory"
+[6] "source     : r_tmp_2023-07-07_185756.586009_13478_99533.grd "
 [7] "names      :  X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
-[8] "min values : 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, 4.547474e-13, ... "
-[9] "max values :    1094.3127,     884.3267,    1101.6135,     928.9261,    1516.3088,    1148.8152,    1368.1981,    1475.1790,    1669.7684,    1184.4513,    1717.8375,    1192.6195,     906.7349,     856.1358,     846.0883, ... "
+[8] "min values : 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 2.393141e-04, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, ... "
+[9] "max values :    1069.6940,     917.3006,    1102.5068,     915.1335,    1549.5077,    1169.6469,    1483.0360,    1453.4453,    1624.6550,    1233.0613,    1715.0280,    1285.7706,     881.6859,     874.7393,     883.4313, ... "
 [10] "time       : 2001-01-01, 2015-12-01 (min, max)"  
 ```
 
 ### Crop
 
-To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has three arguments *x*, *shp_path*, *autosave*.
+To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has two arguments *x*, and *y*.
 
-* *x* is the path to a ".nc" data set file or a RasterBrick object.
-* *shp_path* is the path to a ".shp" file that we want to use to crop our data.
-* *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
+* *x* Raster* object or a data.table or a *.nc filename (character).
+* *y* is a ".shp" filename (character).
 
-
-Let's crop our GPM-IMERG subset to cover only Czechia with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_CZE_shp.zip), and inspect its content with `show_info`:
+Let's crop our GPM-IMERG subset to cover only Bolivia with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_BOL_shp.zip), and inspect its content with `infoNC`:
 
 ```{r crop, eval = FALSE}
-gpm_cz <- crop_data(x = gpm_subset, shp_path = "gadm41_CZE_0.shp")
-show_info(gpm_cz)
+gpm_bol <- crop_data(gpm_subset, "gadm41_BOL_0.shp")
+infoNC(gpm_bol)
 ```
 
 ```
 [1] "class      : RasterBrick "
-[2] "dimensions : 64, 104, 6656, 120  (nrow, ncol, ncell, nlayers)"
+[2] "dimensions : 54, 50, 2700, 180  (nrow, ncol, ncell, nlayers)"
 [3] "resolution : 0.25, 0.25  (x, y)"
-[4] "extent     : 2, 28, 42, 58  (xmin, xmax, ymin, ymax)"
-[5] "crs        : +proj=longlat +datum=WGS84 "
+[4] "extent     : -69.75, -57.25, -23, -9.5  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
 [6] "source     : memory"
-[7] "names      : X2001.01.01, X2001.02.01, X2001.03.01, X2001.04.01, X2001.05.01, X2001.06.01, X2001.07.01, X2001.08.01, X2001.09.01, X2001.10.01, X2001.11.01, X2001.12.01, X2002.01.01, X2002.02.01, X2002.03.01, ... "
-[8] "min values :   43.226040,   30.070290,   65.995613,   46.767975,   44.382591,   52.406155,   83.416138,   51.177319,   88.692894,   14.673723,   49.876202,   55.442097,   21.179314,   57.682911,   33.612221, ... "
-[9] "max values :    89.99401,    70.54952,   158.95328,   106.25800,    90.21087,   135.75002,   248.73044,   138.78595,   158.15816,    51.39417,   113.63100,   141.96646,    77.34425,   162.56750,   132.85863, ... "
-[10] "time       : 2001-01-01, 2010-12-01 (min, max)"
+[7] "names      :  X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
+[8] "min values : 4.359420e+01, 5.965404e+01, 9.195424e+00, 2.650523e+00, 4.473422e-01, 4.649702e-03, 3.581941e-04, 1.511060e-02, 3.136731e-01, 5.168897e-01, 3.443884e-01, 1.019173e+01, 3.299495e+00, 2.491986e+01, 1.160967e+01, ... "
+[9] "max values :    613.21777,    530.11438,    497.65503,    371.26581,    216.29959,    136.70122,    209.37540,    124.56583,    166.48785,    313.69836,    472.29553,    487.41364,    613.77014,    673.70099,    549.12671, ... "
+[10] "time       : 2001-01-01, 2015-12-01 (min, max)" 
 ```
 
 ### Generate Time series
 
-To make a time series out of our data, we use the `make_ts` function, which has three arguments *data*, *name*, and *autosave*.
+To make a time series out of our data, we use the `fldmean` function, which has one argument *x*.
 
-* *data* is the path to a ".nc" data set file or a RasterBrick object.
-* *name* is the short name of a data set. E.g., 'gpm-imerg'.
-* *autosave* is set to FALSE by default. If TRUE data will be automatically stored in the same location of the input file.
+* *x* Raster* object or a data.table or a *.nc filename (character).
 
-Let's generate the time series for our three different GPM-IMERGM data sets (Global, Central Europe, and Czechia), and inspect its first 12 rows:
+Let's generate the time series for our three different GPM-IMERGM data sets (Global, South America, and Bolivia), and inspect its first 12 rows:
 
-```{r global_ts, eval=FALSE}
-gpm_global_ts <- make_ts(gpm_global, 'gpm-imerg')
+```{r global_ts, eval = FALSE}
+gpm_global_ts <- fldmean(gpm_global)
 head(gpm_global_ts, 12)
 ```
 
 ```
-          date     value           name            type
- 1: 2000-06-01  93.60162 GPM IMERGM v06 Satellite-based
- 2: 2000-07-01  96.01442 GPM IMERGM v06 Satellite-based
- 3: 2000-08-01  94.16792 GPM IMERGM v06 Satellite-based
- 4: 2000-09-01  90.38524 GPM IMERGM v06 Satellite-based
- 5: 2000-10-01  93.90120 GPM IMERGM v06 Satellite-based
- 6: 2000-11-01  93.55994 GPM IMERGM v06 Satellite-based
- 7: 2000-12-01  96.68792 GPM IMERGM v06 Satellite-based
- 8: 2001-01-01  94.71431 GPM IMERGM v06 Satellite-based
- 9: 2001-02-01  85.94786 GPM IMERGM v06 Satellite-based
-10: 2001-03-01  96.12793 GPM IMERGM v06 Satellite-based
-11: 2001-04-01  96.99244 GPM IMERGM v06 Satellite-based
-12: 2001-05-01 100.50446 GPM IMERGM v06 Satellite-based
+          date     value
+        <Date>     <num>
+ 1: 2000-06-01  93.64844
+ 2: 2000-07-01  96.05852
+ 3: 2000-08-01  94.18216
+ 4: 2000-09-01  90.43190
+ 5: 2000-10-01  93.91238
+ 6: 2000-11-01  93.61439
+ 7: 2000-12-01  96.70333
+ 8: 2001-01-01  94.67989
+ 9: 2001-02-01  86.00950
+10: 2001-03-01  96.15177
+11: 2001-04-01  97.05069
+12: 2001-05-01 100.53676
 ```
 
-```{r subset_ts, eval=FALSE}
-gpm_subset_ts <- make_ts(gpm_subset, 'gpm-imerg')
+```{r subset_ts, eval = FALSE}
+gpm_subset_ts <- fldmean(gpm_subset)
 head(gpm_subset_ts, 12)
 ```
 
 ```
-          date     value           name            type
- 1: 2001-01-01  96.67884 GPM IMERGM v06 Satellite-based
- 2: 2001-02-01  58.80170 GPM IMERGM v06 Satellite-based
- 3: 2001-03-01  96.04202 GPM IMERGM v06 Satellite-based
- 4: 2001-04-01  80.09136 GPM IMERGM v06 Satellite-based
- 5: 2001-05-01  55.94958 GPM IMERGM v06 Satellite-based
- 6: 2001-06-01  92.74124 GPM IMERGM v06 Satellite-based
- 7: 2001-07-01  95.06115 GPM IMERGM v06 Satellite-based
- 8: 2001-08-01  76.70639 GPM IMERGM v06 Satellite-based
- 9: 2001-09-01 141.68700 GPM IMERGM v06 Satellite-based
-10: 2001-10-01  62.51384 GPM IMERGM v06 Satellite-based
-11: 2001-11-01  97.12927 GPM IMERGM v06 Satellite-based
-12: 2001-12-01  71.00100 GPM IMERGM v06 Satellite-based
+          date     value
+        <Date>     <num>
+ 1: 2001-01-01 106.52438
+ 2: 2001-02-01  89.98158
+ 3: 2001-03-01 113.35350
+ 4: 2001-04-01 107.26019
+ 5: 2001-05-01 123.50707
+ 6: 2001-06-01  94.20347
+ 7: 2001-07-01 102.07352
+ 8: 2001-08-01  94.62878
+ 9: 2001-09-01  96.31932
+10: 2001-10-01 112.90529
+11: 2001-11-01 102.68565
+12: 2001-12-01 113.49551
 ```
 
-```{r cz_ts, eval=FALSE}
-gpm_cz_ts <- make_ts(gpm_cz, 'gpm-imerg')
-head(gpm_cz_ts, 12)
+```{r bol_ts, eval = FALSE}
+gpm_bol_ts <- fldmean(gpm_bol)
+head(gpm_bol_ts, 12)
 ```
 
 ```
-          date     value           name            type
- 1: 2001-01-01  59.36666 GPM IMERGM v06 Satellite-based
- 2: 2001-02-01  50.59915 GPM IMERGM v06 Satellite-based
- 3: 2001-03-01  96.69115 GPM IMERGM v06 Satellite-based
- 4: 2001-04-01  73.23477 GPM IMERGM v06 Satellite-based
- 5: 2001-05-01  64.74244 GPM IMERGM v06 Satellite-based
- 6: 2001-06-01  86.48493 GPM IMERGM v06 Satellite-based
- 7: 2001-07-01 127.52908 GPM IMERGM v06 Satellite-based
- 8: 2001-08-01  94.31304 GPM IMERGM v06 Satellite-based
- 9: 2001-09-01 119.28491 GPM IMERGM v06 Satellite-based
-10: 2001-10-01  30.82040 GPM IMERGM v06 Satellite-based
-11: 2001-11-01  72.33474 GPM IMERGM v06 Satellite-based
-12: 2001-12-01  91.77480 GPM IMERGM v06 Satellite-based
+          date     value
+        <Date>     <num>
+ 1: 2001-01-01 233.87604
+ 2: 2001-02-01 183.34294
+ 3: 2001-03-01 165.97789
+ 4: 2001-04-01  85.02165
+ 5: 2001-05-01  63.68961
+ 6: 2001-06-01  24.68989
+ 7: 2001-07-01  31.89638
+ 8: 2001-08-01  17.94735
+ 9: 2001-09-01  55.87102
+10: 2001-10-01 103.33750
+11: 2001-11-01 163.95180
+12: 2001-12-01 156.72036
 ```
 
 ## Visualize
 
 Either after we have processed our data as required or right after downloaded, we have different options to visualize our data:
 
-* `plot_taylor` to see a Taylor Diagram (requires a referential data set).
-* `plot_map` to see the Cartesian lon-lat map of the first raster layer.
-* `plot_line` to see the average time series.
-* `plot_heatmap` to see a heatmap of all monthly values.
 * `plot_box` to see a seasonal boxplot.
 * `plot_density` to see the empirical density of monthly precipitation.
+* `plot_heatmap` to see a heatmap of all monthly values.
+* `plot_line` to see the average time series.
+* `plot_map` to see the Cartesian lon-lat map of the first raster layer.
 * `plot_summary` to see line, heatmap, box, and density plot together in a single plot.
+* `plot_taylor` to see a Taylor Diagram (requires a referential data set).
 
-Let's plot our three different GPM-IMERGM data sets (Global, Central Europe, and Czechia)
+Let's plot our three different GPM-IMERGM data sets (Global, South America, and Bolivia)
 
 ### Maps
 
@@ -357,13 +354,13 @@ plot_map(gpm_global[[1]])
 plot_map(gpm_subset[[1]])
 ```
 
-![](plots/map_ceu.png){width=90%}
+![](plots/map_sa.png){width=45%}
 
 ```{r map_cz, eval = FALSE}
-plot_map(gpm_cz[[1]])
+plot_map(gpm_bol[[1]])
 ```
 
-![](plots/map_cze.png){width=90%}
+![](plots/map_bo.png){width=45%}
 
 ### Time Series Visuals
 
@@ -371,65 +368,47 @@ To draw a time series generated by `make_ts`, we use any of the options below, w
 
 #### Line
 
-```{r}
+```{r lines}
 plot_line(gpm_global_ts)
 plot_line(gpm_subset_ts)
-plot_line(gpm_cz_ts)
+plot_line(gpm_bol_ts)
 ```
 
 #### Heatmap
 
-```{r}
+```{r hearmaps}
 plot_heatmap(gpm_global_ts)
 plot_heatmap(gpm_subset_ts)
-plot_heatmap(gpm_cz_ts)
+plot_heatmap(gpm_bol_ts)
 ```
 
 #### Boxplot
 
-```{r}
+```{r boxplots}
 plot_box(gpm_global_ts)
 plot_box(gpm_subset_ts)
-plot_box(gpm_cz_ts)
+plot_box(gpm_bol_ts)
 ```
 
 #### Density
 
-```{r}
+```{r histograms}
 plot_density(gpm_global_ts)
 plot_density(gpm_subset_ts)
-plot_density(gpm_cz_ts)
+plot_density(gpm_bol_ts)
 ```
 
 #### Summary
 
-**NOTE:** For good aesthetics we recommend saving `plot_summary` with `ggsave(<filename>, <plot>, width = 16.3, height = 15.03)`.
+**NOTE:** For good aesthetics we recommend saving `plot_summary` with `ggsave(<filename>, <plot>, width = 16, height = 13.5)`.
 
-```{r, eval=FALSE}
+```{r summary, eval=FALSE}
 plot_summary(gpm_global_ts)
 #plot_summary(gpm_subset_ts)
 #plot_summary(gpm_cz_ts)
 ```
 
 ![](plots/summary.png){width=95%}
-
-
-## Time Series Analysis
-
-Once we have generated our time series, we can start evaluating the data with:
-
-* `pod` to calculate the probability of detection.
-* `far` to calculate the false alarm rate.
-* `csi` to calculate the critical success index.
-* `nse` to calculate the Nash–Sutcliffe efficiency.
-
-The above functions have three arguments *x*, *ref*, and *th* (except for `nse`).
-
-* *x* is the time series data.table generated by `make_ts`.
-* *ref* is a data.table time series with the referential data used for evaluation.
-* *th* is the number to be used as the detection threshold.
-
-**NOTE:** Not demonstrated in the current demo because such metrics are not intended for monthly data but rather higher temporal resolution data, e.g., daily or subdaily (coming soon).
 
 # Coming Soon
 

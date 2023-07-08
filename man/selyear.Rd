@@ -27,9 +27,9 @@ Raster* object; data.table
 The function \code{selyear} subsets the data in time within a year range.
 }
 \details{
-If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
-If x is a filename, it should point to a *.nc file.
+If `x` is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
@@ -39,3 +39,4 @@ r <- raster::brick(paste0(tempdir(),
 s <- selyear(r, c(2000, 2010))
 }
 }
+\keyword{internal}

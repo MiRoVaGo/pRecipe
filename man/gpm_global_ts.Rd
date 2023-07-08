@@ -5,12 +5,10 @@
 \alias{gpm_global_ts}
 \title{Monthly precipitation data}
 \format{
-A data.table with 247 obs. of 2 variables:
+A data.table with 256 obs. of 2 variables:
 \describe{
   \item{date}{IDate format \%Y-\%m-\%d}
   \item{value}{monthly average values}
-  \item{name}{full name of the data set}
-  \item{type}{source type of the data set}
 }
 }
 \source{

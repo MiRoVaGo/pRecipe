@@ -3,9 +3,9 @@
 #' The function \code{crop_data} crops the data sets using a shapefile mask.
 #' 
 #' @details
-#' If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 #' 
-#' If x is a filename, it should point to a *.nc file.
+#' If `x` is a filename, it should point to a *.nc file.
 #'
 #' @import data.table
 #' @import sp

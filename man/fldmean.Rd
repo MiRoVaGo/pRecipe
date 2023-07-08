@@ -7,67 +7,33 @@
 \alias{fldmean,character-method}
 \title{Field mean}
 \usage{
-fldmean(x, y = "")
+fldmean(x)
 
-\S4method{fldmean}{Raster}(x, y = "")
+\S4method{fldmean}{Raster}(x)
 
-\S4method{fldmean}{data.table}(x, y = "")
+\S4method{fldmean}{data.table}(x)
 
-\S4method{fldmean}{character}(x, y = "")
+\S4method{fldmean}{character}(x)
 }
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character, see details)}
-
-\item{y}{character (optional, see details)}
 }
 \value{
-data.table; pRecipe
+data.table
 }
 \description{
 The function \code{fldmean} computes the spatial weighted average for each timestep.
 }
 \details{
-If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
-If x is a filename, it should point to a *.nc file.
-
-If y is provided additional info (data set name and type) will be added and the return value will be of class pRecipe. Available options are:
-\itemize{
-\item{"20cr" for 20CR v3,}
-\item{"chirps" for CHIRPS v2.0,}
-\item{"cmap" for CMAP standard version,}
-\item{"cmorph" for CMORPH,}
-\item{"cpc" for CPC-Global,}
-\item{"cru-ts" for CRU_TS v4.06,}
-\item{"em-earth" for EM-EARTH,}
-\item{"era20c" for ERA-20C,}
-\item{"era5" for ERA5,}
-\item{"fldas" for FLDAS,}
-\item{"ghcn" for GHCN-M v2,}
-\item{"gldas-clsm" for GLDAS CLSM,}
-\item{"gldas-noah" for GLDAS NOAH,}
-\item{"gldas-vic" for GLDAS VIC,}
-\item{"gleam" for GLEAM v3.7a,}
-\item{"gpcc" for GPCC v2020,}
-\item{"gpcp" for GPCP v2.3,}
-\item{"gpm_imerg" for GPM IMERGM Final v06,}
-\item{"jra55" for JRA-55,}
-\item{"merra2" for MERRA-2,}
-\item{"mswep" for MSWEP v2.8,}
-\item{"ncep-doe" for NCEP/DOE,}
-\item{"ncep-ncar" for NCEP/NCAR,}
-\item{"persiann" for PERSIANN-CDR,}
-\item{"precl" for PREC/L,}
-\item{"terraclimate" for TerraClimate,}
-\item{"trmm-3b43" for TRMM 3B43 v7,}
-\item{"udel" for UDEL v501.}
-}
+If `x` is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
 download_data("gldas-vic", tempdir(), timestep = "yearly")
 r <- raster::brick(paste0(tempdir(),
 "/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
-s <- fldmean(r, "gldas-vic")
+s <- fldmean(r)
 }
 }

@@ -27,9 +27,9 @@ Raster* object; data.table
 The function \code{sellonlatbox} subsets the data in space within a bounding box.
 }
 \details{
-If x is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
 
-If x is a filename, it should point to a *.nc file.
+If `x` is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{
@@ -39,3 +39,4 @@ r <- raster::brick(paste0(tempdir(),
 s <- sellonlatbox(r, c(12.24, 18.85, 48.56, 51.12))
 }
 }
+\keyword{internal}
