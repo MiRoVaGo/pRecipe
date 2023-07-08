@@ -1,6 +1,6 @@
 #' Map ggplot
 #'
-#' Function for mapping the first layer of a .nc file
+#' Convenient and aesthetic visualization of data in a map
 #' 
 #' @details
 #' If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
@@ -35,8 +35,8 @@ setMethod("plot_map", "Raster",
             } else {
               map_expand <- TRUE
             }
-            map_max <- quantile(x$value,0.9995)
-            map_min <- round(min(x$value)) -1 
+            map_max <- quantile(x$value, 0.9995)
+            map_min <- round(min(x$value)) - 1 
             if (map_min < 0){
               map_min <- 0
             }
@@ -80,8 +80,8 @@ setMethod("plot_map", "data.table",
             } else {
               map_expand <- TRUE
             }
-            map_max <- quantile(x$value,0.9995)
-            map_min <- round(min(x$value)) -1 
+            map_max <- quantile(x$value, 0.9995)
+            map_min <- round(min(x$value)) - 1 
             if (map_min < 0){
               map_min <- 0
             }
@@ -130,8 +130,8 @@ setMethod("plot_map", "character",
             } else {
               map_expand <- TRUE
             }
-            map_max <- quantile(x$value,0.9995)
-            map_min <- round(min(x$value)) -1 
+            map_max <- quantile(x$value, 0.9995)
+            map_min <- round(min(x$value)) - 1 
             if (map_min < 0){
               map_min <- 0
             }

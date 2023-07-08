@@ -2,22 +2,31 @@
 % Please edit documentation in R/plot_box.R
 \name{plot_box}
 \alias{plot_box}
-\title{Precipitation box plot}
+\alias{plot_box,Raster-method}
+\alias{plot_box,data.table-method}
+\alias{plot_box,character-method}
+\title{Boxplot ggplot}
 \usage{
 plot_box(x, var = "Precipitation", unit = "mm")
+
+\S4method{plot_box}{Raster}(x, var = "Precipitation", unit = "mm")
+
+\S4method{plot_box}{data.table}(x, var = "Precipitation", unit = "mm")
+
+\S4method{plot_box}{character}(x, var = "Precipitation", unit = "mm")
 }
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
-\item{var}{character string with the name of the variable to be used for the axis title}
+\item{var}{character (see details)}
 
-\item{unit}{character string with the variable's unit of measurement to be used for the axis title}
+\item{unit}{character (see details)}
 }
 \value{
 ggplot object
 }
 \description{
-Function for plotting (boxplot) time-series of area averaged precipitation.
+Convenient and aesthetic visualization of data in a boxplot.
 }
 \details{
 If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
@@ -27,4 +36,12 @@ If `x` is a filename, it should point to a *.nc file.
 `var` is a character string describing the variable to be used for the plot title
 
 `unit` is a character string describing the unit of measurement to be used for the plot title
+}
+\examples{
+\dontrun{
+download_data("gldas-vic", tempdir(), timestep = "yearly")
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_yearly.nc"))
+s <- plot_box(r)
+}
 }

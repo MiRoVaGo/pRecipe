@@ -24,7 +24,7 @@ plot_map(x, unit = "mm")
 ggplot object
 }
 \description{
-Function for mapping the first layer of a .nc file
+Convenient and aesthetic visualization of data in a map
 }
 \details{
 If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
