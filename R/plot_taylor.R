@@ -13,7 +13,7 @@
 #' \item "seasons" (only works properly with monthly data)
 #' }
 #' 
-#' `...` extra arguments passed on to \code{\link{openair:TaylorDiagram}}
+#' `...` extra arguments passed on to \code{openair::\link[openair:TaylorDiagram]{TaylorDiagram}}
 #'
 #' @import data.table
 #' @importFrom openair TaylorDiagram

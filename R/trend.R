@@ -10,6 +10,7 @@
 #' @import data.table doParallel foreach parallel
 #' @importFrom methods setGeneric setMethod
 #' @importFrom raster brick calc nlayers
+#' @importFrom stats lm
 #' @param x Raster* object; data.table (see details); filename (character, see details)
 #' @return Raster* object; data.table
 #' @export

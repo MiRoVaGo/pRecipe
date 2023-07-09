@@ -2,18 +2,34 @@
 % Please edit documentation in R/muldpm.R
 \name{muldpm}
 \alias{muldpm}
+\alias{muldpm,Raster-method}
+\alias{muldpm,data.table-method}
+\alias{muldpm,character-method}
 \title{Multiply by days per month}
 \usage{
 muldpm(x)
+
+\S4method{muldpm}{Raster}(x)
+
+\S4method{muldpm}{data.table}(x)
+
+\S4method{muldpm}{character}(x)
 }
 \arguments{
-\item{x}{a RasterBrick object with monthly data in [units/day]}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 }
 \value{
-a RasterBrick object
+Raster* object; data.table
 }
 \description{
-Function to calculate pet
+The function \code{muldpm} multiplies the value by days per month.
+}
+\details{
+`x` object with monthly data in [units/day]
+
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If `x` is a filename, it should point to a *.nc file.
 }
 \examples{
 \dontrun{

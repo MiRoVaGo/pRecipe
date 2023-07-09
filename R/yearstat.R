@@ -19,6 +19,7 @@
 #' @import data.table
 #' @importFrom methods as setGeneric setMethod
 #' @importFrom raster brick getZ setZ zApply
+#' @importFrom utils tail
 #' @param x Raster* object; data.table (see details); filename (character, see details)
 #' @param stat character
 #' @return Raster* object; data.table

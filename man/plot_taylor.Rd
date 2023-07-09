@@ -32,5 +32,5 @@ Convenient and aesthetic visualization of data in a Taylor diagram.
 \item "seasons" (only works properly with monthly data)
 }
 
-`...` extra arguments passed on to \code{\link{openair:TaylorDiagram}}
+`...` extra arguments passed on to \code{openair::\link[openair:TaylorDiagram]{TaylorDiagram}}
 }

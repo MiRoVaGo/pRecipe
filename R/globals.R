@@ -1,2 +1,3 @@
-utils::globalVariables(c(".", "name", "obs", "seasons", "value", "lon", "lat", "A",
-                         "B", "C", "D", "forecast", "observed", "t1", "t2"))
+utils::globalVariables(c(".", "A", "B", "C", "D", "dataset", "forecast", "idx",
+                         "lat", "lon", "observed", "seasons", "t1", "t2",
+                         "value"))
