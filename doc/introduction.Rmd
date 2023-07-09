@@ -1,0 +1,417 @@
+---
+title: "Introduction to pRecipe"
+author: "Mijael Rodrigo Vargas Godoy, Yannis Markonis"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Introduction to pRecipe}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: pRecipe.bib
+link-citations: true
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+***
+
+```{r start, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = TRUE,
+  fig.width = 7,
+  warning = FALSE,
+  message = FALSE
+)
+library(pRecipe)
+library(kableExtra)
+data('gpm_global_ts')
+data('gpm_subset_ts')
+data('gpm_cz_ts')
+```
+
+`pRecipe` was conceived back in 2020 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czechia. Designed with reproducible science in mind, **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales [@vargas_godoy_precipe_2023].
+
+<br>
+~_The Global Water Cycle Budget_ | @vargas_godoy_global_2021
+
+_"Like civilization and technology, our understanding of the global water cycle has been continuously evolving, and we have adapted our quantification methods to better exploit new technological resources. The accurate quantification of global water fluxes and storage is crucial in studying the global water cycle."_
+
+***
+
+# Before We Start
+
+Like many other R packages, `pRecipe` has some system requirements:
+
+* [PROJ](https://proj.org/download.html)
+* Geospatial Data Abstraction Library [(GDAL)](https://gdal.org/download.html)
+* Network Common Data Form [(NetCDF)](https://www.unidata.ucar.edu/software/netcdf/)
+
+# Data
+
+`pRecipe` database hosts 27 different precipitation data sets; seven gauge-based, eight satellite-based, seven reanalysis, and five hydrological model precipitation products. Their native specifications, as well as links to their providers, and their respective references are detailed in the following subsections. We have already homogenized, compacted to a single file, and stored them in a [Zenodo repository](https://doi.org/10.5281/zenodo.7078096) under the following naming convention:
+
+`<data set>_<variable>_<units>_<coverage>_<start date>_<end date>_<resolution>_<time step>.nc`
+
+The `pRecipe` data collection was homogenized to these specifications:
+
+* `<variable>` = total precipitation (tp)
+* `<units>` = millimeters (mm)
+* `<resolution>` = 0.25°
+
+E.g., GPCP v2.3 [@adler_global_2018] would be:
+
+`gpcp_tp_mm_global_197901_202205_025_monthly.nc`
+
+## Gauge-Based Products
+```{r gauge, echo=FALSE, results = 'asis'}
+tibble::tribble(
+  ~"Data Set", ~"Spatial Resolution", ~Global, ~Land, ~Ocean, ~"Temporal Resolution", ~"Record Length", ~"Get Data", ~"Reference",
+"CPC-Global", "0.5°", "", "x", "", "Daily", "1979/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.cpc.globalprecip.html)", "@xie_cpc_2010",
+"CRU TS v4.06", "0.5°", "", "x", "", "Monthly", "1901/01-2021/12", "[Download](https://crudata.uea.ac.uk/cru/data/hrg/)", "@harris_version_2020",
+"EM-EARTH", "0.1°", "", "x", "", "Daily", "1950/01-2019/12", "[Download](https://www.frdr-dfdr.ca/repo/dataset/8d30ab02-f2bd-4d05-ae43-11f4a387e5ad)", "@tang_em-earth_2022",
+"GHCN v2", "5°", "", "x", "", "Monthly", "1900/01-2015/05", "[Download](https://psl.noaa.gov/data/gridded/data.ghcngridded.html)", "@peterson_overview_1997",
+"GPCC v2020", "0.25°", "", "x", "", "Monthly", "1891/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.gpcc.html)", "@schneider_gpcc_2011",
+"PREC/L", "0.5°", "", "x", "", "Monthly", "1948/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.precl.html)", "@chen_global_2002",
+"UDel v5.01", "0.5°", "", "x", "", "Monthly", "1901/01-2017/12", "[Download](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)", "@willmott_terrestrial_2001"
+) |>
+  kbl(align = 'lcccccccr') |>
+  kable_styling("striped") |>
+  add_header_above(c(" " = 1, " " = 1, "Spatial Coverage" = 3, " " = 1, " " = 1, " " = 1, " " = 1)) |>
+  unclass() |> cat()
+```
+
+## Satellite-Based Products
+
+```{r satellite, echo=FALSE, results = 'asis'}
+tibble::tribble(
+  ~"Data Set", ~"Spatial Resolution", ~Global, ~Land, ~Ocean, ~"Temporal Resolution", ~"Record Length", ~"Get Data", ~Reference, 
+"CHIRPS v2.0", "0.05°", "", "50°SN", "", "Monthly", "1981/01-2022/07", "[Download](https://www.chc.ucsb.edu/data/chirps)", "@funk_climate_2015",
+"CMAP", "2.5°", "x", "x", "x", "Monthly", "1979/01-2022/07", "[Download](https://psl.noaa.gov/data/gridded/data.cmap.html)", "@xie_global_1997",
+"CMORPH", "0.25°", "60°SN", "60°SN", "60°SN", "Daily", "1998/01-2021/12", "[Download](https://www.ncei.noaa.gov/data/cmorph-high-resolution-global-precipitation-estimates/)", "@joyce_cmorph_2004",
+"GPCP v2.3", "0.5°", "x", "x", "x", "Monthly", "1979/01-2022/05", "[Download](https://psl.noaa.gov/data/gridded/data.gpcp.html)", "@adler_global_2018",
+"GPM IMERGM v06", "0.1°", "x", "x", "x", "Monthly", "2000/06-2020/12", "[Download](https://doi.org/10.5067/GPM/IMERG/3B-MONTH/06)", "@huffman_gpm_2019",
+"MSWEP v2.8", "0.1°", "x", "x", "x", "Monthly", "1979/02-2022/06", "[Download](https://www.gloh2o.org/mswep/)", "@beck_mswep_2019",
+"PERSIANN-CDR", "0.25°", "60°SN", "60°SN", "60°SN", "Monthly", "1983/01-2022/06", "[Download](https://chrsdata.eng.uci.edu/)", "@ashouri_persiann-cdr_2015",
+"TRMM 3B43 v7", "0.25°", "50°SN", "50°SN", "50°SN", "Monthly", "1998/01-2019/12", "[Download](https://doi.org/10.5067/TRMM/TMPA/MONTH/7)", "@huffman_trmm_2010"
+) |>
+  kbl(align = 'lcccccccr') |>
+  kable_styling("striped") |>
+  add_header_above(c(" " = 1, " " = 1, "Spatial Coverage" = 3, " " = 1, " " = 1, " " = 1, " " = 1)) |>
+  unclass() |> cat()
+```
+
+## Reanalysis Products
+
+```{r reanalysis, echo=FALSE, results = 'asis'}
+tibble::tribble(
+  ~"Data Set", ~"Spatial Resolution", ~Global, ~Land, ~Ocean, ~"Temporal Resolution", ~"Record Length", ~"Get Data", ~Reference,
+"20CR v3", "1°", "x", "x", "x", "Monthly", "1836/01-2015/12", "[Download](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html)", "@slivinski_towards_2019",
+"ERA-20C", "1.125°", "x", "x", "x", "Monthly", "1900/01-2010/12", "[Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era-20c)", "@poli_era-20c_2016",
+"ERA5", "0.25°", "x", "x", "x", "Monthly", "1959/01-2021/12", "[Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5)", "@hersbach_era5_2020",
+"JRA-55", "1.25°", "x", "x", "x", "Monthly", "1958/01-2021/12", "[Download](https://rda.ucar.edu/datasets/ds628.1/dataaccess/)", "@kobayashi_jra-55_2015",
+"MERRA-2", "0.5° x 0.625°", "x", "x", "x", "Monthly", "1980/01-2023/01", "[Download](https://disc.gsfc.nasa.gov/datasets?page=1&project=MERRA-2)", "@gelaro_modern-era_2017",
+"NCEP/NCAR R1", "1.875°", "x", "x", "x", "Monthly", "1948/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html)", "@kalnay_ncepncar_1996",
+"NCEP/DOE R2", "1.875°", "x", "x", "x", "Monthly", "1979/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis2.html)", "@kanamitsu_ncepdoe_2002"
+) |>
+  kbl(align = 'lcccccccr') |>
+  kable_styling("striped") |>
+  add_header_above(c(" " = 1, " " = 1, "Spatial Coverage" = 3, " " = 1, " " = 1, " " = 1, " " = 1)) |>
+  unclass() |> cat()
+```
+
+## Hydrological Model Forcing
+
+```{r models, echo=FALSE, results = 'asis'}
+tibble::tribble(
+  ~"Data Set", ~"Spatial Resolution", ~Global, ~Land, ~Ocean, ~"Temporal Resolution", ~"Record Length", ~"Get Data", ~Reference,
+"FLDAS", "0.1°", "", "x", "", "Monthly", "1982/01-2021/12", "[Download](https://ldas.gsfc.nasa.gov/fldas/fldas-data-download)", "@mcnally_land_2017",
+"GLDAS CLSM v2.0", "0.25°", "", "x", "", "Daily", "1948/01-2014/12", "[Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data)", "@rodell_global_2004",
+"GLDAS NOAH v2.0", "0.25°", "", "x", "", "Monthly", "1948/01-2014/12", "[Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data)", "@rodell_global_2004",
+"GLDAS VIC v2.0", "1°", "", "x", "", "Monthly", "1948/01-2014/12", "[Download](https://ldas.gsfc.nasa.gov/gldas/gldas-get-data)", "@rodell_global_2004",
+"TerraClimate", "4$km$", "", "x", "", "Monthly", "1958/01-2021/12", "[Download](https://www.climatologylab.org/terraclimate.html)", "@abatzoglou_terraclimate_2018"
+) |>
+  kbl(align = 'lcccccccr') |>
+  kable_styling("striped") |>
+  add_header_above(c(" " = 1, " " = 1, "Spatial Coverage" = 3, " " = 1, " " = 1, " " = 1, " " = 1)) |>
+  unclass() |> cat()
+```
+
+# Introduction to *pRecipe*
+
+In this introductory demo we will first download the GPM-IMERGM data set. We will then subset the downloaded data over South America for the 2001-2015 period, and crop it to the national scale for Bolivia. In the next step, we will generate time series for our data sets and conclude with the visualization of our data.
+
+**NOTE:** While the functions in `pRecipe` are intended to work directly with its data inventory. `pRecipe` can handle most other data sets in ".nc" format, as well as any other ".nc" file generated by its functions.
+
+## Installation
+
+```{r install, eval = FALSE}
+install.packages('pRecipe')
+library(pRecipe)
+```
+
+## Data Download
+
+Downloading the entire data collection or only a few data sets is quite straightforward. You just call the `download_data` function, which has four arguments *dataset*, *path*, *domain*, and *timestep*.
+
+* *dataset* is set to "all" by default, but you can specify the names of your data sets of interest only.
+* *path* is set to "." by default. I.e., the current working directory. By replacing it for [your_project_folder], the downloaded files will be stored in [your_project_folder] instead.
+* *domain* is set to "raw" by default, but you can specify the domain of your interest only. E.g., "ocean" for ocean only data sets (For availability please check the [Data] section). 
+* *timestep* is set to "monthly" by default, but if you prefer you can also download annual data with "yearly".
+
+Let's download the GPM-IMERGM data set and inspect its content with `infoNC`:
+
+```{r download, eval = FALSE}
+download_data(dataset = 'gpm-imerg')
+gpm_global <- raster::brick('gpm-imerg_tp_mm_global_200006_202012_025_monthly.nc')
+infoNC(gpm_global)
+```
+
+```
+[1] "class      : RasterBrick "
+[2] "dimensions : 720, 1440, 1036800, 256  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : gpm-imerg_tp_mm_global_200006_202012_025_monthly.nc "
+[7] "names      : X2000.06.01, X2000.07.01, X2000.08.01, X2000.09.01, X2000.10.01, X2000.11.01, X2000.12.01, X2001.01.01, X2001.02.01, X2001.03.01, X2001.04.01, X2001.05.01, X2001.06.01, X2001.07.01, X2001.08.01, ... "
+[8] "Date/time  : 2000-06-01, 2021-09-01 (min, max)"
+[9] "varname    : tp " 
+```
+
+## Processing
+
+Once we have downloaded our database, we can start processing the data with:
+
+* `crop_data` to crop the data using a shapefile.
+* `fldmean` to generate a time series by taking the area weighted average over each timestep.
+* `remap` to go from the native resolution (0.25°) to coarser ones (e.g., 0.5°, 1°, 1.5°, ...).
+* `subset_data` to subset the data in time and/or space.
+* `yearstat` to aggregate the data from monthly into annual.
+
+### Subset
+
+To subset our data to a desired region and period of interest, we use the `subset_data` function, which has three arguments *x*, *box*, and *yrs*.
+
+* *x* Raster* object or a data.table or a filename (character).
+* *box* is the bounding box of the region of interest with the coordinates in degrees in the form (xmin, xmax, ymin, ymax).
+* *yrs* is the period of interest with years in the form (start_year, end_year).
+
+Let's subset the GPM-IMERGM data set over South America (-96, -30, -56, 24) for the 2001-2015 period, and inspect its content with `infoNC`:
+
+```{r subset, eval = FALSE}
+gpm_subset <- subset_data(gpm_global, box = c(-96, -30, -56, 24), yrs = c(2001, 2015))
+infoNC(gpm_subset)
+```
+
+```
+[1] "class      : RasterBrick "
+[2] "dimensions : 320, 264, 84480, 180  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : -96, -30, -56, 24  (xmin, xmax, ymin, ymax)"
+[5] "crs        : memory"
+[6] "source     : r_tmp_2023-07-07_185756.586009_13478_99533.grd "
+[7] "names      :  X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
+[8] "min values : 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 2.393141e-04, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, 0.000000e+00, ... "
+[9] "max values :    1069.6940,     917.3006,    1102.5068,     915.1335,    1549.5077,    1169.6469,    1483.0360,    1453.4453,    1624.6550,    1233.0613,    1715.0280,    1285.7706,     881.6859,     874.7393,     883.4313, ... "
+[10] "time       : 2001-01-01, 2015-12-01 (min, max)"  
+```
+
+### Crop
+
+To further crop our data to a desired polygon other than a rectangle, we use the `crop_data` function, which has two arguments *x*, and *y*.
+
+* *x* Raster* object or a data.table or a *.nc filename (character).
+* *y* is a ".shp" filename (character).
+
+Let's crop our GPM-IMERG subset to cover only Bolivia with the respective [shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_BOL_shp.zip), and inspect its content with `infoNC`:
+
+```{r crop, eval = FALSE}
+gpm_bol <- crop_data(gpm_subset, "gadm41_BOL_0.shp")
+infoNC(gpm_bol)
+```
+
+```
+[1] "class      : RasterBrick "
+[2] "dimensions : 54, 50, 2700, 180  (nrow, ncol, ncell, nlayers)"
+[3] "resolution : 0.25, 0.25  (x, y)"
+[4] "extent     : -69.75, -57.25, -23, -9.5  (xmin, xmax, ymin, ymax)"
+[5] "crs        : +proj=longlat +datum=WGS84 +no_defs "
+[6] "source     : memory"
+[7] "names      :  X2001.01.01,  X2001.02.01,  X2001.03.01,  X2001.04.01,  X2001.05.01,  X2001.06.01,  X2001.07.01,  X2001.08.01,  X2001.09.01,  X2001.10.01,  X2001.11.01,  X2001.12.01,  X2002.01.01,  X2002.02.01,  X2002.03.01, ... "
+[8] "min values : 4.359420e+01, 5.965404e+01, 9.195424e+00, 2.650523e+00, 4.473422e-01, 4.649702e-03, 3.581941e-04, 1.511060e-02, 3.136731e-01, 5.168897e-01, 3.443884e-01, 1.019173e+01, 3.299495e+00, 2.491986e+01, 1.160967e+01, ... "
+[9] "max values :    613.21777,    530.11438,    497.65503,    371.26581,    216.29959,    136.70122,    209.37540,    124.56583,    166.48785,    313.69836,    472.29553,    487.41364,    613.77014,    673.70099,    549.12671, ... "
+[10] "time       : 2001-01-01, 2015-12-01 (min, max)" 
+```
+
+### Generate Time series
+
+To make a time series out of our data, we use the `fldmean` function, which has one argument *x*.
+
+* *x* Raster* object or a data.table or a *.nc filename (character).
+
+Let's generate the time series for our three different GPM-IMERGM data sets (Global, South America, and Bolivia), and inspect its first 12 rows:
+
+```{r global_ts, eval = FALSE}
+gpm_global_ts <- fldmean(gpm_global)
+head(gpm_global_ts, 12)
+```
+
+```
+          date     value
+        <Date>     <num>
+ 1: 2000-06-01  93.64844
+ 2: 2000-07-01  96.05852
+ 3: 2000-08-01  94.18216
+ 4: 2000-09-01  90.43190
+ 5: 2000-10-01  93.91238
+ 6: 2000-11-01  93.61439
+ 7: 2000-12-01  96.70333
+ 8: 2001-01-01  94.67989
+ 9: 2001-02-01  86.00950
+10: 2001-03-01  96.15177
+11: 2001-04-01  97.05069
+12: 2001-05-01 100.53676
+```
+
+```{r subset_ts, eval = FALSE}
+gpm_subset_ts <- fldmean(gpm_subset)
+head(gpm_subset_ts, 12)
+```
+
+```
+          date     value
+        <Date>     <num>
+ 1: 2001-01-01 106.52438
+ 2: 2001-02-01  89.98158
+ 3: 2001-03-01 113.35350
+ 4: 2001-04-01 107.26019
+ 5: 2001-05-01 123.50707
+ 6: 2001-06-01  94.20347
+ 7: 2001-07-01 102.07352
+ 8: 2001-08-01  94.62878
+ 9: 2001-09-01  96.31932
+10: 2001-10-01 112.90529
+11: 2001-11-01 102.68565
+12: 2001-12-01 113.49551
+```
+
+```{r bol_ts, eval = FALSE}
+gpm_bol_ts <- fldmean(gpm_bol)
+head(gpm_bol_ts, 12)
+```
+
+```
+          date     value
+        <Date>     <num>
+ 1: 2001-01-01 233.87604
+ 2: 2001-02-01 183.34294
+ 3: 2001-03-01 165.97789
+ 4: 2001-04-01  85.02165
+ 5: 2001-05-01  63.68961
+ 6: 2001-06-01  24.68989
+ 7: 2001-07-01  31.89638
+ 8: 2001-08-01  17.94735
+ 9: 2001-09-01  55.87102
+10: 2001-10-01 103.33750
+11: 2001-11-01 163.95180
+12: 2001-12-01 156.72036
+```
+
+## Visualize
+
+Either after we have processed our data as required or right after downloaded, we have different options to visualize our data:
+
+* `plot_box` to see a seasonal boxplot.
+* `plot_density` to see the empirical density of monthly precipitation.
+* `plot_heatmap` to see a heatmap of all monthly values.
+* `plot_line` to see the average time series.
+* `plot_map` to see the Cartesian lon-lat map of the first raster layer.
+* `plot_summary` to see line, heatmap, box, and density plot together in a single plot.
+* `plot_taylor` to see a Taylor Diagram (requires a referential data set).
+
+Let's plot our three different GPM-IMERGM data sets (Global, South America, and Bolivia)
+
+### Maps
+
+To see a map of any data set raw or processed, we use `plot_map` which takes only one layer of the RasterBrick as input.
+
+```{r map_global, eval = FALSE}
+plot_map(gpm_global[[1]])
+```
+
+![](plots/map.png){width=90%}
+
+```{r map_subset, eval = FALSE}
+plot_map(gpm_subset[[1]])
+```
+
+![](plots/map_sa.png){width=45%}
+
+```{r map_cz, eval = FALSE}
+plot_map(gpm_bol[[1]])
+```
+
+![](plots/map_bo.png){width=45%}
+
+### Time Series Visuals
+
+To draw a time series generated by `make_ts`, we use any of the options below, which takes only a `make_ts` ".csv" generated file.
+
+#### Line
+
+```{r lines}
+plot_line(gpm_global_ts)
+plot_line(gpm_subset_ts)
+plot_line(gpm_bol_ts)
+```
+
+#### Heatmap
+
+```{r hearmaps}
+plot_heatmap(gpm_global_ts)
+plot_heatmap(gpm_subset_ts)
+plot_heatmap(gpm_bol_ts)
+```
+
+#### Boxplot
+
+```{r boxplots}
+plot_box(gpm_global_ts)
+plot_box(gpm_subset_ts)
+plot_box(gpm_bol_ts)
+```
+
+#### Density
+
+```{r histograms}
+plot_density(gpm_global_ts)
+plot_density(gpm_subset_ts)
+plot_density(gpm_bol_ts)
+```
+
+#### Summary
+
+**NOTE:** For good aesthetics we recommend saving `plot_summary` with `ggsave(<filename>, <plot>, width = 16, height = 13.5)`.
+
+```{r summary, eval=FALSE}
+plot_summary(gpm_global_ts)
+#plot_summary(gpm_subset_ts)
+#plot_summary(gpm_cz_ts)
+```
+
+![](plots/summary.png){width=95%}
+
+# Coming Soon
+
+More functions for data processing and analysis and expanding the database.
+
+# References

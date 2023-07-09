@@ -58,10 +58,10 @@ setMethod("plot_box", "data.table",
           function(x, var = "Precipitation", unit = "mm") {
             if (length(unique(x$dataset)) <= 1){
               p00 <- ggplot(x, aes(x = as.factor(month(date)), y = value)) +
-                geom_boxplot(color = '#377eb8')
+                geom_boxplot(fill = '#377eb8')
             } else {
               p00 <- ggplot(x, aes(x = as.factor(month(date)), y = value,
-                                   color = dataset)) +
+                                   fill = dataset)) +
                 geom_boxplot()
             }
             p01 <- p00 +
