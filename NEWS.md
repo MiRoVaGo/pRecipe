@@ -1,3 +1,14 @@
+#pRecipe 3.0.0
+* renamed and restructured various functions
+* added `label`, `muldpm`, `tabular`, and `trend` functions
+* `crop_data` now removes empty space with NAs
+* `subset_data` now handles subsetting in time and/or space
+* improved parallel processing
+* functions now have methods for Raster* object, data.table, and filename (character)
+* updated vignette
+* updated README
+* updated documentation accordingly
+
 #pRecipe 2.5.0
 * added `%>%` operator
 * increased versatility of all plot functions (for evapoRe compatibility)
@@ -6,7 +17,7 @@
 
 #pRecipe 2.4.0
 
-* yearly data has been  added to the database
+* yearly data has been added to the database
 * added pod, far, csi, and nse functions
 * updated the vignette
 * updated citation info
