@@ -15,7 +15,7 @@ Description: An open-access tool/framework to download, validate, visualize, and
 Depends: R (>= 4.0.0)
 Imports: grDevices, methods, parallel, stats, utils, data.table, doParallel,
   foreach, ggplot2, ggpubr, lubridate, magrittr, ncdf4, openair, raster,
-  R.utils, scales, sf, sp
+  scales, sf, sp
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

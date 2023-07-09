@@ -1,12 +1,13 @@
-#' Rescale a precipitation data product in time
+#' Yearly <stat>
 #'
-#' The function \code{yearstat} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
+#' The function \code{yearstat} aggregates the data from monthly to yearly.
 #'
-#' @importFrom methods as 
-#' @importFrom raster brick setZ subset zApply
-#' @importFrom R.utils getAbsolutePath
-#' @param x a character string with the path to the data file. Or RasterBrick object
-#' @param stat a character string with the desired aggregation function. Suitable options are:
+#' @details
+#' If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+#' 
+#' If `x` is a filename, it should point to a *.nc file.
+#' 
+#' `stat` is a character string describing the desired aggregation function. Suitable options are:
 #' \itemize{
 #' \item "max"
 #' \item "mean"
@@ -14,82 +15,101 @@
 #' \item "min"
 #' \item "sum" (default)
 #' }
-#' @param autosave logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file
-#' @return A RasterBrick.
+#' 
+#' @import data.table
+#' @importFrom methods as setGeneric setMethod
+#' @importFrom raster brick getZ setZ zApply
+#' @param x Raster* object; data.table (see details); filename (character, see details)
+#' @param stat character
+#' @return Raster* object; data.table
 #' @export
 #' @examples
 #' \dontrun{
-#' yearstat("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
-#' yearstat("dummie.nc", autosave = TRUE)
+#' download_data("gldas-vic", path = tempdir())
+#' r <- raster::brick(paste0(tempdir(),
+#' "/gldas-vic_tp_mm_land_194801_201412_025_monthly.nc"))
+#' s <- yearstat(r, "mean")
 #' }
 
-yearstat <- function(x, stat = "sum", autosave = FALSE){
-  nc_in <- getAbsolutePath(x)
-  checker <- name_check(x)
-  if (checker$length == 8) {
-    checker$name[8] <- "yearly"
-    start_year <- substr(checker$name[5], 1, 4)
-    start_month <- substr(checker$name[5], 5, 6)
-    end_year <- substr(checker$name[6], 1, 4)
-    end_month <- substr(checker$name[6], 5, 6)
-    if ((as.numeric(start_month) != 1) & (as.numeric(end_month) != 12)){
-      checker$name[5] <- as.numeric(start_year) + 1
-      checker$name[6] <- as.numeric(end_year) - 1
-    } else if ((as.numeric(start_month) != 1) & (as.numeric(end_month) == 12)){
-      checker$name[5] <- as.numeric(start_year) + 1
-      checker$name[6] <- end_year
-    } else if ((as.numeric(start_month) == 1) & (as.numeric(end_month) != 12)){
-      checker$name[5] <- start_year
-      checker$name[6] <- as.numeric(end_year) - 1
-    } else {
-      checker$name[5] <- start_year
-      checker$name[6] <- end_year
-    }
-    nc_out <- paste(checker$name, collapse = "_")
-    nc_out <- paste0(nc_out, ".nc")
-    nc_mid <- sub("(.*/)(.*)", "\\1", nc_in)
-    nc_out <- paste0(nc_mid, nc_out)
-  } else {
-    nc_out <- sub(".nc.*", "", nc_in)
-    nc_out <- paste0(nc_out, "_yearly.nc")
-  }
-  nc_out <- sub(".nc.nc.*", ".nc", nc_out)
-  check_out <- exists_check(nc_out)
-  if (check_out$exists) stop(check_out$sms)
-  if (is.character(x)){
-    dummie_brick <- brick(nc_in)
-  } else {
-    dummie_brick <- x
-  }
-  if (checker$length == 8) {
-    if ((as.numeric(start_month) != 1) & (as.numeric(end_month) != 12)){
-      start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
-      end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
-    } else if ((as.numeric(start_month) != 1) & (as.numeric(end_month) == 12)){
-      start_year <- paste0(as.numeric(start_year) + 1, "-01-01")
-      end_year <- paste0(end_year, "-12-01")
-    } else if ((as.numeric(start_month) == 1) & (as.numeric(end_month) != 12)){
-      start_year <- paste0(start_year, "-01-01")
-      end_year <- paste0(as.numeric(end_year) - 1, "-12-01")
-    } else {
-      start_year <- paste0(start_year, "-01-01")
-      end_year <- paste0(end_year, "-12-01")
-    }
-    dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
-    dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
-                                             as.Date(end_year), by = "years"))
-    range_years <- which(getZ(dummie_yearly) >= start_year & 
-                           (getZ(dummie_yearly) <= end_year))
-    dummie_yearly <- subset(dummie_yearly, range_years)
-    dummie_yearly <- setZ(dummie_yearly, seq(as.Date(start_year), 
-                                             as.Date(end_year), by = "years"))
-  } else {
-    dummie_yearly <- zApply(dummie_brick, by = year, fun = match.fun(stat), na.rm = TRUE)
-  }
-  if (autosave){
-    saveNC(dummie_yearly, nc_out)
-    return(invisible())
-  } else {
-    return(dummie_yearly)
-  }
-}
+setGeneric("yearstat", function(x, stat = "sum") standardGeneric("yearstat"))
+
+#' @rdname yearstat
+#' @method yearstat Raster
+
+setMethod("yearstat", "Raster",
+          function(x, stat = "sum") {
+            dummie_dates <- getZ(x) %>% aux_date()
+            start_date <- dummie_dates[1]
+            final_date <- tail(dummie_dates, 1)
+            if ((month(start_date) != 1) & (month(final_date) != 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = "%Y-%m-%d")
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) != 1) & (month(final_date) == 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) == 1) & (month(final_date) != 12)){
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            }
+            dummie <- selyear(x, c(year(start_date), year(final_date)))
+            dummie <- zApply(dummie, by = year, fun = match.fun(stat),
+                             na.rm = TRUE)
+            dummie <- setZ(dummie, seq(start_date, final_date, by = 'year'))
+            return(dummie)
+          })
+
+#' @rdname yearstat
+#' @method yearstat data.table
+
+setMethod("yearstat", "data.table",
+          function(x, stat = "sum") {
+            dummie_dates <- x$date
+            start_date <- min(dummie_dates, na.rm = TRUE)
+            final_date <- max(dummie_dates, na.rm = TRUE)
+            if ((month(start_date) != 1) & (month(final_date) != 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = "%Y-%m-%d")
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) != 1) & (month(final_date) == 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) == 1) & (month(final_date) != 12)){
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            }
+            dummie <- x[(date >= start_date) & (date <= final_date),
+                        .(value = match.fun(stat)(value, na.rm = TRUE)),
+                        .(lon, lat, year(date))]
+            return(dummie)
+          })
+
+#' @rdname yearstat
+#' @method yearstat character
+
+setMethod("yearstat", "character",
+          function(x, stat = "sum") {
+            x <- brick(x)
+            dummie_dates <- getZ(x) %>% aux_date()
+            start_date <- dummie_dates[1]
+            final_date <- tail(dummie_dates, 1)
+            if ((month(start_date) != 1) & (month(final_date) != 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = "%Y-%m-%d")
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) != 1) & (month(final_date) == 12)){
+              start_date <- as.Date(paste0(year(start_date) + 1, "-01-01"),
+                                    format = '%Y-%m-%d')
+            } else if ((month(start_date) == 1) & (month(final_date) != 12)){
+              final_date <- as.Date(paste0(year(final_date) - 1, "-12-01"),
+                                    format = '%Y-%m-%d')
+            }
+            dummie <- selyear(x, c(year(start_date), year(final_date)))
+            dummie <- zApply(dummie, by = year, fun = match.fun(stat),
+                             na.rm = TRUE)
+            dummie <- setZ(dummie, seq(start_date, final_date, by = 'year'))
+            return(dummie)
+          })

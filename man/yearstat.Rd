@@ -2,33 +2,49 @@
 % Please edit documentation in R/yearstat.R
 \name{yearstat}
 \alias{yearstat}
-\title{Rescale a precipitation data product in time}
+\alias{yearstat,Raster-method}
+\alias{yearstat,data.table-method}
+\alias{yearstat,character-method}
+\title{Yearly <stat>}
 \usage{
-yearstat(x, stat = "sum", autosave = FALSE)
+yearstat(x, stat = "sum")
+
+\S4method{yearstat}{Raster}(x, stat = "sum")
+
+\S4method{yearstat}{data.table}(x, stat = "sum")
+
+\S4method{yearstat}{character}(x, stat = "sum")
 }
 \arguments{
-\item{x}{a character string with the path to the data file. Or RasterBrick object}
+\item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
-\item{stat}{a character string with the desired aggregation function. Suitable options are:
+\item{stat}{character}
+}
+\value{
+Raster* object; data.table
+}
+\description{
+The function \code{yearstat} aggregates the data from monthly to yearly.
+}
+\details{
+If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "value"
+
+If `x` is a filename, it should point to a *.nc file.
+
+`stat` is a character string describing the desired aggregation function. Suitable options are:
 \itemize{
 \item "max"
 \item "mean"
 \item "median"
 \item "min"
 \item "sum" (default)
-}}
-
-\item{autosave}{logical FALSE (default). If TRUE data will be automatically stored in the same location of the input file}
 }
-\value{
-A RasterBrick.
-}
-\description{
-The function \code{yearstat} aggregates the requested data set from monthly to yearly time steps and stores it in the same location of the input file.
 }
 \examples{
 \dontrun{
-yearstat("gpcp_tp_mm_global_197901_202205_025_monthly.nc", autosave = TRUE)
-yearstat("dummie.nc", autosave = TRUE)
+download_data("gldas-vic", path = tempdir())
+r <- raster::brick(paste0(tempdir(),
+"/gldas-vic_tp_mm_land_194801_201412_025_monthly.nc"))
+s <- yearstat(r, "mean")
 }
 }

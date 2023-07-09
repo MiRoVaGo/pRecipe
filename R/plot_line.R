@@ -42,7 +42,7 @@ setMethod("plot_line", "Raster",
               geom_line(color = '#377eb8') +
               theme_bw() +
               labs(x = NULL, y = paste0('[', unit, ']'), title = var) +
-              scale_x_date(date_breaks = "4 year", date_labels = "%Y-%m") +
+              scale_x_date(date_labels = "%Y-%m") +
               theme(plot.title = element_text(size = 24),
                     axis.text = element_text(size = 20),
                     axis.title = element_text(size = 24))
@@ -64,7 +64,7 @@ setMethod("plot_line", "data.table",
             p01 <- p00 +
               theme_bw() +
               labs(x = NULL, y = paste0('[', unit, ']'), title = var) +
-              scale_x_date(date_breaks = "4 year", date_labels = "%Y-%m") +
+              scale_x_date(date_labels = "%Y-%m") +
               theme(plot.title = element_text(size = 24),
                     axis.text = element_text(size = 20),
                     axis.title = element_text(size = 24))
@@ -82,7 +82,7 @@ setMethod("plot_line", "character",
               geom_line(color = '#377eb8') +
               theme_bw() +
               labs(x = NULL, y = paste0('[', unit, ']'), title = var) +
-              scale_x_date(date_breaks = "4 year", date_labels = "%Y-%m") +
+              scale_x_date(date_labels = "%Y-%m") +
               theme(plot.title = element_text(size = 24),
                     axis.text = element_text(size = 20),
                     axis.title = element_text(size = 24))
