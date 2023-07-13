@@ -29,7 +29,7 @@ setMethod("tabular", "Raster",
             dummie <- foreach (idx = 1:nlayers(x), .combine = rbind) %dopar% {
               dummie_layer <- x[[idx]]
               dummie_layer <- as.data.frame(dummie_layer, xy = TRUE,
-                                            long = TRUE, na.rm = FALSE) %>%
+                                            long = TRUE, na.rm = TRUE) %>%
                 as.data.table()
               setnames(dummie_layer, c("lon", "lat", "date", "value"))
               dummie_layer
@@ -49,7 +49,7 @@ setMethod("tabular", "character",
             dummie <- foreach (idx = 1:nlayers(dummie_brick), .combine = rbind) %dopar% {
               dummie_layer <- dummie_brick[[idx]]
               dummie_layer <- as.data.frame(dummie_layer, xy = TRUE,
-                                            long = TRUE, na.rm = FALSE) %>%
+                                            long = TRUE, na.rm = TRUE) %>%
                 as.data.table()
               setnames(dummie_layer, c("lon", "lat", "date", "value"))
               dummie_layer
