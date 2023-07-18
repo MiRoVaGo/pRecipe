@@ -51,7 +51,8 @@ setMethod("tabular", "character",
               dummie_layer <- as.data.frame(dummie_layer, xy = TRUE,
                                             long = TRUE, na.rm = TRUE) %>%
                 as.data.table()
-              setnames(dummie_layer, c("lon", "lat", "date", "value"))
+              setnames(dummie_layer, c("lon", "lat", "date", "value"),
+                       skip_absent = TRUE)
               dummie_layer
             }
             return(dummie)

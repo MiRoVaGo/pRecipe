@@ -33,9 +33,9 @@ knitr::opts_chunk$set(
 )
 library(pRecipe)
 library(kableExtra)
-data('gpm_global_ts')
-data('gpm_subset_ts')
-data('gpm_cz_ts')
+gpm_global_ts <- pRecipe:::gpm_global_ts
+gpm_subset_ts <- pRecipe:::gpm_subset_ts
+gpm_bol_ts <- pRecipe:::gpm_bol_ts
 ```
 
 `pRecipe` was conceived back in 2020 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czechia. Designed with reproducible science in mind, **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales [@vargas_godoy_precipe_2023].
