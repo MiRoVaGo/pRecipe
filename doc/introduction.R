@@ -8,9 +8,6 @@ knitr::opts_chunk$set(
 )
 library(pRecipe)
 library(kableExtra)
-data('gpm_global_ts')
-data('gpm_subset_ts')
-data('gpm_cz_ts')
 
 ## ----gauge, echo=FALSE, results = 'asis'--------------------------------------
 tibble::tribble(
@@ -105,33 +102,49 @@ tibble::tribble(
 #  head(gpm_bol_ts, 12)
 
 ## ----map_global, eval = FALSE-------------------------------------------------
-#  plot_map(gpm_global[[1]])
+#  plot_map(gpm_global)
 
 ## ----map_subset, eval = FALSE-------------------------------------------------
-#  plot_map(gpm_subset[[1]])
+#  plot_map(gpm_subset)
 
-## ----map_cz, eval = FALSE-----------------------------------------------------
-#  plot_map(gpm_bol[[1]])
+## ----map_bo, eval = FALSE-----------------------------------------------------
+#  plot_map(gpm_bol)
 
-## ----lines--------------------------------------------------------------------
-plot_line(gpm_global_ts)
-plot_line(gpm_subset_ts)
-plot_line(gpm_bol_ts)
+## ----lines, eval = FALSE------------------------------------------------------
+#  plot_line(gpm_global_ts)
 
-## ----hearmaps-----------------------------------------------------------------
-plot_heatmap(gpm_global_ts)
-plot_heatmap(gpm_subset_ts)
-plot_heatmap(gpm_bol_ts)
+## ----lines_sa, eval = FALSE---------------------------------------------------
+#  plot_line(gpm_subset_ts)
 
-## ----boxplots-----------------------------------------------------------------
-plot_box(gpm_global_ts)
-plot_box(gpm_subset_ts)
-plot_box(gpm_bol_ts)
+## ----lines_bo, eval = FALSE---------------------------------------------------
+#  plot_line(gpm_bol_ts)
 
-## ----histograms---------------------------------------------------------------
-plot_density(gpm_global_ts)
-plot_density(gpm_subset_ts)
-plot_density(gpm_bol_ts)
+## ----hearmaps, eval = FALSE---------------------------------------------------
+#  plot_heatmap(gpm_global_ts)
+
+## ----hearmaps_sa, eval = FALSE------------------------------------------------
+#  plot_heatmap(gpm_subset_ts)
+
+## ----hearmaps_bo, eval = FALSE------------------------------------------------
+#  plot_heatmap(gpm_bol_ts)
+
+## ----boxplots, eval = FALSE---------------------------------------------------
+#  plot_box(gpm_global_ts)
+
+## ----boxplots_sa, eval = FALSE------------------------------------------------
+#  plot_box(gpm_subset_ts)
+
+## ----boxplots_bo, eval = FALSE------------------------------------------------
+#  plot_box(gpm_bol_ts)
+
+## ----histograms, eval = FALSE-------------------------------------------------
+#  plot_density(gpm_global_ts)
+
+## ----histograms_sa, eval = FALSE----------------------------------------------
+#  plot_density(gpm_subset_ts)
+
+## ----histograms_bo, eval = FALSE----------------------------------------------
+#  plot_density(gpm_bol_ts)
 
 ## ----summary, eval=FALSE------------------------------------------------------
 #  plot_summary(gpm_global_ts)

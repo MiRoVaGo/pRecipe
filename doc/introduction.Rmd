@@ -33,9 +33,6 @@ knitr::opts_chunk$set(
 )
 library(pRecipe)
 library(kableExtra)
-data('gpm_global_ts')
-data('gpm_subset_ts')
-data('gpm_cz_ts')
 ```
 
 `pRecipe` was conceived back in 2020 as part of MRVG's doctoral dissertation at the Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Czechia. Designed with reproducible science in mind, **`pRecipe` facilitates the download, exploration, visualization, and analysis** of multiple precipitation data products across various spatiotemporal scales [@vargas_godoy_precipe_2023].
@@ -342,22 +339,22 @@ Let's plot our three different GPM-IMERGM data sets (Global, South America, and 
 
 ### Maps
 
-To see a map of any data set raw or processed, we use `plot_map` which takes only one layer of the RasterBrick as input.
+To see a map of any data set raw or processed, we use `plot_map`.
 
 ```{r map_global, eval = FALSE}
-plot_map(gpm_global[[1]])
+plot_map(gpm_global)
 ```
 
 ![](plots/map.png){width=90%}
 
 ```{r map_subset, eval = FALSE}
-plot_map(gpm_subset[[1]])
+plot_map(gpm_subset)
 ```
 
 ![](plots/map_sa.png){width=45%}
 
-```{r map_cz, eval = FALSE}
-plot_map(gpm_bol[[1]])
+```{r map_bo, eval = FALSE}
+plot_map(gpm_bol)
 ```
 
 ![](plots/map_bo.png){width=45%}
@@ -366,35 +363,73 @@ plot_map(gpm_bol[[1]])
 
 #### Line
 
-```{r lines}
+```{r lines, eval = FALSE}
 plot_line(gpm_global_ts)
+```
+
+![](plots/line.png){width=90%}
+```{r lines_sa, eval = FALSE}
 plot_line(gpm_subset_ts)
+```
+
+![](plots/line_sa.png){width=90%}
+
+```{r lines_bo, eval = FALSE}
 plot_line(gpm_bol_ts)
 ```
 
+![](plots/line_bo.png){width=90%}
+
 #### Heatmap
 
-```{r hearmaps}
+```{r hearmaps, eval = FALSE}
 plot_heatmap(gpm_global_ts)
+```
+
+![](plots/heatmap.png){width=90%}
+```{r hearmaps_sa, eval = FALSE}
 plot_heatmap(gpm_subset_ts)
+```
+
+![](plots/heatmap_sa.png){width=90%}
+```{r hearmaps_bo, eval = FALSE}
 plot_heatmap(gpm_bol_ts)
 ```
+![](plots/heatmap_bo.png){width=90%}
 
 #### Boxplot
 
-```{r boxplots}
+```{r boxplots, eval = FALSE}
 plot_box(gpm_global_ts)
+```
+
+![](plots/box.png){width=90%}
+
+```{r boxplots_sa, eval = FALSE}
 plot_box(gpm_subset_ts)
+```
+
+![](plots/box_sa.png){width=90%}
+
+```{r boxplots_bo, eval = FALSE}
 plot_box(gpm_bol_ts)
 ```
+![](plots/box_bo.png){width=90%}
 
 #### Density
 
-```{r histograms}
+```{r histograms, eval = FALSE}
 plot_density(gpm_global_ts)
+```
+![](plots/density.png){width=90%}
+```{r histograms_sa, eval = FALSE}
 plot_density(gpm_subset_ts)
+```
+![](plots/density_sa.png){width=90%}
+```{r histograms_bo, eval = FALSE}
 plot_density(gpm_bol_ts)
 ```
+![](plots/density_bo.png){width=90%}
 
 #### Summary
 
@@ -406,7 +441,7 @@ plot_summary(gpm_global_ts)
 #plot_summary(gpm_cz_ts)
 ```
 
-![](plots/summary.png){width=95%}
+![](plots/summary.png){width=90%}
 
 # Coming Soon
 

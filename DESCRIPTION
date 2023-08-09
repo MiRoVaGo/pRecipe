@@ -18,7 +18,7 @@ Imports: grDevices, methods, parallel, stats, utils, data.table, doParallel,
   scales, sf, sp
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 URL: https://github.com/MiRoVaGo/pRecipe
 BugReports: https://github.com/MiRoVaGo/pRecipe/issues
 SystemRequirements: PROJ (>= 6, https://proj.org/download.html), 
