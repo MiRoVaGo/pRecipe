@@ -112,8 +112,8 @@ tibble::tribble(
 tibble::tribble(
   ~"Data Set", ~"Spatial Resolution", ~Global, ~Land, ~Ocean, ~"Temporal Resolution", ~"Record Length", ~"Get Data", ~Reference,
 "20CR v3", "1°", "x", "x", "x", "Monthly", "1836/01-2015/12", "[Download](https://psl.noaa.gov/data/gridded/data.20thC_ReanV3.html)", "@slivinski_towards_2019",
-"ERA-20C", "1.125°", "x", "x", "x", "Monthly", "1900/01-2010/12", "[Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era-20c)", "@poli_era-20c_2016",
-"ERA5", "0.25°", "x", "x", "x", "Monthly", "1959/01-2021/12", "[Download](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5)", "@hersbach_era5_2020",
+"ERA-20C", "1.125°", "x", "x", "x", "Monthly", "1900/01-2010/12", "[Download](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-20th-century)", "@poli_era-20c_2016",
+"ERA5", "0.25°", "x", "x", "x", "Monthly", "1959/01-2021/12", "[Download](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)", "@hersbach_era5_2020",
 "JRA-55", "1.25°", "x", "x", "x", "Monthly", "1958/01-2021/12", "[Download](https://rda.ucar.edu/datasets/ds628.1/dataaccess/)", "@kobayashi_jra-55_2015",
 "MERRA-2", "0.5° x 0.625°", "x", "x", "x", "Monthly", "1980/01-2023/01", "[Download](https://disc.gsfc.nasa.gov/datasets?page=1&project=MERRA-2)", "@gelaro_modern-era_2017",
 "NCEP/NCAR R1", "1.875°", "x", "x", "x", "Monthly", "1948/01-2022/08", "[Download](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.derived.html)", "@kalnay_ncepncar_1996",
