@@ -57,6 +57,7 @@ setMethod("yearstat", "Raster",
             dummie <- selyear(x, c(year(start_date), year(final_date)))
             dummie <- zApply(dummie, by = year, fun = match.fun(stat),
                              na.rm = TRUE)
+            dummie[dummie == 0] <- NA
             dummie <- setZ(dummie, seq(start_date, final_date, by = 'year'))
             return(dummie)
           })
@@ -84,6 +85,7 @@ setMethod("yearstat", "data.table",
             dummie <- x[(date >= start_date) & (date <= final_date),
                         .(value = match.fun(stat)(value, na.rm = TRUE)),
                         .(lon, lat, year(date))]
+            dummie[value == 0, value := NA]
             return(dummie)
           })
 
@@ -111,6 +113,7 @@ setMethod("yearstat", "character",
             dummie <- selyear(x, c(year(start_date), year(final_date)))
             dummie <- zApply(dummie, by = year, fun = match.fun(stat),
                              na.rm = TRUE)
+            dummie[dummie == 0] <- NA
             dummie <- setZ(dummie, seq(start_date, final_date, by = 'year'))
             return(dummie)
           })
