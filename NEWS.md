@@ -1,4 +1,8 @@
 #pRecipe 3.0.1-1
+* added IPCC regions to `pRecipe_masks()`
+* `saveNC()` has now optional arguments for variable name metadata
+
+#pRecipe 3.0.1-1
 * added `pRecipe_masks()` function which imports a data.table with 1036800 obs. of 16 variables: lon, lat, basin_id, biome_class, biome_short_class, country, country_short, elev_class, KG_class, KG_class_1, KG_class_2, KG_class_3, KG_class_1_name, land_cover_class, land_cover_short_class, and land_mask.
 * fixed bug on `yearstat`
 * updated broken links in vignette

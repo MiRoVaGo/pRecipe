@@ -4,12 +4,18 @@
 \alias{saveNC}
 \title{Save .nc file}
 \usage{
-saveNC(x, file)
+saveNC(x, file, name = "tp", longname = "Total precipitation", units = "mm")
 }
 \arguments{
 \item{x}{Raster* object}
 
 \item{file}{character}
+
+\item{name}{character}
+
+\item{longname}{character}
+
+\item{units}{character}
 }
 \value{
 No return value, called to save a file

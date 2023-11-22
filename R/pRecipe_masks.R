@@ -10,7 +10,7 @@ pRecipe_masks <- function(){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
-  zenodo_url <- "https://zenodo.org/record/8374531/files/pRecipe_masks_global_025.gz"
+  zenodo_url <- "https://zenodo.org/record/10196716/files/pRecipe_masks_global_025.gz"
   dummie <- fread(zenodo_url)
   return(dummie)
 }

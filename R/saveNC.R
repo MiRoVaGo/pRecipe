@@ -7,6 +7,9 @@
 #' @importFrom raster getValues getZ xFromCol yFromRow
 #' @param x Raster* object
 #' @param file character
+#' @param name character
+#' @param longname character
+#' @param units character
 #' @return No return value, called to save a file
 #' @export
 #' @examples
@@ -14,7 +17,7 @@
 #' save_nc(dummie_brick, "gpcp_tp_mm_global_197901_202205_025_monthly.nc")
 #' }
 
-saveNC <- function(x, file){
+saveNC <- function(x, file, name = "tp", longname = "Total precipitation", units = "mm"){
   lon <- xFromCol(x)
   lon <- round(lon, 4)
   lat <- yFromRow(x)
@@ -46,11 +49,11 @@ saveNC <- function(x, file){
                        units = "days since 1970-01-01 00:00:0.0",
                        calendar = "standard",
                        unlim = TRUE)
-  deftp <- ncvar_def(name = "tp", units = "mm", 
+  deftp <- ncvar_def(name = name, units = units, 
                      list(deflon, deflat, deftime), 
                      missval = -9999,
                      compression = 4,
-                     longname = "Total monthly precipitation",
+                     longname = longname,
                      prec = "float")
   ncoutput <- nc_create(file, list(deftp), force_v4 = TRUE, verbose = FALSE)
   ncvar_put(ncoutput, deftp, tp)
