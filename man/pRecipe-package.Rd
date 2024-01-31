@@ -2,6 +2,7 @@
 % Please edit documentation in R/pRecipe.R
 \docType{package}
 \name{pRecipe-package}
+\alias{pRecipe}
 \alias{pRecipe-package}
 \title{pRecipe: Precipitation R Recipes}
 \description{
@@ -10,8 +11,17 @@ pRecipe is an R package that facilitates the download, exploration, visualizatio
 \references{
 Vargas Godoy, M. R., & Markonis, Y. (2023). pRecipe: A global precipitation climatology toolbox and database. Environmental Modelling & Software, 165, 105711. \doi{10.1016/j.envsoft.2023.105711}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/MiRoVaGo/pRecipe}
+  \item Report bugs at \url{https://github.com/MiRoVaGo/pRecipe/issues}
+}
+
+}
 \author{
 \strong{Coded by:} Mijael Rodrigo Vargas Godoy \email{vargas_godoy@fzp.czu.cz}
 
 \strong{Conceptual design by:} Mijael Rodrigo Vargas Godoy \email{vargas_godoy@fzp.czu.cz} and Yannis Markonis \email{markonis@fzp.czu.cz}
 }
+\keyword{internal}

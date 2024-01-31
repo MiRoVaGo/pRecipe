@@ -38,14 +38,16 @@ setMethod("trend", "data.table",
             no_cores <- detectCores() - 1
             if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
             registerDoParallel(cores = no_cores)
-            if (length(unique(x$lon)) > length(unique(x$lat))) {
-              x <- split(x, by = "lon")
-            } else {
-              x <- split(x, by = "lat")
-            }
+            x <- split(x, by = c("lon", "lat"))
             dummie <- foreach (idx = 1:length(x), .combine = rbind) %dopar% {
               dummie_row <- x[[idx]]
-              dummie_row <- dummie_row[, .(slope = lm(value ~ date)$coefficients[[2]]), .(lon, lat)]
+              dummie_time <- 1:nrow(dummie_row)
+              X <- cbind(1, dummie_time)
+              invXtX <- solve(t(X) %*% X) %*% t(X)
+              dummie_slope <- (invXtX %*% dummie_row$value)[2]
+              dummie_row <- unique(dummie_row[, .(lon, lat)])
+              dummie_row$slope <- dummie_slope
+              return(dummie_row)
             }
             return(dummie)
           })

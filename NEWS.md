@@ -1,13 +1,20 @@
-#pRecipe 3.0.1-1
-* added IPCC regions to `pRecipe_masks()`
-* `saveNC()` has now optional arguments for variable name metadata
+# pRecipe 3.0.1-3
 
-#pRecipe 3.0.1-1
-* added `pRecipe_masks()` function which imports a data.table with 1036800 obs. of 16 variables: lon, lat, basin_id, biome_class, biome_short_class, country, country_short, elev_class, KG_class, KG_class_1, KG_class_2, KG_class_3, KG_class_1_name, land_cover_class, land_cover_short_class, and land_mask.
+* fixed bug on `trend` 
+
+# pRecipe 3.0.1-1
+
+* added IPCC regions to `pRecipe_masks`
+* `saveNC` has now optional arguments for variable name metadata
+
+# pRecipe 3.0.1-1
+
+* added `pRecipe_masks` function which imports a data.table with 1036800 obs. of 16 variables: lon, lat, basin_id, biome_class, biome_short_class, country, country_short, elev_class, KG_class, KG_class_1, KG_class_2, KG_class_3, KG_class_1_name, land_cover_class, land_cover_short_class, and land_mask.
 * fixed bug on `yearstat`
 * updated broken links in vignette
 
-#pRecipe 3.0.0
+# pRecipe 3.0.0
+
 * renamed and restructured various functions
 * added `label`, `muldpm`, `tabular`, and `trend` functions
 * `crop_data` now removes empty space with NAs
@@ -18,13 +25,14 @@
 * updated README
 * updated documentation accordingly
 
-#pRecipe 2.5.0
+# pRecipe 2.5.0
+
 * added `%>%` operator
 * increased versatility of all plot functions (for evapoRe compatibility)
-* fixed bugs for make_ts() not generating a Date column
+* fixed bugs for `make_ts` not generating a Date column
 * updated documentation accordingly
 
-#pRecipe 2.4.0
+# pRecipe 2.4.0
 
 * yearly data has been added to the database
 * added pod, far, csi, and nse functions
