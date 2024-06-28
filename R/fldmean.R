@@ -49,12 +49,12 @@ setMethod("fldmean", "Raster",
 
 setMethod("fldmean", "data.table",
           function(x){
-            dummie_list <- split(x, by = "date")
+            dummie_list <- unique(x$date)
             no_cores <- detectCores() - 1
             if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
             registerDoParallel(cores = no_cores)
             dummie <- foreach (idx = 1:length(dummie_list), .combine = rbind) %dopar% {
-              dummie_table <- dummie_list[[idx]]
+              dummie_table <- x[date == dummie_list[idx]]
               dummie_date <- unique(dummie_table$date)
               dummie_step <- dummie_table[, .(lon, lat, value)]
               dummie_step <- rasterFromXYZ(dummie_step)

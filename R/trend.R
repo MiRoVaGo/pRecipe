@@ -38,9 +38,10 @@ setMethod("trend", "data.table",
             no_cores <- detectCores() - 1
             if (no_cores < 1 | is.na(no_cores))(no_cores <- 1)
             registerDoParallel(cores = no_cores)
-            x <- split(x, by = c("lon", "lat"))
-            dummie <- foreach (idx = 1:length(x), .combine = rbind) %dopar% {
-              dummie_row <- x[[idx]]
+            x[, coord_id := .GRP, by = c("lon", "lat")]
+            COORD_IDX <- max(x$coord_id)
+            dummie <- foreach (idx = 1:COORD_IDX, .combine = rbind) %dopar% {
+              dummie_row <- x[coord_id == idx]
               dummie_time <- 1:nrow(dummie_row)
               X <- cbind(1, dummie_time)
               invXtX <- solve(t(X) %*% X) %*% t(X)
