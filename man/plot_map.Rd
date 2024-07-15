@@ -7,18 +7,22 @@
 \alias{plot_map,character-method}
 \title{Map ggplot}
 \usage{
-plot_map(x, unit = "mm")
+plot_map(x, layer = 1, unit = "mm", timestamp = TRUE)
 
-\S4method{plot_map}{Raster}(x, unit = "mm")
+\S4method{plot_map}{Raster}(x, layer = 1, unit = "mm", timestamp = TRUE)
 
-\S4method{plot_map}{data.table}(x, unit = "mm")
+\S4method{plot_map}{data.table}(x, layer = 1, unit = "mm", timestamp = TRUE)
 
-\S4method{plot_map}{character}(x, unit = "mm")
+\S4method{plot_map}{character}(x, layer = 1, unit = "mm", timestamp = TRUE)
 }
 \arguments{
 \item{x}{Raster* object; data.table (see details); filename (character, see details)}
 
+\item{layer}{numeric}
+
 \item{unit}{character}
+
+\item{timestamp}{logical}
 }
 \value{
 ggplot object
@@ -32,4 +36,8 @@ If `x` is a data.table, its columns should be named: "lon", "lat", "date", and "
 If `x` is a filename, it should point to a *.nc file.
 
 `unit` is a character string describing the unit of measurement to be used for the legend title
+
+`layer` is the layer number to be plotted.
+
+`timestamp` if TRUE (default) the plot title is the layer's date
 }
