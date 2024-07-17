@@ -1,3 +1,7 @@
+# pRecipe 3.0.2
+
+* `plot_map` has now optional arguments for legend title, plot title, and layer.
+
 # pRecipe 3.0.1-3
 
 * fixed bug on `trend` 
