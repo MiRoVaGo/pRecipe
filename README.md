@@ -4,7 +4,7 @@
 [![R badge](https://img.shields.io/badge/build%20with-%E2%99%A5%20and%20R-blue)](https://github.com/MiRoVaGo/pRecipe)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/pRecipe)](https://cran.r-project.org/package=pRecipe)
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/pRecipe)](https://cran.r-project.org/package=pRecipe)
-[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/pRecipe)](https://CRAN.R-project.org/package=pRecipe)
+[![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/grand-total/pRecipe)](https://CRAN.R-project.org/package=pRecipe)
 [![license](https://img.shields.io/badge/license-GPL3-lightgrey.svg)](https://choosealicense.com/)
 <!-- badges: end -->
 
