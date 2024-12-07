@@ -11,7 +11,7 @@ plot_map(x, layer = 1, unit = "mm", timestamp = TRUE)
 
 \S4method{plot_map}{Raster}(x, layer = 1, unit = "mm", timestamp = TRUE)
 
-\S4method{plot_map}{data.table}(x, layer = 1, unit = "mm", timestamp = TRUE)
+\S4method{plot_map}{data.table}(x, layer = 0, unit = "mm", timestamp = TRUE)
 
 \S4method{plot_map}{character}(x, layer = 1, unit = "mm", timestamp = TRUE)
 }

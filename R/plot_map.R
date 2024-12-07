@@ -79,9 +79,11 @@ setMethod("plot_map", "Raster",
 #' @method plot_map data.table
 
 setMethod("plot_map", "data.table",
-          function(x, layer = 1, unit = "mm", timestamp = TRUE) {
-            dummie_dates <- sort(unique(x$date))
-            x <- x[date == dummie_dates[layer]]
+          function(x, layer = 0, unit = "mm", timestamp = TRUE) {
+            if(layer >= 1) {
+              dummie_dates <- sort(unique(x$date))
+              x <- x[date == dummie_dates[layer]]
+            }
             if (round((max(x$lon) - min(x$lon))) == 360){
               map_expand <- FALSE
             } else {

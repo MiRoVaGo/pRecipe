@@ -28,6 +28,7 @@ download_all <- function(folder_path = ".", domain = "raw", time_res = "monthly"
   download_em_earth(folder_path, domain, time_res)
   download_era20c(folder_path, domain, time_res)
   download_era5(folder_path, domain, time_res)
+  download_era5_land(folder_path, domain, time_res)
   download_fldas(folder_path, domain, time_res)
   download_ghcn(folder_path, domain, time_res)
   download_gldas_clsm(folder_path, domain, time_res)
@@ -36,6 +37,7 @@ download_all <- function(folder_path = ".", domain = "raw", time_res = "monthly"
   download_gpcc(folder_path, domain, time_res)
   download_gpcp(folder_path, domain, time_res)
   download_gpm_imerg(folder_path, domain, time_res)
+  download_gsmap(folder_path, domain, time_res)
   download_jra55(folder_path, domain, time_res)
   download_merra2(folder_path, domain, time_res)
   download_mswep(folder_path, domain, time_res)
@@ -44,6 +46,4 @@ download_all <- function(folder_path = ".", domain = "raw", time_res = "monthly"
   download_persiann(folder_path, domain, time_res)
   download_precl(folder_path, domain, time_res)
   download_terraclimate(folder_path, domain, time_res)
-  download_trmm_3b43(folder_path, domain, time_res)
-  download_udel(folder_path, domain, time_res)
 }

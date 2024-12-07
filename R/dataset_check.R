@@ -11,17 +11,17 @@ dataset_check <- function(data_name){
   if (!Reduce("&", is.element(data_name, c("all", "20cr", "chirps", "cmap",
                                            "cmorph", "cpc", "cru-ts",
                                            "em-earth", "era20c", "era5",
-                                           "fldas", "ghcn", "gldas-clsm",
-                                           "gldas-noah", "gldas-vic", "gpcc",
-                                           "gpcp", "gpm-imerg", "jra55",
+                                           "era5-land", "fldas", "ghcn",
+                                           "gldas-clsm", "gldas-noah",
+                                           "gldas-vic", "gpcc", "gpcp",
+                                           "gpm-imerg", "gsmap", "jra55",
                                            "mswep", "merra2", "ncep-doe",
                                            "ncep-ncar", "persiann", "precl",
-                                           "terraclimate", "trmm-3b43",
-                                           "udel")))){
+                                           "terraclimate")))){
     stop("Error: Data set not available.
     Select from 20cr, chirps, cmap, cmorph, cpc, cru-ts, em-earth, era20c,
-    era5, fldas, ghcn, gldas-clsm, gldas-noah, gldas-vic, gpcc, gpcp, gpm-imerg, 
-    jra55, merra2, mswep, ncep-doe, ncep-ncar, persiann, precl, terraclimate,
-    trmm-3b43, udel")
+    era5, era5-land, fldas, ghcn, gldas-clsm, gldas-noah, gldas-vic, gpcc, gpcp,
+    gpm-imerg, gsmap, jra55, merra2, mswep, ncep-doe, ncep-ncar, persiann,
+    precl, terraclimate")
   }
 }

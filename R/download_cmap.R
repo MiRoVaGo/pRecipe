@@ -24,9 +24,10 @@ download_cmap <- function(folder_path = ".", domain = "raw", time_res = "monthly
   options(timeout = 6000)
   on.exit(options(old_options))
   if (domain == "raw"){domain <- "global"}
-  zenodo_base <- "https://zenodo.org/record/7808922/files/"
+  zenodo_base <- "https://zenodo.org/record/14290970/files/"
+  if (domain == "ocean") {zenodo_base <- "https://zenodo.org/record/14290971/files/"}
   zenodo_end <- "?download=1"
-  file_name <- paste0("cmap_tp_mm_", domain, "_197901_202302_025_", time_res, ".nc")
+  file_name <- paste0("cmap_tp_mm_", domain, "_197901_202410_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

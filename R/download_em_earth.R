@@ -13,6 +13,7 @@
 #' }
 #' @param time_res a character string with the desired time resolution. Suitable options are:
 #' \itemize{
+#' \item{"daily",}
 #' \item{"monthly",}
 #' \item{"yearly".}
 #' }
@@ -28,7 +29,8 @@ download_em_earth <- function(folder_path = ".", domain = "raw", time_res = "mon
   } else {
     warning(paste0('The ', domain, ' domain is not available'))
   }
-  zenodo_base <- "https://zenodo.org/record/7808922/files/"
+  zenodo_base <- "https://zenodo.org/record/14290970/files/"
+  if (time_res == "daily") {zenodo_base <- "https://zenodo.org/record/14290969/files/"}
   zenodo_end <- "?download=1"
   file_name <- paste0("em-earth_tp_mm_", domain, "_195001_201912_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)

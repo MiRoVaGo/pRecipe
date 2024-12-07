@@ -4,7 +4,7 @@
 \alias{plot_taylor}
 \title{Taylor diagram}
 \usage{
-plot_taylor(x, y, groups = "source", ...)
+plot_taylor(x, y, groups = "default", ...)
 }
 \arguments{
 \item{x}{data.table}
@@ -22,13 +22,14 @@ plot object
 Convenient and aesthetic visualization of data in a Taylor diagram.
 }
 \details{
-`x` columns should be named: "lon", "lat", "date", "value", "dataset", and "source". The last two columns are added using the \code{\link{label}}.
+`x` columns should be named: "lon", "lat", "date", "value", "dataset", and "source".
 
-`y` columns should be named: "lon", "lat", "date", "value", "dataset", and "source". The last two columns are added using the \code{\link{label}}.
+`y` columns should be named: "lon", "lat", "date", "value", "dataset", and "source".
 
 `groups` character to define panels. Suitable options are:
 \itemize{
-\item "source" (default)
+\item "default" (only one panel)
+\item "source"
 \item "seasons" (only works properly with monthly data)
 }
 

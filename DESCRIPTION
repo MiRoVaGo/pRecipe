@@ -9,13 +9,12 @@ Authors@R:
            email = "imarkonis@gmail.com", role = c("aut", "ths"),
            comment = c(ORCID = "0000-0003-0144-8969")))
 Description: An open-access tool/framework to download, validate, visualize, and
-  analyze multi-source precipitation data. More information and an example of implementation can
-  be found in Vargas Godoy and Markonis (2023,
+  analyze multi-source precipitation data. More information and an example of
+  implementation can be found in Vargas Godoy and Markonis (2023,
   <doi:10.1016/j.envsoft.2023.105711>).
 Depends: R (>= 4.0.0)
-Imports: grDevices, methods, parallel, stats, utils, data.table, doParallel,
-  foreach, ggplot2, ggpubr, lubridate, magrittr, ncdf4, openair, raster,
-  scales, sf, sp
+Imports: grDevices, methods, stats, utils, data.table, ggplot2,
+  ggpubr, magrittr, openair, raster, scales, twc
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
@@ -25,7 +24,8 @@ SystemRequirements: PROJ (>= 6, https://proj.org/download.html),
   GDAL (>= 3, https://gdal.org/download.html),
   NetCDF(>= 4, https://www.unidata.ucar.edu/software/netcdf/).
 RoxygenNote: 7.3.2
-Suggests: kableExtra, knitr, rmarkdown, spelling, testthat (>= 3.0.0), tibble 
+Suggests: cowplot, foreach, kableExtra, knitr, rmarkdown, spelling,
+  testthat (>= 3.0.0), tibble 
 Config/testthat/edition: 3
 Language: en-US
 VignetteBuilder: knitr

@@ -13,6 +13,7 @@
 #' }
 #' @param time_res a character string with the desired time resolution. Suitable options are:
 #' \itemize{
+#' \item{"daily",}
 #' \item{"monthly",}
 #' \item{"yearly".}
 #' }
@@ -24,7 +25,9 @@ download_era20c <- function(folder_path = ".", domain = "raw", time_res = "month
   options(timeout = 6000)
   on.exit(options(old_options))
   if (domain == "raw"){domain <- "global"}
-  zenodo_base <- "https://zenodo.org/record/7808922/files/"
+  zenodo_base <- "https://zenodo.org/record/14290970/files/"
+  if (domain == "ocean") {zenodo_base <- "https://zenodo.org/record/14290971/files/"}
+  if (time_res == "daily") {zenodo_base <- "https://zenodo.org/record/14290969/files/"}
   zenodo_end <- "?download=1"
   file_name <- paste0("era20c_tp_mm_", domain, "_190001_201012_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)

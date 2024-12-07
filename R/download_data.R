@@ -69,6 +69,7 @@ download_data <- function(dataset = "all", path = ".", domain = "raw", timestep 
                                         "em-earth" = download_em_earth(path, domain, timestep),
                                         "era20c" = download_era20c(path, domain, timestep),
                                         "era5" = download_era5(path, domain, timestep),
+                                        "era5-land" = download_era5_land(path, domain, timestep),
                                         "fldas" = download_fldas(path, domain, timestep),
                                         "ghcn" = download_ghcn(path, domain, timestep),
                                         "gldas-clsm" = download_gldas_clsm(path, domain, timestep),
@@ -77,6 +78,7 @@ download_data <- function(dataset = "all", path = ".", domain = "raw", timestep 
                                         "gpcc" = download_gpcc(path, domain, timestep),
                                         "gpcp" = download_gpcp(path, domain, timestep),
                                         "gpm-imerg" = download_gpm_imerg(path, domain, timestep),
+                                        "gsmap" = download_gsmap(path, domain, timestep),
                                         "jra55" = download_jra55(path, domain, timestep),
                                         "merra2" = download_merra2(path, domain, timestep),
                                         "mswep" = download_mswep(path, domain, timestep),
@@ -84,9 +86,7 @@ download_data <- function(dataset = "all", path = ".", domain = "raw", timestep 
                                         "ncep-ncar" = download_ncep_ncar(path, domain, timestep),
                                         "persiann" = download_persiann(path, domain, timestep),
                                         "precl" = download_precl(path, domain, timestep),
-                                        "terraclimate" = download_terraclimate(path, domain, timestep),
-                                        "trmm-3b43" = download_trmm_3b43(path, domain, timestep),
-                                        "udel" = download_udel(path, domain, timestep)
+                                        "terraclimate" = download_terraclimate(path, domain, timestep)
   ))
   return(invisible())
 }

@@ -28,9 +28,10 @@ download_gldas_vic <- function(folder_path = ".", domain = "raw", time_res = "mo
   } else {
     warning(paste0('The ', domain, ' domain is not available'))
   }
-  zenodo_base <- "https://zenodo.org/record/7808922/files/"
+  zenodo_base <- "https://zenodo.org/record/14290970/files/"
+  if (time_res == "daily") {zenodo_base <- "https://zenodo.org/record/14290969/files/"}
   zenodo_end <- "?download=1"
-  file_name <- paste0("gldas-vic_tp_mm_", domain, "_194801_201412_025_", time_res, ".nc")
+  file_name <- paste0("gldas-vic-v2-0_tp_mm_", domain, "_194801_201412_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

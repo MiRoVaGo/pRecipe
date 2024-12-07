@@ -1,6 +1,6 @@
-#' TRMM_3B43 data downloader
+#' ERA5 data downloader
 #'
-#' Function for downloading TRMM 3B43 v7.
+#' Function for downloading ERA5.
 #'
 #' @importFrom utils download.file
 #' @param folder_path a character string with the path where the data will be downloaded.
@@ -19,14 +19,15 @@
 #' @return No return value, called to download the data set.
 #' @keywords internal
 
-download_trmm_3b43 <- function(folder_path = ".", domain = "raw", time_res = "monthly"){
+download_era5_land <- function(folder_path = ".", domain = "raw", time_res = "monthly"){
   old_options <- options()
   options(timeout = 6000)
   on.exit(options(old_options))
   if (domain == "raw"){domain <- "global"}
-  zenodo_base <- "https://zenodo.org/record/7808922/files/"
+  zenodo_base <- "https://zenodo.org/record/14290970/files/"
+  if (domain == "ocean") {zenodo_base <- "https://zenodo.org/record/14290971/files/"}
   zenodo_end <- "?download=1"
-  file_name <- paste0("trmm-3b43_tp_mm_", domain, "50s50n_199801_201912_025_", time_res, ".nc")
+  file_name <- paste0("era5-land_tp_mm_", domain, "_195001_202112_025_", time_res, ".nc")
   file_url <- paste0(zenodo_base, file_name, zenodo_end)
   file_destination <- paste(folder_path, file_name, sep = "/")
   try(download.file(file_url, file_destination, mode = "wb"), silent = TRUE)

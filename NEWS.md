@@ -1,6 +1,8 @@
 # pRecipe 3.0.2
 
+* daily data is available now!
 * `plot_map` has now optional arguments for legend title, plot title, and layer.
+* core functions moved to the twc package.
 
 # pRecipe 3.0.1-3
 

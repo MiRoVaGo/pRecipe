@@ -19,6 +19,7 @@ download_persiann(folder_path = ".", domain = "raw", time_res = "monthly")
 
 \item{time_res}{a character string with the desired time resolution. Suitable options are:
 \itemize{
+\item{"daily",}
 \item{"monthly",}
 \item{"yearly".}
 }}
