@@ -25,6 +25,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{twc}{\code{\link[twc]{crop_data}}, \code{\link[twc]{csi}}, \code{\link[twc]{far}}, \code{\link[twc]{fldmean}}, \code{\link[twc]{infoNC}}, \code{\link[twc]{muldpm}}, \code{\link[twc]{nse}}, \code{\link[twc]{pod}}, \code{\link[twc]{pRecipe_masks}}, \code{\link[twc]{remap}}, \code{\link[twc]{saveNC}}, \code{\link[twc]{subset_data}}, \code{\link[twc]{tabular}}, \code{\link[twc]{trend}}, \code{\link[twc]{yearstat}}}
+  \item{twc}{\code{\link[twc]{crop_data}}, \code{\link[twc]{csi}}, \code{\link[twc]{far}}, \code{\link[twc]{fldmean}}, \code{\link[twc]{infoNC}}, \code{\link[twc]{muldpm}}, \code{\link[twc]{nse}}, \code{\link[twc]{pRecipe_masks}}, \code{\link[twc]{pod}}, \code{\link[twc]{remap}}, \code{\link[twc]{saveNC}}, \code{\link[twc]{subset_data}}, \code{\link[twc]{tabular}}, \code{\link[twc]{trend}}, \code{\link[twc]{yearstat}}}
 }}
 
