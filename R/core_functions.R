@@ -3,12 +3,6 @@
 twc::crop_data
 
 #' @export
-twc::csi
-
-#' @export
-twc::far
-
-#' @export
 twc::fldmean
 
 #' @export
@@ -18,13 +12,7 @@ twc::infoNC
 twc::muldpm
 
 #' @export
-twc::nse
-
-#' @export
 twc::pRecipe_masks
-
-#' @export
-twc::pod
 
 #' @export
 twc::remap
